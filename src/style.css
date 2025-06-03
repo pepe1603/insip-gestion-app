@@ -1,0 +1,90 @@
+/* src/styles.css */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+/* Definir colores personalizados como variables CSS */
+:root {
+  --background-color: #0b0123;
+  --hover-color: #AA50FF1F;
+  --text-color: #CCD2D6;
+  --title-color: #ffffff;
+  --button-text-color: #4000BF;
+  --button-bg-color: #ffffff;
+  --light-title-color: #35363A;
+  --light-paragraph-color: #666c70b8;
+  --navbar-title-color: #374151;
+
+  --color-empresarial-300: #9ABF49;
+  --color-empresarial-200: #A6BF6F;
+  --color-empresarial-100: #C7D9A0;
+  --color-empresarial-50: #F2F2F2;
+}
+
+/* Asegúrate de que Tailwind cargue sus utilidades */
+@import "tailwindcss";
+
+/* Usar estas variables en lugar de las clases predeterminadas de Tailwind */
+
+.bg-empresarial-300{
+  background-color: var(--color-empresarial-300);
+}
+.bg-empresarial-200{
+  background-color: var(--color-empresarial-200);
+}
+.bg-empresarial-100{
+  background-color: var(--color-empresarial-100);
+}
+.bg-empresarial-50{
+  background-color: var(--color-empresarial-50);
+}
+.text-empresarial-300{
+  background-color: var(--color-empresarial-300);
+}
+.text-empresarial-200{
+  background-color: var(--color-empresarial-200);
+}
+.text-empresarial-100{
+  background-color: var(--color-empresarial-100);
+}
+.text-empresarial-50{
+  background-color: var(--color-empresarial-50);
+}
+
+
+.bg-background {
+  background-color: var(--background-color);
+}
+
+.text-textColor {
+  color: var(--text-color);
+}
+
+.text-titleColor {
+  color: var(--title-color);
+}
+
+.hover\:text-buttonText:hover {
+  color: var(--button-text-color);
+}
+
+.bg-buttonBg {
+  background-color: var(--button-bg-color);
+}
+
+.text-lightTitle {
+  color: var(--light-title-color);
+}
+
+.text-lightParagraph {
+  color: var(--light-paragraph-color);
+}
+
+
+body{
+  font-family: "Montserrat", sans-serif;
+}
+
+footer{
+  /*font-family: "Roboto", sans-serif;*/
+}

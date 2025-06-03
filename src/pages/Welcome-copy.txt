@@ -1,0 +1,940 @@
+<template>
+  <div>
+    <!-- Título principal -->
+    <h1 class="mx-auto mt-12 font-bold text-4xl text-center">
+      Bienvenido a MiApp
+    </h1>
+    <p class="mx-auto mt-4 max-w-2xl text-center text-lg text-textColor">
+      Esta es la página de bienvenida de MiApp. Aquí puedes encontrar información sobre nuestra aplicación y sus características.
+    </p>
+
+    <p class="w-full h-auto my-4 flex items-center justify-center">
+      <UiLoader />
+    </p>
+
+<!-- Formulario de creación de producto (usando los componentes genericos) -->
+<section class="bg-white dark:bg-gray-900">
+    <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+      <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">Add a new product</h2>
+      <form @submit.prevent="handleSubmit">
+        <div class="grid gap-4 sm:grid-cols-2 sm:gap-6">
+          <!-- Campos del formulario utilizando los componentes genéricos -->
+          <UiInputText
+            id="name"
+            label="Product Name"
+            placeholder="Type product name"
+            v-model="formData.name"
+            required
+          />
+          <UiInputText
+            id="brand"
+            label="Brand"
+            placeholder="Product brand"
+            v-model="formData.brand"
+            required
+          />
+          <UiInputNumber
+            id="price"
+            label="Price"
+            placeholder="$2999"
+            v-model="formData.price"
+            required
+          />
+          <UiSelect
+            id="category"
+            label="Category"
+            v-model="formData.category"
+            :options="categoryOptions"
+            required
+          />
+          <UiInputNumber
+            id="item-weight"
+            label="Item Weight (kg)"
+            placeholder="12"
+            v-model="formData.weight"
+            required
+          />
+          <UiTextArea
+            id="description"
+            label="Description"
+            placeholder="Your description here"
+            v-model="formData.description"
+          />
+          
+          
+<div class="my-4 p-4 border ">
+  
+  <UiDivider label="Seccion Tootips" />
+  
+  <UiTooltip :tooltipOptions="{ content: '¡Este es un mensaje importante!', placement: 'top', trigger: 'mouseenter' }">
+      <button class="bg-green-500 text-white py-2 px-4 rounded">¡Pasa el ratón!</button>
+    </UiTooltip>
+
+    <div class="w-full max-w-md mx-auto p-4">
+    <!-- Usamos el componente UiInputRange -->
+    <UiInputRange
+      label="Selecciona un valor"
+      v-model="rangeValue"
+      min="0"
+      max="100"
+      step="5"
+    />
+    
+    <!-- Mostrar el valor seleccionado para asegurarnos que funciona -->
+    <p class="mt-4 text-lg">Valor seleccionado: {{ rangeValue }}</p>
+  </div>
+  
+
+  <UiDivider laberl="Seccion de uso de teclas para panel de comandos "/>
+  <div class="p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold">Comandos del teclado</h2>
+    <p class="mt-4">
+      Para abrir el menú, presiona 
+      <UiKbd customClass="bg-blue-500">Ctrl</UiKbd> + 
+      <UiKbd customClass="bg-red-500">Shift</UiKbd> + 
+      <UiKbd>Q</UiKbd>.
+    </p>
+  </div>
+
+</div>
+
+
+          <UiInputFile
+            id="product-image"
+            label="Product Image"
+            v-model="formData.image"
+            
+          />
+
+          <!-- Campo URL -->
+          <UiInputUrl
+            id="product-url"
+            label="Product URL"
+            placeholder="Enter the product URL"
+            v-model="formData.productUrl"
+
+          />
+
+            <UiInputDatepicker
+              id="release-date"
+              label="Date of Release"
+              v-model="formData.productReleaseDate"
+              placeholder="Enter release date"
+              format="dd/MM/yyyy"
+            />
+
+            <UiInputEmail 
+            id="product-email"
+            label="Product Email"
+            placeholder="Jhondoe@example.com"
+
+            />
+
+            <div>
+
+              <PasswordGroup
+                v-model:passwordValue="userPasswordGroup"
+                v-model:confirmPasswordValue="userConfirmPasswordGroup"
+                :passwordLabel="'Nueva Contraseña'"
+                :confirmPasswordLabel="'Confirmar Nueva Contraseña'"
+                :passwordRequired="true"
+                :confirmPasswordRequired="true"
+                :minLength="8"
+                :passwordErrorMessage="'La nueva contraseña debe tener al menos 8 caracteres.'"
+                :confirmPasswordErrorMessage="'Las nuevas contraseñas no coinciden.'"
+              />
+            </div>
+
+
+
+            <UiResponsiveGridRow :cols="2" :gap="4">
+              <UiInputText label="Nombre" model="nombre" />
+              <UiInputText label="Apellido" model="apellido" />
+            </UiResponsiveGridRow>
+
+            <UiResponsiveGridRow :cols="{ sm: 2, md: 3 }" :gap="{ sm: 4, md: 6 }">
+              <UiInputText label="Ciudad" model="ciudad" />
+              <UiSelect label="País" model="pais" :options="paises" />
+              <UiInputNumber label="Código Postal" model="cp" />
+            </UiResponsiveGridRow>
+
+            <UiResponsiveGridRow :cols="1">
+              <UiTextArea label="Comentarios" model="comentarios" />
+            </UiResponsiveGridRow>
+            
+        </div>
+
+        <!-- Botón de envío del formulario -->
+        <button
+          type="submit"
+          class="inline-flex items-center px-5 py-2.5 mt-4 sm:mt-6 text-sm font-medium text-center text-white bg-indigo-700 rounded-lg focus:ring-4 focus:ring-indigo-200 dark:focus:ring-indigo-900 hover:bg-indigo-800"
+        >
+          Add product
+        </button>
+
+
+        <div>
+
+
+          <div class="w-full h-auto my-4 flex flex-col items-center justify-center">
+      <UiLoader />
+     <!--
+      <loading-spinner></loading-spinner>
+
+          -->
+
+
+          <div class="dark">
+    <UiPaginator
+      :total-items="totalItems"
+      :items-per-page="itemsPerPage"
+      v-model:page="currentPage"
+      :max-visible-pages="5"
+      size="lg"
+      :dark="isDarkMode"
+    />
+  </div>
+
+    </div>
+
+    <UiButton>Botón Primario</UiButton>
+    <UiButton variant="secondary" class="mt-2">Botón Secundario</UiButton>
+    <UiButton variant="success" class="mt-2">Guardar</UiButton>
+    <UiButton variant="error" class="mt-2">Eliminar</UiButton>
+    <UiButton variant="warning" class="mt-2">Cuidado</UiButton>
+    <UiButton variant="info" class="mt-2">Detalles</UiButton>
+    <UiButton variant="loading" disabled class="mt-2">Cargando...</UiButton>
+    <UiButton variant="success" iconSize="h-6 w-6" class="mt-2">Éxito Manual</UiButton>
+
+    <hr class="my-4">
+    <UiButton variant="outline-primary">Primary</UiButton>
+    <UiButton variant="outline-error" size="large" class="ml-2">Error</UiButton>
+    <UiButton variant="outline-warning" size="small" class="ml-2">Warning</UiButton>
+
+
+
+
+  </div>
+
+
+  <UiDivider :icon="PlusIcon" color="green" />
+  <p>Contenido con icono en el divisor</p>
+
+  <div>
+    <UiSwitch v-model="isEnabled" id="my-switch" label="Habilitar"/>
+    <p>El switch está: {{ isEnabled ? 'habilitado' : 'deshabilitado' }}</p>
+
+    <UiSwitch v-model="darkMode" label="Modo Oscuro" class="mt-4"/>
+    <p>Modo oscuro está: {{ darkMode ? 'activado' : 'desactivado' }}</p>
+
+    <UiSwitch label="Deshabilitado" disabled class="mt-4"/>
+  </div>
+
+  <!-- checbosx individual-->
+
+  <div>
+    <UiCheckbox v-model="isChecked" id="terms" label="Acepto los términos y condiciones" />
+    <p>¿Aceptado?: {{ isChecked }}</p>
+
+    <UiCheckbox label="Deshabilitado" disabled class="mt-4"  />
+  </div>
+
+
+  <!-- chewboix en grupo: -->
+  <div>
+    <p class="mb-2 font-semibold text-gray-900 dark:text-white">Selecciona tus lenguajes:</p>
+    <ul class="space-y-2">
+      <li>
+        <UiCheckbox v-model="selectedLanguages" value="javascript" label="JavaScript" />
+      </li>
+      <li>
+        <UiCheckbox v-model="selectedLanguages" value="python" label="Python" />
+      </li>
+      <li>
+        <UiCheckbox v-model="selectedLanguages" value="java" label="Java" />
+      </li>
+    </ul>
+    <p>Lenguajes seleccionados: {{ selectedLanguages }}</p>
+  </div>
+
+  <hr>
+  <div>
+    <!-- Radio buttons individuales -->
+      <p class="text-lg mb-2 font-semibold text-gray-900 dark:text-white">Seleccione su preferencia</p>
+      <ul class="space-y-2">
+        <li>    
+          <UiRadioButton
+            v-model="selectedOption"
+            value="option1"
+            label="Opción 1"
+          />
+        </li>
+        <li>
+          <UiRadioButton
+            v-model="selectedOption"
+            value="option2"
+            label="Opción 2"
+          />
+        </li>
+        <li>
+          <UiRadioButton
+            v-model="selectedOption"
+            value="option3"
+            label="Opción 3"
+          />
+        </li>
+      </ul>
+    
+      <p>Opción seleccionada: {{ selectedOption }}</p>
+    
+  </div>
+
+
+
+
+  <div class="p-4">
+    <h2 class="text-lg font-bold text-gray-900">Quick Search</h2>
+
+    <!-- Uso del componente con el icono de búsqueda -->
+    <UiInputSearch
+      v-model="searchQuery"
+      placeholder="Search for something..."
+      :icon="searchIcon"
+    />
+
+    <p v-if="searchQuery">Buscando: {{ searchQuery }}</p>
+  </div>
+
+
+  <UiDivider label="Section 1" color="blue" />
+    <p>Contenido de la sección 2</p>
+
+  <div class="p-4">
+    <h2 class="text-lg font-bold text-gray-900">section Badges</h2>
+    <p class="text-sm text-gray-500">Aquí puedes ver los badges de diferentes colores:</p>
+    <div class="flex gap-2 mt-2">
+      <UiBadge text="Badge" color="indigo" size="sm" />
+      <UiBadge text="Badge" color="gray" size="sm" />
+      
+      <UiBadge text="Badge" color="purple" size="sm" />
+
+      <UiBadge text="Badge" color="pink" :icon="CheckIcon" size="lg"/>
+      <UiBadge text="Badge" color="green" :icon="magnifyingGlassIcon" size="lg"/>
+
+      <div class="space-x-4">
+        <UiBadge text="Badge" color="blue" size="lg" />
+        <UiBadge text="Badge" color="red" size="lg" />
+        
+        <UiBadge text="Badge" color="yellow" size="lg" />
+      </div>
+    </div>
+  </div>
+
+  
+  <UiDivider label="Seccion de avatars" color="indigo" />
+
+
+  <div class="p-4 space-y-4">
+    <h2 class="text-lg font-bold text-gray-900">Avatars</h2>
+
+    <div class="flex gap-4">
+    <UiAvatar name="John Doe" size="small" />
+    <UiAvatar src="https://picsum.photos/200" alt="Jane Doe" size="small" />
+    <UiAvatar src="https://picsum.photos/200" alt="Alice Smith" size="medium" />
+    <UiAvatar src="https://picsum.photos/200" alt="Bob Johnson" size="large" />
+    
+    
+
+    </div>
+  </div>
+
+  <UiDivider label="Seccion de cards" color="indigo" />
+  <div class="p-4 space-y-4">
+    <h2 class="text-lg mb-4 font-bold text-gray-900">Cards</h2>
+    <UiCardImage
+      imageSrc="https://img.freepik.com/foto-gratis/hermosa-escena-dibujos-animados-paisaje-urbano-anime-sakura_23-2151035286.jpg?ga=GA1.1.363685336.1745826461&semt=ais_hybrid&w=740"
+      title="Noteworthy technology acquisitions 2021"
+      description="Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order."
+      link="#"
+    />
+
+    <!-- Uso del componente de tarjeta horizontal -->
+    <UiCardHorizontal
+      :imageSrc="'https://img.freepik.com/fotos-premium/chica-auriculares-cabeza_916191-243261.jpg?ga=GA1.1.363685336.1745826461&semt=ais_hybrid&w=740'"
+      :title="'Noteworthy technology acquisitions 2021'"
+      :description="'Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.'"
+      :link="'/update-route'"
+    >
+      <!-- Aquí puedes añadir un botón o contenido adicional -->
+      <template #extra-content>
+        <button class="mt-2 px-4 py-2 text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+          More Details
+        </button>
+      </template>
+    </UiCardHorizontal>
+
+  </div>
+
+  <div>
+    <UiInputPassword
+      id="password"
+      label="Contraseña"
+      placeholder="Ingresa tu contraseña"
+      v-model="userPassword"
+      required
+    />
+    <p>La contraseña ingresada es: {{ userPassword }}</p>
+  </div> 
+    
+
+      </form>
+    </div>
+  </section>
+    
+
+
+    <!-- Botones para abrir los modales -->
+    <div class="flex gap-4 justify-center mt-8">
+      <button @click="isInfoOpen = true" class="bg-blue-600 text-white px-4 py-2 rounded">
+        Modal Info
+      </button>
+      <button @click="isConfirmOpen = true" class="bg-red-600 text-white px-4 py-2 rounded">
+        Modal Confirm
+      </button>
+    </div>
+
+    <UiDivider label="Seccion de tablas" color="indigo" />
+    <h2 class="text-lg mb-4 font-bold text-gray-900">Tablas</h2>
+
+    <div>
+      <UiTable :headers="tableHeaders" :data="tableData">
+      <template #Nombre="slotProps">
+        <strong>{{ slotProps.item.Nombre }}</strong>
+      </template>
+
+      <template #CorreoElectronico="{ item }">
+        <a :href="`mailto:${item.CorreoElectronico}`">{{ item.CorreoElectronico }}</a>
+      </template>
+
+      <template #Edad="dataFila">
+        <span class="text-blue-500">{{ dataFila.item.Edad }} años</span>
+      </template>
+
+      <template #Acciones="{ item: fila }">
+        <button class="px-2 py-1 text-xs font-semibold rounded-md bg-indigo-100 text-indigo-700">Editar {{ fila.Nombre }}</button>
+        <button class="ml-1 px-2 py-1 text-xs font-semibold rounded-md bg-red-100 text-red-700">Eliminar</button>
+        <UiButton size="small" variant="outline-info" class="ml-2">nothing</UiButton>
+      </template>
+    </UiTable>
+
+
+    <div>
+    <h1>Tabla con Filtrado Opcional (Activado)</h1>
+    <UiTable :headers="tableHeaders" :data="tableData" :showFilter="true" filterPlaceholder="Buscar nombres..." />
+
+    <h1 class="mt-8">Tabla sin Filtrado</h1>
+    <UiTable :headers="tableHeaders" :data="tableData" />
+  </div>
+
+
+  </div>
+
+
+
+
+  <UiDivider label="Seccion de SorttableList" />
+  <div>
+    <h1>Ejemplo de Avatares Dragables</h1>
+    <UiSortableList @update="onAvatarOrderChange">
+      <div class="avatar cursor-move">
+        <div class="size-10 rounded-full">
+          <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-1.png" alt="avatar" />
+        </div>
+      </div>
+      <div class="avatar cursor-move">
+        <div class="size-10 rounded-full">
+          <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-2.png" alt="avatar" />
+        </div>
+      </div>
+      <div class="avatar cursor-move">
+        <div class="size-10 rounded-full">
+          <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-3.png" alt="avatar" />
+        </div>
+      </div>
+      <div class="avatar cursor-move">
+        <div class="size-10 rounded-full">
+          <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-5.png" alt="avatar" />
+        </div>
+      </div>
+      <div class="avatar cursor-move">
+        <div class="size-10 rounded-full">
+          <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-7.png" alt="avatar" />
+        </div>
+      </div>
+      <div class="avatar cursor-move">
+        <div class="size-10 rounded-full">
+          <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-10.png" alt="avatar" />
+        </div>
+      </div>
+      <div class="avatar cursor-move">
+        <div class="size-10 rounded-full">
+          <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-12.png" alt="avatar" />
+        </div>
+      </div>
+      <div class="avatar cursor-move">
+        <div class="size-10 rounded-full overflow-hidden">
+          <img src="https://cdn.flyonui.com/fy-assets/avatar/avatar-15.png" alt="avatar" class="" />
+        </div>
+      </div>
+    </UiSortableList>
+  </div>
+
+<div class=" bg-white p-4 m-6">
+  <UiDivider label="Seccion de elemtos Data Display" />
+
+  
+  <div>
+    <h1 class="text-4xl font-bold mb-8">Bienvenido al Sistema de Gestión de Asistencias</h1>
+    <p class="mb-6 text-lg">
+      Optimiza el seguimiento de la asistencia de tus empleados y genera reportes detallados fácilmente.
+    </p>
+
+    <UiCtaSection
+      title="¿Eres nuevo por aquí?"
+      description="Comienza a gestionar la asistencia de tu equipo hoy mismo. ¡Es rápido y sencillo!"
+      :primaryLink="{ label: 'Crear mi primer evento', to: '/crear-asistencia' }"
+      imageSrc="https://tailwindcss.com/plus-assets/img/component-images/dark-project-app-screenshot.png"
+      imageAlt="Ilustración de gestión de tiempo"
+      gradientStart="#673AB7"
+      gradientEnd="#3F51B5"
+    />
+
+    <div class="mt-12">
+      <h2 class="text-2xl font-semibold mb-4">Características principales:</h2>
+      <ul>
+        <li>Registro de entradas y salidas en tiempo real.</li>
+        <li>Generación de reportes personalizables.</li>
+        <li>Gestión de tipos de asistencia (trabajo remoto, vacaciones, etc.).</li>
+        </ul>
+    </div>
+  </div>
+
+  
+    <UiDescriptionList
+      title="Información del Aplicante"
+      description="Detalles personales y aplicación."
+      :items="applicantInfo"
+    >
+      <template #Attachments="{ item }">
+        <ul role="list" class="divide-y divide-gray-100 rounded-md border border-gray-200">
+          <li v-for="(attachment, index) in item.value" :key="index" class="flex items-center justify-between py-4 pr-5 pl-4 text-sm/6">
+            <div class="flex w-0 flex-1 items-center">
+              <PaperClipIcon class="size-5 shrink-0 text-gray-400" aria-hidden="true" />
+              <div class="ml-4 flex min-w-0 flex-1 gap-2">
+                <span class="truncate font-medium">{{ attachment.name }}</span>
+                <span class="shrink-0 text-gray-400">{{ attachment.size }}</span>
+              </div>
+            </div>
+            <div class="ml-4 shrink-0">
+              <a href="#" class="font-medium text-indigo-600 hover:text-indigo-500">Download</a>
+            </div>
+          </li>
+        </ul>
+      </template>
+    </UiDescriptionList>
+
+
+
+    <CtaSection />
+
+    
+
+
+    <div><div class="mx-auto text-center">
+    <h1>Dropdown Simple</h1>
+    <UiDropdown :items="simpleItems" label="Acciones" />
+
+    <h1 class="mt-8">Dropdown con Enlaces y Botón</h1>
+    <UiDropdown :items="linkButtonItems" label="Navegación" />
+
+    <h1 class="mt-8">Dropdown Personalizado</h1>
+      
+        <UiDropdown>
+      <template #button>
+        <button class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-4 py-2 text-white font-semibold shadow-sm hover:bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          Opciones Avanzadas
+          <ChevronDownIcon class="-mr-1 size-5" aria-hidden="true" />
+        </button>
+      </template>
+      <template :items="customItems ">
+        <span v-if="customItems.icon" class="mr-2">{{ customItems.icon }}</span> {{ customItems.label }}
+      </template>
+      <template #footer>
+        <div class="border-t border-gray-100 py-2 px-4 text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400">
+          Versión 1.0
+        </div>
+      </template>
+      
+    </UiDropdown>
+        
+      </div>
+
+
+
+  </div>
+
+
+
+
+
+
+  </div>
+
+    <!-- Modal Informativo (sin slots personalizados) -->
+    <modal-dynamic
+      :isOpen="isInfoOpen"
+      @update:isOpen="isInfoOpen = $event"
+      type="dark"
+      title="Hola 👋 Bienvenido a MiApp"
+      content="Este es un mensaje de bienvenida personalizado para los usuarios."
+      @primary-action="handleAccept"
+    />
+
+    <!-- Modal Confirmación (solo el body y botón cancelar personalizado) -->
+    <modal-dynamic
+      :isOpen="isConfirmOpen"
+      @update:isOpen="isConfirmOpen = $event"
+      type="purple"
+      title="¿Eliminar elemento?"
+      @primary-action="confirmAction"
+      @secondary-action="cancelAction"
+    >
+      <template #body>
+        <div class="w-full flex items-center gap-4 mx-auto">
+          <img src="https://picsum.photos/200/300" alt="Confirmación" class="w-full rounded-md h-24 aspect-video" />
+          <p class="text-center text-sm text-gray-700">
+            Esta acción eliminará el elemento permanentemente. ¿Estás seguro?
+          </p>
+        </div>
+      </template>
+
+      <!-- Botón cancelar personalizado (opcional) -->
+      <template #secondary-action>
+        <button
+          type="button"
+          class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-xs ring-1 ring-gray-300 ring-inset hover:bg-gray-50 sm:mt-0 sm:w-auto"
+          @click="cancelAction"
+        >
+          Cancelar
+        </button>
+      </template>
+    </modal-dynamic>
+  
+     <UiDivider label="Seccion de btns test Toast" />
+
+<div class="p-5 mx-auto space-x-2">
+  <UiButton variant="success" @click="showSuccessToast">Mostrar Éxito</UiButton>
+<UiButton variant="outline-error" @click="showErrorToast">Mostrar Error</UiButton>
+<UiButton varian="notify" @click="showNotifyToast">Notify</UiButton>
+<UiButton variant="outline-warning" @click="showWarningToast">Mostrar Advertencia</UiButton>
+<UiButton  @click="showInfoToast">Mostrar Información</UiButton>
+<UiButton variant="outline-secondary" @click="showCustomPositionToast">Mostrar en la esquina inferior izquierda</UiButton>
+
+</div>
+
+
+<UiDivider label="seccion de Gallery"/>
+
+<div class="p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-xl font-semibold mb-4">Galería Predeterminada</h2>
+    <UiGallery :images="imageList"  />
+
+    <h2 class="text-xl font-semibold mt-8 mb-4">Galería Masonry</h2>
+    <UiGalleryMasonry :images="imageListMasonry" />
+  </div>
+
+
+
+<UiDivider label="Seccion de formrularios" />
+
+
+
+
+  
+  </div>
+
+ 
+</template>
+
+<script setup>
+import { onMounted, ref, computed, watch } from 'vue'
+import ModalDynamic from '../components/modals/ModalDynamic.vue'
+import UiInputText from '../components/ui/UiInputText.vue'
+import UiInputNumber from '../components/ui/UiInputNumber.vue'
+import UiSelect from '../components/ui/UiSelect.vue'
+import UiTextArea from '../components/ui/UiTextArea.vue'
+import UiInputFile from '../components/ui/UiInputFile.vue'
+import UiInputUrl from '../components/ui/UiInputUrl.vue' // Importa el nuevo componente de URL
+import UiTooltip from '../components/ui/UiTooltip.vue'
+import UiInputDatepicker from '../components/ui/UiInputDatepicker.vue' // Importa el nuevo componente de fecha
+import UiButton from '../components/ui/UiButton.vue' // Importa el nuevo componente de botón
+import UiSwitch from '../components/ui/UiSwitch.vue' // Importa el nuevo componente de switch
+import UiCheckbox from '../components/ui/UiCheckbox.vue' // Importa el nuevo componente de checkbox
+import UiRadioButton from '../components/ui/UiRadioButton.vue' // Importa el nuevo componente de radio button
+import UiInputSearch from '../components/ui/UiInputSearch.vue' // Importa el nuevo componente de input con atajo de teclado
+import UiBadge from '../components/ui/UiBadge.vue' // Importa el nuevo componente de badge
+import UiDivider from '../components/ui/UiDivider.vue' // Importa el nuevo componente de divider
+import UiAvatar from '../components/ui/UiAvatar.vue' // Importa el nuevo componente de avatar+
+import UiCardImage from '../components/ui/UiCardImage.vue' // Importa el nuevo componente de tarjeta de imagen
+import UiCardHorizontal from '../components/ui/UiCardHorizontal.vue' // Importa el nuevo componente de tarjeta horizontal 
+import { MicrophoneIcon, PaperClipIcon, ChevronDownIcon, MagnifyingGlassIcon, CheckIcon, PlusIcon   } from '@heroicons/vue/24/solid';  // Importa el icono de búsqueda de Heroicons
+import UiInputPassword from '../components/ui/UiInputPassword.vue'
+import UiTable from '../components/ui/UiTable.vue' // Importa el nuevo componente de tabla
+import UiSortableList from '../components/ui/UiSortableList.vue'
+import UiDescriptionList from '../components/ui/UiDescriptionList.vue'
+import UiDropdown from '../components/ui/UiDropdown.vue'
+import UiInputEmail from '../components/ui/UiInputEmail.vue'
+import PasswordGroup from '../components/ui/UiInputPasswordGroup.vue'
+import UiResponsiveGridRow from '../components/ui/UiResponsiveGridRow.vue'
+import UiInputRange from  '../components/ui/UiInputRange.vue'
+import UiKbd from '../components/ui/UiKbd.vue'
+import UiGalleryMasonry from '../components/ui/UiGalleryMasonry.vue'
+import UiGallery from '../components/ui/UiGallery.vue'
+import UiLoader from '../components/ui/UiLoader.vue'
+import LoadingSpinner from '../components/LoadingSpinner.vue'
+import CtaSection from '../components/CtaSection.vue'
+import UiCtaSection from '../components/ui/UiCtaSection.vue'
+
+import UiPaginator from '../components/ui/UiPaginator.vue'
+
+
+import RegisterUsuario from '../views/RegisterUsuario.vue'
+
+
+import { useToastService  } from '../services/toastService'
+import {useGlobalToast} from '../composables/useGlobalToast'
+
+// Info Modal
+const isInfoOpen = ref(false)
+const handleAccept = () => {
+  console.log('Información aceptada')
+  isInfoOpen.value = false
+}
+
+// Confirm Modal
+const isConfirmOpen = ref(false)
+const confirmAction = () => {
+  console.log('Confirmado ✅')
+  isConfirmOpen.value = false
+}
+const cancelAction = () => {
+  console.log('Cancelado ❌')
+  isConfirmOpen.value = false
+}
+
+///formualrio gfenerico
+// Define los datos del formulario
+const formData = ref({
+  name: '',
+  brand: '',
+  price: '',
+  category: '',
+  weight: '',
+  description: '',
+  image: null,
+  productReleaseDate: '', // Aquí agregamos la fecha de lanzamiento del producto
+  productUrl: ''  // Aquí agregamos la URL del producto
+})
+
+// Opciones del select para la categoría
+const categoryOptions = [
+  { label: 'TV/Monitors', value: 'TV' },
+  { label: 'PC', value: 'PC' },
+  { label: 'Gaming/Console', value: 'GA' },
+  { label: 'Phones', value: 'PH' }
+]
+
+// Enviar el formulario (simulando la lógica de manejo)
+const handleSubmit = () => {
+  console.log('Formulario enviado:', formData.value)
+}
+
+// Estado del switch
+
+const isEnabled = ref(false);
+const darkMode = ref(false);
+
+// Estado del checkbox individual
+const isChecked = ref(false);
+
+// Estado del checkbox en grupo
+const selectedLanguages = ref([]);
+
+// Estado del radio button
+const selectedOption = ref('option1') // Establecemos la opción predeterminada
+
+// Estado del input de búsqueda
+const searchQuery = ref('') // Aquí almacenamos lo que se escribe en el input
+const searchIcon = MicrophoneIcon // Puedes usar cualquier icono de Heroicons que prefieras
+
+// Estado del badge
+const magnifyingGlassIcon = MagnifyingGlassIcon // Icono de búsqueda de Heroicons
+
+//estilos para inputPassword
+const userPassword = ref('');
+
+
+//Estado Tabla
+const tableHeaders = ['Nombre', 'Edad', 'Correo Electrónico', 'Acciones'];
+const tableData = ref([
+  { Nombre: 'Alice', Edad: 30, 'Correo Electrónico': 'alice@example.com', Acciones: '' },
+  { Nombre: 'Bob', Edad: 25, 'Correo Electrónico': 'bob@example.com', Acciones: '' },
+  { Nombre: 'Charlie', Edad: 35, 'Correo Electrónico': 'charlie@example.com', Acciones: '' },
+]);
+
+
+//estado de sshortableList
+const onAvatarOrderChange = (event) => {
+  console.log('Nuevo orden de los avatares:', event.newIndex, event.oldIndex);
+  // Aquí puedes actualizar tu array de avatares si lo estás gestionando
+};
+
+
+//esatdop de DescriptionList Aligleft
+const applicantInfo = ref([
+  { label: 'Nombre Completo', value: 'Margot Foster', key: 'FullName' },
+  { label: 'Aplicación para', value: 'Backend Developer', key: 'ApplicationFor' },
+  { label: 'Dirección de Correo', value: 'margotfoster@example.com', key: 'EmailAddress' },
+  { label: 'Expectativa Salarial', value: '$120,000', key: 'SalaryExpectation' },
+  { label: 'Acerca de', value: 'Fugiat ipsum...', key: 'About' },
+  {
+    label: 'Adjuntos',
+    key: 'Attachments',
+    value: [
+      { name: 'resume_back_end_developer.pdf', size: '2.4mb' },
+      { name: 'coverletter_back_end_developer.pdf', size: '4.5mb' },
+    ],
+  },
+]);
+
+
+//estado de UiDoropdown 
+const simpleItems = ref([
+  { label: 'Editar' },
+  { label: 'Eliminar', onClick: () => alert('Eliminar') },
+  { label: 'Ver Detalles' },
+]);
+
+const linkButtonItems = ref([
+  { label: 'Inicio', href: '/' },
+  { label: 'Perfil', href: '/profile' },
+  { label: 'Cerrar Sesión', type: 'button', onClick: () => alert('Cerrando sesión...') },
+]);
+
+const customItems = ref([
+  { label: 'Información', icon: 'ℹ️' },
+  { label: 'Configuración', icon: '⚙️' },
+]);
+
+
+//estado de toast
+
+const { success, error, warning, info, notify } = useToastService();
+
+const showNotifyToast = () => {
+  notify('¡En hora buena, Bienvenido!', { duration: 10000 });
+};
+
+const showSuccessToast = () => {
+  success('¡La operación se completó con éxito!', { position: 'bottom-center', duration: 6000 });
+};
+
+const showErrorToast = () => {
+  error('¡Ocurrió un error al procesar la solicitud!', { title: '¡Error Inesperado!' });
+};
+
+const showWarningToast = () => {
+  warning('Advertencia: ¡Asegúrate de revisar esta información!');
+};
+
+const showInfoToast = () => {
+  info('Esta es una notificación informativa.', { position: 'top-center', duration: 1200 });
+};
+
+const showCustomPositionToast = () => {
+  info('¡Hola desde abajo a la izquierda!', { position: 'bottom-left', duration: 4000 });
+};
+//usar elñ toas de manera global usando el helper -> plgins registrado
+
+const toast = useGlobalToast();
+
+const showToast = () => {
+  toast?.success('¡Esto vino del helper useGlobalToast!');
+};
+
+
+onMounted(() => {
+  showToast();
+});
+
+/// estado de PassswordGroup
+const userPasswordGroup = ref('');
+const userConfirmPasswordGroup = ref('');
+
+//estado de UiResposiveGridRow
+const paises = ref([
+  { label: 'México', value: 'MX' },
+  { label: 'Estados Unidos', value: 'US' },
+  { label: 'Canadá', value: 'CA' }
+]);
+
+
+//estado de range
+
+// Definimos la variable que almacenará el valor del rango
+const rangeValue = ref(25);  // Valor inicial del rango (puede ser cualquier valor dentro del rango definido)
+
+//estados lista de imagenes de gallery masonry
+const imageList = [
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 1' },
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 2' },
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 3' },
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 4' },
+  { src: 'https://picsum.photos/600/400?grayscale', alt: 'Imagen 5' },
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 6' },
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 7' },
+  { src: 'https://picsum.photos/seed/picsum/600/400', alt: 'Imagen 8' },
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 9' },
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 10' },
+  { src: 'https://picsum.photos/600/400?grayscale', alt: 'Imagen 11' },
+  { src: 'https://picsum.photos/seed/picsum/600/400', alt: 'Imagen 12' },
+];
+const imageListMasonry = [
+  { src: 'https://picsum.photos/600/400', alt: 'Imagen 1' },
+  { src: 'https://picsum.photos/860/600', alt: 'Imagen 2' },
+  { src: 'https://picsum.photos/650/600', alt: 'Imagen 3' },
+  { src: 'https://picsum.photos/700/500', alt: 'Imagen 4' },
+  { src: 'https://picsum.photos/650/720?grayscale', alt: 'Imagen 5' },
+  { src: 'https://picsum.photos/450/330', alt: 'Imagen 6' },
+  { src: 'https://picsum.photos/410/450', alt: 'Imagen 7' },
+  { src: 'https://picsum.photos/seed/picsum/500/300', alt: 'Imagen 8' },
+  { src: 'https://picsum.photos/500/300', alt: 'Imagen 9' },
+  { src: 'https://picsum.photos/600/450', alt: 'Imagen 10' },
+  { src: 'https://picsum.photos/400/400?grayscale', alt: 'Imagen 11' },
+  { src: 'https://picsum.photos/seed/picsum/440/370', alt: 'Imagen 12' },
+];
+
+
+//estado pagination
+const totalItems = ref(100);
+const itemsPerPage = ref(10);
+const currentPage = ref(1);
+const isDarkMode = ref(true);
+
+// Watch para reaccionar a los cambios de página
+watch(currentPage, (newPage) => {
+  console.log('Página actual:', newPage);
+  // Aquí puedes cargar los datos para la nueva página
+});
+
+</script>
