@@ -3,9 +3,14 @@
     :id="id"
     :type="type"
     :disabled="disabled"
-    :class="[baseClasses, sizeClasses, variantClasses]"
+    :class="[baseClasses, sizeClasses, variantClasses, buttonFlexDirectionClass]"
   >
-    <component v-if="iconComponent" :is="iconComponent" class="inline-flex align-middle mr-2" :class="iconSizeClass" aria-hidden="true" />
+    <component
+      v-if="hasIcon"
+      :is="resolvedIconComponent"
+      :class="[iconSizeClass, iconMarginClass]"
+      aria-hidden="true"
+    />
     <slot></slot>
   </button>
 </template>
@@ -31,21 +36,25 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: (value) => ['primary','notify', 'secondary', 'success', 'error', 'warning', 'info', 'neutral', 'loading', 'outline-primary', 'outline-secondary', 'outline-success', 'outline-error', 'outline-warning', 'outline-info'].includes(value),
+    validator: (value) => ['primary', 'notify', 'secondary', 'success', 'error', 'warning', 'info', 'neutral', 'loading', 'outline-primary', 'outline-secondary', 'outline-success', 'outline-error', 'outline-warning', 'outline-info'].includes(value),
   },
   size: {
     type: String,
-    default: 'medium',
-    validator: (value) => ['small', 'medium', 'large'].includes(value),
+    default: 'md', // Valor por defecto a 'md'
+    validator: (value) => ['xs', 'sm', 'md', 'lg', 'xl'].includes(value),
   },
   disabled: {
     type: Boolean,
     default: false,
   },
-  iconSize: {
+  icon: {
+    type: [String, Function, Object],
+    default: null,
+  },
+  iconPosition: {
     type: String,
-    default: 'h-5 w-5',
-    validator: (value) => ['h-3 w-3', 'h-4 w-4', 'h-5 w-5', 'h-6 w-6'].includes(value),
+    default: 'right', // Por defecto, el ícono estará a la derecha del texto
+    validator: (value) => ['left', 'right'].includes(value),
   },
 });
 
@@ -68,12 +77,16 @@ const baseClasses = computed(() => [
 
 const sizeClasses = computed(() => {
   switch (props.size) {
-    case 'small':
+    case 'xs':
       return ['px-2', 'py-1', 'text-xs'];
-    case 'large':
-      return ['px-5', 'py-3', 'text-base'];
-    default: // medium
-      return ['px-4', 'py-2', 'text-sm'];
+    case 'sm':
+      return ['px-3', 'py-1.5', 'text-sm'];
+    case 'lg':
+      return ['px-5', 'py-3', 'text-lg']; // Ajuste para 'lg' a text-lg
+    case 'xl':
+      return ['px-6', 'py-3.5', 'text-xl']; // Ajuste para 'xl' a text-xl
+    default: // md
+      return ['px-4', 'py-2', 'text-base']; // Ahora 'md' es 'text-base'
   }
 });
 
@@ -93,10 +106,10 @@ const variantClasses = computed(() => {
       return ['bg-blue-500', 'hover:bg-blue-600', 'focus:ring-blue-300', 'text-white', 'dark:bg-blue-600', 'dark:hover:bg-blue-700', 'dark:focus:ring-blue-800'];
     case 'neutral':
       return ['bg-slate-100', 'border border-slate-200', 'hover:bg-slate-400', 'focus:ring-slate-300', 'text-slate-800', 'dark:bg-slate-600', 'dark:hover:bg-slate-700', 'dark:focus:ring-slate-800'];
-      case 'download':
+    case 'download':
       return ['bg-slate-100', 'border border-slate-200', 'hover:bg-slate-400', 'focus:ring-slate-300', 'text-slate-800', 'dark:bg-slate-600', 'dark:hover:bg-slate-700', 'dark:focus:ring-slate-800'];
     case 'loading':
-      return ['bg-indigo-600', 'text-white', 'cursor-wait', 'dark:bg-indigo-700']; // Estilos para el estado de carga
+      return ['bg-indigo-600', 'text-white', 'cursor-wait', 'dark:bg-indigo-700'];
     case 'outline-primary':
       return ['text-indigo-600', 'border', 'border-indigo-600', 'hover:bg-indigo-100', 'focus:ring-indigo-300', 'dark:text-indigo-500', 'dark:border-indigo-500', 'dark:hover:bg-indigo-900', 'dark:focus:ring-indigo-800'];
     case 'outline-secondary':
@@ -114,26 +127,78 @@ const variantClasses = computed(() => {
   }
 });
 
-const iconSizeClass = computed(() => props.iconSize);
-
-const iconComponent = computed(() => {
+const defaultIconComponent = computed(() => {
   switch (props.variant) {
     case 'success':
       return CheckCircleIcon;
     case 'error':
-      return XCircleIcon; // Icono de error
+      return XCircleIcon;
     case 'warning':
       return ExclamationCircleIcon;
     case 'info':
       return InformationCircleIcon;
-    case 'neutral':
-      return ;
-    case 'download':
-      return ;
     case 'loading':
-      return ArrowPathIcon; // Icono de carga
+      return ArrowPathIcon;
+    case 'download':
+      return ArrowDownTrayIcon;
     default:
       return null;
   }
+});
+
+const hasIcon = computed(() => {
+  return props.icon !== null || defaultIconComponent.value !== null;
+});
+
+const resolvedIconComponent = computed(() => {
+  if (props.icon) {
+    if (typeof props.icon === 'function') {
+      return props.icon();
+    } else if (typeof props.icon === 'object' && props.icon.__file) {
+      return props.icon;
+    }
+  }
+  return defaultIconComponent.value;
+});
+
+const iconSizeClass = computed(() => {
+  switch (props.size) {
+    case 'xs':
+      return 'h-3 w-3';
+    case 'sm':
+      return 'h-4 w-4';
+    case 'md':
+      return 'h-5 w-5';
+    case 'lg':
+      return 'h-6 w-6';
+    case 'xl':
+      return 'h-7 w-7';
+    default:
+      return 'h-5 w-5'; // Default para 'md'
+  }
+});
+
+// NUEVO: Clase para la dirección de flexbox del botón
+const buttonFlexDirectionClass = computed(() => {
+  // Solo aplicamos flex-row-reverse si el ícono está a la derecha
+  // y hay un ícono para mostrar.
+  return props.iconPosition === 'right' && hasIcon.value ? 'flex-row-reverse' : '';
+});
+
+// NUEVO: Clase para el margen del ícono basada en la posición
+const iconMarginClass = computed(() => {
+  if (!hasIcon.value) return ''; // No hay ícono, no hay margen
+
+  // Si el ícono está a la izquierda (por defecto si no hay flex-row-reverse)
+  // necesita margen a la derecha (mr-2) para separarse del texto.
+  if (props.iconPosition === 'left') {
+    return 'mr-2';
+  }
+  // Si el ícono está a la derecha (con flex-row-reverse)
+  // necesita margen a la izquierda (ml-2) para separarse del texto.
+  else if (props.iconPosition === 'right') {
+    return 'ml-2';
+  }
+  return ''; // Por si acaso
 });
 </script>

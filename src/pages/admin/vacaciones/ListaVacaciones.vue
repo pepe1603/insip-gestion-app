@@ -5,15 +5,50 @@
       <p class="text-gray-600">Gestiona las solicitudes de vacaciones de los empleados.</p>
     </div>
 
-    <div class="my-4 flex justify-between">
+    <div class="my-4 flex justify-between items-center">
       <UiButton variant="outline-success" @click="goCreateVacacion">
         <PlusCircleIcon class="w-6 h-6 mr-2" /> <span> Crear Nueva Solicitud</span>
+      </UiButton>
+      <UiButton variant="outline-secondary" @click="cargarVacaciones">
+        <CheckCircleIcon class="w-6 h-6 mr-2" />
+        <span> Recargar Solicitudes</span>
+      </UiButton>
+    </div>
+
+    <div class="my-6 flex flex-wrap gap-3 justify-center">
+      <UiButton
+        v-for="estado in estadosConteo"
+        :key="estado.name"
+        :variant="currentFilter === estado.name ? 'primary' : 'outline-secondary'"
+        size="small"
+        @click="setFilter(estado.name)"
+      >
+        {{ estado.label }}
+        <UiBadge
+          :text="estado.count.toString()"
+          :color="getEstadoColor(estado.name)"
+          size="sm"
+          class="ml-2"
+        />
+      </UiButton>
+      <UiButton
+        :variant="currentFilter === 'Todos' ? 'primary' : 'outline-secondary'"
+        size="small"
+        @click="setFilter('Todos')"
+      >
+        Todos
+        <UiBadge
+          :text="vacaciones.length.toString()"
+          color="gray"
+          size="sm"
+          class="ml-2"
+        />
       </UiButton>
     </div>
 
     <UiTable
       :headers="tableHeaders"
-      :data="vacacionesFormatted"
+      :data="filteredVacaciones"
       :show-filter="true"
       filter-placeholder="Buscar solicitudes de vacaciones..."
     >
@@ -46,7 +81,8 @@
           <UiButton
             variant="outline-primary"
             size="small"
-            @click="editarVacacion(item.Id)" >
+            @click="editarVacacion(item.Id)"
+          >
             Editar
           </UiButton>
           <UiButton
@@ -56,15 +92,30 @@
           >
             Eliminar
           </UiButton>
-          </div>
+        </div>
       </template>
     </UiTable>
+    <div class="w-full my-4 text-sm text-gray-600 text-center">
+      <p class="text-gray-600">Puedes crear, editar o eliminar solicitudes de vacaciones utilizando los botones correspondientes.
+        Recuerda que las solicitudes eliminadas no se pueden recuperar.</p>
+      <p class="text-gray-600">Para más información, contacta con el administrador del sistema.</p>
+    </div>
 
-    <div v-if="cargando" class="text-center py-4 text-gray-500">Cargando solicitudes de vacaciones...</div>
-    <div v-if="error" class="text-red-500 py-4 text-center">Error al cargar las vacaciones: {{ error }}</div>
-    <div v-if="vacaciones.length === 0 && !cargando && !error && !globalFilterApplied" class="text-center py-4 text-gray-500">No hay solicitudes de vacaciones disponibles.</div>
-    <div v-if="vacaciones.length === 0 && globalFilterApplied && !cargando && !error" class="text-center py-4 text-gray-500">No se encontraron resultados para la búsqueda.</div>
+    <div class="my-4 h-14 text-base">
+      <div v-if="cargando" class="text-center py-4 text-gray-500">Cargando solicitudes de vacaciones...</div>
+      <div v-if="error" class="text-red-500 py-4 text-center">Error al cargar las vacaciones: {{ error }}</div>
+      <div v-if="vacaciones.length === 0 && !cargando && !error && currentFilter === 'Todos'" class="text-center py-4 text-gray-500">No hay solicitudes de vacaciones disponibles.</div>
+      <div v-if="filteredVacaciones.length === 0 && !cargando && !error && currentFilter !== 'Todos'" class="text-center py-4 text-gray-500">No se encontraron solicitudes con el estado "{{ currentFilter }}".</div>
+    </div>
 
+    <UiDivider class="my-8" label="Acciones Rápidas" :icon="checkCircleIcon" size="lg" />
+
+    <div class="text-center mb-8">
+      <UiButton variant="primary" @click="goToAdminSolicitudes" :icon="clipBoardDocumentIcon">
+        Administrar Solicitudes (Estados)
+      </UiButton>
+      <p class="text-gray-600 mt-2">Accede a la sección de administración de estados de solicitudes de vacaciones.</p>
+    </div>
 
     <ModalDynamic
       :isOpen="isDeleteConfirmOpen"
@@ -103,16 +154,24 @@ import UiTable from '../../../components/ui/UiTable.vue';
 import UiButton from '../../../components/ui/UiButton.vue';
 import UiBadge from '../../../components/ui/UiBadge.vue';
 import ModalDynamic from '../../../components/modals/ModalDynamic.vue';
-import { PlusCircleIcon } from '@heroicons/vue/20/solid';
+import { ClipboardDocumentCheckIcon, ExclamationTriangleIcon, FireIcon, PlusCircleIcon, SparklesIcon, TruckIcon } from '@heroicons/vue/20/solid';
 import VacacionesService from '../../../services/vacacionesService';
 import { formatDate } from '../../../utils/dateFormatter';
+import UiDivider from '../../../components/ui/UiDivider.vue';
+import { CheckCircleIcon } from '@heroicons/vue/24/outline'; // Asegúrate de importar esto si aún no lo haces
+import UiTag from '../../../components/ui/UiTag.vue';
+
+
 
 const router = useRouter();
 
 const vacaciones = ref([]);
 const cargando = ref(false);
 const error = ref(null);
-const globalFilterApplied = ref(false);
+const globalFilterApplied = ref(false); // Esto parece estar relacionado con el filtro de la tabla, no con los estados
+
+const checkCircleIcon = CheckCircleIcon; // Importar el icono de Heroicons
+const clipBoardDocumentIcon = ClipboardDocumentCheckIcon;
 
 const tableHeaders = [
   'Id',
@@ -133,6 +192,45 @@ const fechaFinAEliminar = ref(null);
 const fechaInicioAEliminarFormatted = computed(() => formatDate(fechaInicioAEliminar.value));
 const fechaFinAEliminarFormatted = computed(() => formatDate(fechaFinAEliminar.value));
 
+// --- NUEVAS PROPIEDADES Y FUNCIONES PARA EL FILTRADO POR ESTADO ---
+const currentFilter = ref('Todos'); // 'Todos', 'PENDIENTE', 'APROBADO', 'RECHAZADO', 'CANCELADO'
+
+const setFilter = (estado) => {
+  currentFilter.value = estado;
+};
+
+// Conteo de solicitudes por estado
+const estadosConteo = computed(() => {
+  const counts = {
+    'PENDIENTE': 0,
+    'APROBADO': 0,
+    'RECHAZADO': 0,
+    'CANCELADO': 0,
+  };
+  vacaciones.value.forEach(v => {
+    const estado = v.estado_solicitud?.estado?.toUpperCase();
+    if (counts.hasOwnProperty(estado)) {
+      counts[estado]++;
+    }
+  });
+
+  return [
+    { name: 'PENDIENTE', label: 'Pendientes', count: counts['PENDIENTE'] },
+    { name: 'APROBADO', label: 'Aprobadas', count: counts['APROBADO'] },
+    { name: 'RECHAZADO', label: 'Rechazadas', count: counts['RECHAZADO'] },
+    { name: 'CANCELADO', label: 'Canceladas', count: counts['CANCELADO'] },
+  ];
+});
+
+// Datos formateados y filtrados para la tabla
+const filteredVacaciones = computed(() => {
+  let data = vacacionesFormatted.value;
+  if (currentFilter.value !== 'Todos') {
+    data = data.filter(v => v.Estado.toUpperCase() === currentFilter.value.toUpperCase());
+  }
+  return data;
+});
+
 /**
  * Carga todas las solicitudes de vacaciones desde el servicio.
  */
@@ -142,6 +240,8 @@ const cargarVacaciones = async () => {
   try {
     const data = await VacacionesService.getAll();
     vacaciones.value = data;
+    // Resetear el filtro a 'Todos' al recargar
+    currentFilter.value = 'Todos';
   } catch (err) {
     error.value = err.message || 'Error desconocido al cargar las vacaciones.';
     console.error('Error al cargar las solicitudes de vacaciones:', err);
@@ -203,6 +303,11 @@ const verDetallesVacacion = (vacacion) => {
   // Si no tienes una ruta específica, podrías abrir un modal con los detalles.
 };
 
+const goToAdminSolicitudes = () => {
+  router.push({ name: 'administrar-estados-vacaciones' }) //ruta para visualizacion de secciond e vacaciones.
+};
+
+
 // --- Acciones CRUD y Modales (Estado de solicitud eliminado del frontend) ---
 const confirmarEliminarVacacion = (vacacion) => {
   vacacionAEliminarId.value = vacacion.id;
@@ -231,11 +336,6 @@ const eliminarVacacion = async () => {
 const cancelarEliminar = () => {
   isDeleteConfirmOpen.value = false;
 };
-
-// State change functions are removed as requested.
-// const aprobarVacacion = async (vacacion) => { /* ... */ };
-// const rechazarVacacion = async (vacacion) => { /* ... */ };
-// const cancelarVacacion = async (vacacion) => { /* ... */ };
 
 onMounted(() => {
   cargarVacaciones();
