@@ -61,6 +61,7 @@
       </div>
 
       <CrearEditarFormDinamico
+        title=""
         :fields="formFields"
         :initialValues="formValues"
         :saveButtonText="saveButtonText"
@@ -70,12 +71,14 @@
         @cancel="cancelar"
       >
         <template #dias_solicitados_display>
+          
           <UiInputNumber
             label="Días Solicitados (Estimado):"
             :modelValue="calculatedDays"
             :disabled="true"
             class="mt-4"
           />
+          <span class="text-sm font-semibold  text-orange-800"> aun se encuentra en beta</span>
         </template>
       </CrearEditarFormDinamico>
     </div>
@@ -104,8 +107,8 @@ const modo = computed(() => route.name === 'editar-vacacion' ? 'editar' : 'crear
 
 const formValues = ref({
   empleado_id: null,
-  fecha_inicio: format(new Date(), 'yyyy-MM-dd'),
-  fecha_fin: format(new Date(), 'yyyy-MM-dd'),
+  fecha_inicio: null, //format(new Date(), 'yyyy-MM-dd'),
+  fecha_fin: null, //format(new Date(), 'yyyy-MM-dd'),
   observaciones: '', // Añadido para el campo de observaciones
 });
 
@@ -153,15 +156,27 @@ const handleEmployeeSelected = (selectedEmployee) => {
   formValues.value.empleado_id = selectedEmployee.id;
 };
 
+
+// Computed property para calcular los días
 const calculatedDays = computed(() => {
   if (formValues.value.fecha_inicio && formValues.value.fecha_fin) {
     const start = parseISO(formValues.value.fecha_inicio);
     const end = parseISO(formValues.value.fecha_fin);
+    // Calcula la diferencia en días. Añade 1 para incluir ambos días (inicio y fin).
     const days = differenceInDays(end, start);
-    return days >= 0 ? days + 1 : 0;
+    return days >= 0 ? days + 1 : 0; // Asegúrate de que no sea negativo
   }
-  return 0;
+  return 0; // Si alguna fecha falta, los días son 0
 });
+
+// Watcher para actualizar formValues.dias_vacaciones_solicitados
+// cada vez que calculatedDays cambie.
+watch(calculatedDays, (newDays) => {
+  // Actualiza el campo dias_vacaciones_solicitados para visulaizar losd ias calculados cuando cambien las fechas pero no se envia en el submit
+  calculatedDays.value = newDays;
+  formValues.value.dias_vacaciones_solicitados = newDays; // Asegúrate de que este campo exista en formValues
+}, { immediate: true }); // `immediate: true` para que se calcule al inicio también
+
 
 const formFields = ref([
   { type: 'date', model: 'fecha_inicio', label: 'Fecha de Inicio:', required: true },
@@ -224,9 +239,10 @@ const cancelar = () => {
 const guardarVacacion = async (formData) => {
   const dataToSend = {
     empleado_id: formValues.value.empleado_id,
-    fecha_inicio: formData.fecha_inicio,
-    fecha_fin: formData.fecha_fin,
+    fecha_inicio: formData.fecha_inicio, //formData.fecha_inicio,
+    fecha_fin: formData.fecha_fin, //formData.fecha_fin,
     observaciones: formData.observaciones, // Incluidas las observaciones
+    
   };
 
   try {

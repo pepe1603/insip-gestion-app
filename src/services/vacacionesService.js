@@ -34,14 +34,31 @@ export default {
       return response.data.data
     } catch (error) {
       console.error('Error al crear la solicitud de vacación:', error)
-      const errorMessage = error.response?.data?.message || 'Error desconocido al crear la solicitud de vacación.'
+      const errorMessage = error.response?.data?.message ||  error.response?.data?.data?.error ||  'Error desconocido al crear la solicitud de vacación.'
       useToastService().error(errorMessage, { title: 'Error al crear' })
       throw new Error(errorMessage)
     }
   },
 
+
+  async inicializarVacacionesHistoricas(data) {
+  try {
+    const response = await api.post('/vacaciones/inicializar-historico', data)
+    useToastService().success('Vacaciones inicializadas exitosamente.', { title: 'Éxito' })
+    return response.data.data
+  } catch (error) {
+    console.error('Error al inicializar vacaciones históricas:', error)
+    const errorMessage = error.response?.data?.message || 'Error desconocido al inicializar vacaciones.'
+    useToastService().error(errorMessage, { title: 'Error al inicializar' })
+    throw new Error(errorMessage)
+  }
+},
+
+
   async update(id, data) {
     try {
+
+      console.log('Actualizando solicitud de vacaciones con ID:', id, 'y datos:', data)
       const response = await api.put(`/vacaciones/${id}`, data)
       useToastService().success('Solicitud de vacación actualizada exitosamente.', { title: 'Éxito' })
       return response.data.data
@@ -73,7 +90,7 @@ export default {
       return response.data.data
     } catch (error) {
       console.error(`Error al aprobar la solicitud de vacación con ID ${id}:`, error)
-      const errorMessage = error.response?.data?.error || `Error desconocido al aprobar la solicitud de vacación con ID ${id}.`
+      const errorMessage = error.response?.data?.message || `Error desconocido al aprobar la solicitud de vacación con ID ${id}.`
       useToastService().error(errorMessage, { title: 'Error al aprobar' })
       throw new Error(errorMessage)
     }
@@ -86,7 +103,7 @@ export default {
       return response.data.data
     } catch (error) {
       console.error(`Error al rechazar la solicitud de vacación con ID ${id}:`, error)
-      const errorMessage = error.response?.data?.error || `Error desconocido al rechazar la solicitud de vacación con ID ${id}.`
+      const errorMessage = error.response?.data?.message || `Error desconocido al rechazar la solicitud de vacación con ID ${id}.`
       useToastService().error(errorMessage, { title: 'Error al rechazar' })
       throw new Error(errorMessage)
     }
@@ -99,7 +116,7 @@ export default {
       return response.data.data
     } catch (error) {
       console.error(`Error al cancelar la solicitud de vacación con ID ${id}:`, error)
-      const errorMessage = error.response?.data?.error || `Error desconocido al cancelar la solicitud de vacación con ID ${id}.`
+      const errorMessage = error.response?.data?.message || `Error desconocido al cancelar la solicitud de vacación con ID ${id}.`
       useToastService().error(errorMessage, { title: 'Error al cancelar' })
       throw new Error(errorMessage)
     }
@@ -111,7 +128,7 @@ export default {
       return response.data.data
     } catch (error) {
       console.error(`Error al obtener las vacaciones del empleado ${empleadoId}:`, error)
-      const errorMessage = error.response?.data?.error || `Error desconocido al obtener las vacaciones del empleado ${empleadoId}.`
+      const errorMessage = error.response?.data?.message || `Error desconocido al obtener las vacaciones del empleado ${empleadoId}.`
       useToastService().error(errorMessage, { title: 'Error al cargar' })
       throw new Error(errorMessage)
     }
@@ -135,7 +152,7 @@ export default {
       return response.data.data
     } catch (error) {
       console.error(`Error al obtener la disponibilidad de vacaciones del empleado ${empleadoId}:`, error)
-      const errorMessage = error.response?.data?.error || `Error desconocido al obtener la disponibilidad de vacaciones del empleado ${empleadoId}.`
+      const errorMessage = error.response?.data?.messsage || `Error desconocido al obtener la disponibilidad de vacaciones del empleado ${empleadoId}.`
       useToastService().error(errorMessage, { title: 'Error al cargar' })
       throw new Error(errorMessage)
     }

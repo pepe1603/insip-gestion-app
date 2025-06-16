@@ -107,7 +107,7 @@
               :disabled="field.disabled"
             />
             <UiDatepicker
-              v-if="field.type === 'date'"
+              v-if="field.type === 'datepicker'"
               :id="field.model"
               :label="field.label"
               v-model="formData[field.model]"
@@ -115,6 +115,16 @@
               :format="field.format"
               :required="field.required"
             />
+            <UiInputDate
+            v-if="field.type === 'date'"
+            :id="field.model"
+            :label="field.label"
+            v-model="formData[field.model]"
+            :placeholder="field.placeholder"
+            :required="field.required"
+            />
+
+
             <UiInputFile
               v-if="field.type === 'file'"
               :id="field.model"
@@ -172,6 +182,7 @@ import UiSwitch from '../ui/UiSwitch.vue';
 import UiDatepicker from '../ui/UiInputDatepicker.vue';
 import UiInputFile from '../ui/UiInputFile.vue';
 import UiInputTime from '../ui/UiInputTime.vue';
+import UiInputDate from '../ui/UiInputDate.vue';
 
 const props = defineProps({
   title: {
@@ -215,6 +226,10 @@ watch(() => props.initialValues, (newValues) => {
 }, { immediate: true });
 
 const handleSubmit = () => {
+
+  console.log('Datos del formulario:', formData.value);
+  // Emitir el evento con los datos del formulario
+
   emit('submit-form', formData.value);
 };
 

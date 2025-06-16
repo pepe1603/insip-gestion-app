@@ -1,7 +1,7 @@
 <template>
     <kbd
       :class="[
-        'inline-flex items-center justify-center px-2 py-1 text-sm font-mono text-white  rounded-md',
+        'inline-flex items-center justify-center px-3 py-1.5  gap-1 text-sm font-mono text-white  rounded-md',
         customClass
       ]"
     >

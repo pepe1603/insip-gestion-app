@@ -260,9 +260,10 @@ const routes = [
     { path: 'lista', name: 'lista-vacaciones', component: ListaVacaciones },
     { path: 'crear', name: 'crear-vacacion', component: () => import('../pages/admin/vacaciones/CrearEditarVacacion.vue') },
     { path: 'editar/:id', name: 'editar-vacacion', component: () => import('../pages/admin/vacaciones/CrearEditarVacacion.vue'), props: true },
+    { path: 'administrar', name: 'administrar-estados-vacaciones', component: () => import('../pages/admin/vacaciones/AdminSolicitudesVacaciones.vue') },
+    { path: 'opciones-avanzadas', name: 'opciones-avanzadas', component: () => import('../pages/admin/vacaciones/OpcionesAvanzadas.vue'), },
     {
       path: 'reportes',
-      name: 'reportes-vacaciones-base', //opcional: un nombre base apra la seccion de reportes
       component: ReportesVacacionesView,
       children: [
           // Ruta hija predeterminada para /vacaciones/reportes

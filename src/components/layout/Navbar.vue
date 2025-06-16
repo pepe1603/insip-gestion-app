@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white navbar-title shadow-md h-14 fixed top-0 left-0 right-0 z-20">
+  <nav class="bg-white shadow-md h-14 fixed top-0 left-0 right-0 z-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex-shrink-0 flex items-center gap-2">
@@ -14,8 +14,8 @@
               :to="link.to"
               class="relative text-base text-gray-600 font-medium transition-colors duration-300"
               :class="isActiveRoute(link.to)
-                ? 'navbar-title border-b-2 border-buttonText'
-                : 'navbar-title hover:text-indigo-600  hover:border-b hover:border-indigo-600 focus:outline-none focus:text-buttonText'"
+                ? ' border-b-2 border-buttonText'
+                : ' hover:text-indigo-600  hover:border-b hover:border-indigo-600 focus:outline-none focus:text-buttonText'"
             >
               {{ link.name }}
             </router-link>

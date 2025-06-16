@@ -44,7 +44,7 @@
           <div class="w-fit flex gap-1 flex-wrap" :class=" 'max-w-sm' ? 'flex-wrap' : 'flex-nowrap' ">
             <UiButton
               variant="outline-primary"
-              size="small"
+              size="sm"
               class="mr-1"
               @click="editarAsistencia(item.originalItem)"
             >
@@ -52,7 +52,7 @@
             </UiButton>
             <UiButton
               variant="outline-error"
-              size="small"
+              size="sm"
               @click="confirmarEliminarAsistencia(item.originalItem)"
             >
               Eliminar

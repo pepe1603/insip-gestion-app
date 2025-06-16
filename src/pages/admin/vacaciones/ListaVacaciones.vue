@@ -5,7 +5,8 @@
       <p class="text-gray-600">Gestiona las solicitudes de vacaciones de los empleados.</p>
     </div>
 
-    <div class="my-4 flex justify-between items-center">
+
+    <div class="my-8 flex justify-between items-center">
       <UiButton variant="outline-success" @click="goCreateVacacion">
         <PlusCircleIcon class="w-6 h-6 mr-2" /> <span> Crear Nueva Solicitud</span>
       </UiButton>
@@ -20,7 +21,7 @@
         v-for="estado in estadosConteo"
         :key="estado.name"
         :variant="currentFilter === estado.name ? 'primary' : 'outline-secondary'"
-        size="small"
+        size="sm"
         @click="setFilter(estado.name)"
       >
         {{ estado.label }}
@@ -33,7 +34,7 @@
       </UiButton>
       <UiButton
         :variant="currentFilter === 'Todos' ? 'primary' : 'outline-secondary'"
-        size="small"
+        size="sm"
         @click="setFilter('Todos')"
       >
         Todos
@@ -79,15 +80,22 @@
       <template #Acciones="{ item }">
         <div class="w-fit flex gap-1 flex-wrap">
           <UiButton
+            variant="outline-info"
+            size="sm"
+            @click="verDetallesVacacion(item)"
+          >
+            Detalles
+          </UiButton>
+          <UiButton
             variant="outline-primary"
-            size="small"
+            size="sm"
             @click="editarVacacion(item.Id)"
           >
             Editar
           </UiButton>
           <UiButton
             variant="outline-error"
-            size="small"
+            size="sm"
             @click="confirmarEliminarVacacion(item.originalItem)"
           >
             Eliminar
@@ -96,9 +104,9 @@
       </template>
     </UiTable>
     <div class="w-full my-4 text-sm text-gray-600 text-center">
-      <p class="text-gray-600">Puedes crear, editar o eliminar solicitudes de vacaciones utilizando los botones correspondientes.
+      <p class="text-gray-600">
         Recuerda que las solicitudes eliminadas no se pueden recuperar.</p>
-      <p class="text-gray-600">Para más información, contacta con el administrador del sistema.</p>
+      
     </div>
 
     <div class="my-4 h-14 text-base">
@@ -115,6 +123,81 @@
         Administrar Solicitudes (Estados)
       </UiButton>
       <p class="text-gray-600 mt-2">Accede a la sección de administración de estados de solicitudes de vacaciones.</p>
+    </div>
+
+    <!-- Contenedor de búsqueda rápida de disponibilidad de vacaciones -->
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-wrap items-center p-6 gap-6 min-h-40 max-h-max mb-8">
+      <div class="flex md:flex-col items-center self-start gap-3 w-full sm:w-auto">
+
+        <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
+          <SparklesIcon class="w-6 h-6 text-blue-500" />
+          Disponibilidad de Vacaciones
+        </h2>
+
+        <article class="flex items-center gap-3 w-full sm:w-auto">
+          <UiInputText
+          v-model="busquedaEmpleado"
+          placeholder="Buscar por ID o nombre del empleado..."
+          @keydown.enter="buscarDisponibilidadEmpleado"
+        />
+        <UiButton
+          variant="outline-secondary"
+          
+          @click="buscarDisponibilidadEmpleado"
+        >
+          Ver Disponibilidad
+        </UiButton>
+        </article>
+      </div>
+      <div class="flex-1 px-4 h-64">
+      <div v-if="disponibilidadEmpleado === null" class="text-gray-400 text-base">
+        <p class="mb-1">Busca un empleado por su ID o nombre para ver su disponibilidad de vacaciones.</p>
+        <p class="mb-4">Puedes escribir el ID y presionar <UiKbd>Enter <ArrowTurnDownLeftIcon class="w-5 h-5 text-gray-400" /> </UiKbd> o el botón.</p>
+        
+        <span class="italic">No se ha buscado ningún empleado.</span>
+      </div>
+      <div v-if="disponibilidadEmpleado !== null" class="mt-2 text-left">
+        <div v-if="disponibilidadEmpleado.error" class="text-red-500 font-medium">
+        {{ disponibilidadEmpleado.error }}
+        </div>
+        <div v-else class="rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 shadow p-5 border border-blue-100">
+        <p class="font-semibold text-lg mb-3 text-blue-800 flex items-center gap-2">
+          <SparklesIcon class="w-5 h-5 text-blue-400" />
+          <span >Disponibilidad de</span>
+          <span class="text-blue-700">{{ disponibilidadEmpleado.empleado }}</span>
+        </p>
+        <ul class="divide-y divide-blue-100">
+          <li class="py-1 flex justify-between items-center">
+          <span class="text-gray-500">Días arrastrados</span>
+          <span class="font-semibold text-blue-700">{{ disponibilidadEmpleado.dias_arrastrados }}</span>
+          </li>
+          <li class="py-1 flex justify-between items-center">
+          <span class="text-gray-500">Días disponibles</span>
+          <span class="font-semibold text-green-600">{{ disponibilidadEmpleado.disponible }}</span>
+          </li>
+          <li class="py-1 flex justify-between items-center">
+          <span class="text-gray-500">Días asignados</span>
+          <span class="font-semibold text-blue-600">{{ disponibilidadEmpleado.total_asignado }}</span>
+          </li>
+          <li class="py-1 flex justify-between items-center">
+          <span class="text-gray-500">Días solicitados</span>
+          <span class="font-semibold text-yellow-600">{{ disponibilidadEmpleado.total_base_por_antiguedad }}</span>
+          </li>
+          <li class="py-1 flex justify-between items-center">
+          <span class="text-gray-500">Días usados</span>
+          <span class="font-semibold text-red-600">{{ disponibilidadEmpleado.usado }}</span>
+          </li>
+        </ul>
+        </div>
+      </div>
+      </div>
+    </div>
+
+
+    <UiDivider class="my-8" label="Información Adicional" :icon="FireIcon" size="lg" />
+    <div class="text-center mb-8">
+      <p class="text-gray-600">Para más información sobre las políticas de vacaciones, consulta el manual del empleado o contacta al departamento de recursos humanos.</p>
+      <p class="text-gray-600">También puedes revisar las guías de uso del sistema en la sección de ayuda.</p>
     </div>
 
     <ModalDynamic
@@ -144,6 +227,23 @@
         </UiButton>
       </template>
     </ModalDynamic>
+
+    <ModalDynamic
+      :isOpen="isDetallesModalOpen"
+      @update:isOpen="isDetallesModalOpen = $event"
+      type="info"
+      :title="'Detalles de la Solicitud'"
+      size="lg"
+    >
+      <template #body>
+        <DetalleVacacion :vacacion="vacacionSeleccionada" />
+      </template>
+      <template #primary-action>
+        <UiButton type="button" variant="outline-secondary" @click="cerrarDetallesModal">
+          Cerrar
+        </UiButton>
+      </template>
+      </ModalDynamic>
   </div>
 </template>
 
@@ -153,14 +253,42 @@ import { useRouter } from 'vue-router';
 import UiTable from '../../../components/ui/UiTable.vue';
 import UiButton from '../../../components/ui/UiButton.vue';
 import UiBadge from '../../../components/ui/UiBadge.vue';
+import UiKbd from '../../../components/ui/UiKbd.vue';
 import ModalDynamic from '../../../components/modals/ModalDynamic.vue';
-import { ClipboardDocumentCheckIcon, ExclamationTriangleIcon, FireIcon, PlusCircleIcon, SparklesIcon, TruckIcon } from '@heroicons/vue/20/solid';
+import DetalleVacacion from '../../../components/features/vacaciones/DetalleVacacion.vue'; // <-- Importa el nuevo componente
+import { ClipboardDocumentCheckIcon, ExclamationTriangleIcon, FireIcon, PlusCircleIcon, SparklesIcon, TruckIcon,  } from '@heroicons/vue/20/solid';
+
 import VacacionesService from '../../../services/vacacionesService';
 import { formatDate } from '../../../utils/dateFormatter';
 import UiDivider from '../../../components/ui/UiDivider.vue';
-import { CheckCircleIcon } from '@heroicons/vue/24/outline'; // Asegúrate de importar esto si aún no lo haces
-import UiTag from '../../../components/ui/UiTag.vue';
+import { ArrowTurnDownLeftIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
+import UiInputText from '../../../components/ui/UiInputText.vue';
+// UiTag no se está usando en este componente, puedes removerlo si no lo necesitas.
+// import UiTag from '../../../components/ui/UiTag.vue';
 
+// Variables y métodos para la búsqueda de disponibilidad de vacaciones
+const busquedaEmpleado = ref('');
+const disponibilidadEmpleado = ref(null);
+
+const buscarDisponibilidadEmpleado = async () => {
+  disponibilidadEmpleado.value = null;
+  if (!busquedaEmpleado.value || !busquedaEmpleado.value.trim()) {
+    disponibilidadEmpleado.value = { error: 'Por favor ingresa un ID o nombre de empleado.' };
+    return;
+  }
+  try {
+    // Aquí deberías llamar a tu servicio real para obtener la disponibilidad
+    // Por ejemplo: 
+    const data = await VacacionesService.getDisponibilidad(busquedaEmpleado.value);
+    // Simulación de respuesta:
+    // Si no se encuentra el empleado, puedes simular un error:
+    disponibilidadEmpleado.value = { error: 'Empleado no encontrado.' };
+    disponibilidadEmpleado.value = data;
+    console.log('Disponibilidad del empleado:', disponibilidadEmpleado.value);
+  } catch (err) {
+    disponibilidadEmpleado.value = { error: err.message || 'Error al buscar disponibilidad.' };
+  }
+};
 
 
 const router = useRouter();
@@ -168,10 +296,11 @@ const router = useRouter();
 const vacaciones = ref([]);
 const cargando = ref(false);
 const error = ref(null);
-const globalFilterApplied = ref(false); // Esto parece estar relacionado con el filtro de la tabla, no con los estados
+const globalFilterApplied = ref(false);
 
-const checkCircleIcon = CheckCircleIcon; // Importar el icono de Heroicons
+const checkCircleIcon = CheckCircleIcon;
 const clipBoardDocumentIcon = ClipboardDocumentCheckIcon;
+const sparklesIcon = SparklesIcon;
 
 const tableHeaders = [
   'Id',
@@ -192,14 +321,34 @@ const fechaFinAEliminar = ref(null);
 const fechaInicioAEliminarFormatted = computed(() => formatDate(fechaInicioAEliminar.value));
 const fechaFinAEliminarFormatted = computed(() => formatDate(fechaFinAEliminar.value));
 
-// --- NUEVAS PROPIEDADES Y FUNCIONES PARA EL FILTRADO POR ESTADO ---
-const currentFilter = ref('Todos'); // 'Todos', 'PENDIENTE', 'APROBADO', 'RECHAZADO', 'CANCELADO'
+// --- NUEVAS PROPIEDADES Y FUNCIONES PARA EL MODAL DE DETALLES ---
+const isDetallesModalOpen = ref(false); // Controla la visibilidad del modal de detalles
+const vacacionSeleccionada = ref(null); // Almacena la vacación seleccionada para mostrar en el modal
+
+const verDetallesVacacion = (item) => {
+
+  // Formatear el objeto para el modal de detalles
+  if (!item || !item.originalItem) {
+    console.error('No se pudo obtener la vacación original para mostrar los detalles.');
+    return;
+  }
+  // Asignamos el objeto formateado a la propiedad vacacionSeleccionada
+  vacacionSeleccionada.value = item; // item ya es el objeto formateado para la tabla
+  isDetallesModalOpen.value = true;
+};
+
+const cerrarDetallesModal = () => {
+  isDetallesModalOpen.value = false;
+  vacacionSeleccionada.value = null; // Limpiar los datos al cerrar el modal
+};
+// --- FIN NUEVAS PROPIEDADES Y FUNCIONES PARA EL MODAL DE DETALLES ---
+
+const currentFilter = ref('Todos');
 
 const setFilter = (estado) => {
   currentFilter.value = estado;
 };
 
-// Conteo de solicitudes por estado
 const estadosConteo = computed(() => {
   const counts = {
     'PENDIENTE': 0,
@@ -222,7 +371,6 @@ const estadosConteo = computed(() => {
   ];
 });
 
-// Datos formateados y filtrados para la tabla
 const filteredVacaciones = computed(() => {
   let data = vacacionesFormatted.value;
   if (currentFilter.value !== 'Todos') {
@@ -231,16 +379,12 @@ const filteredVacaciones = computed(() => {
   return data;
 });
 
-/**
- * Carga todas las solicitudes de vacaciones desde el servicio.
- */
 const cargarVacaciones = async () => {
   cargando.value = true;
   error.value = null;
   try {
     const data = await VacacionesService.getAll();
     vacaciones.value = data;
-    // Resetear el filtro a 'Todos' al recargar
     currentFilter.value = 'Todos';
   } catch (err) {
     error.value = err.message || 'Error desconocido al cargar las vacaciones.';
@@ -251,12 +395,6 @@ const cargarVacaciones = async () => {
   }
 };
 
-/**
- * Transforma los datos crudos de las vacaciones obtenidos de la API
- * a un formato más amigable para la tabla y sus slots.
- * Las propiedades creadas (ej. 'Id', 'Empleado', 'FechaInicio') DEBEN COINCIDIR EXACTAMENTE
- * con los nombres de los slots y los strings en `tableHeaders`.
- */
 const vacacionesFormatted = computed(() => {
   const formattedData = vacaciones.value.map(v => ({
     Id: v.id,
@@ -265,15 +403,14 @@ const vacacionesFormatted = computed(() => {
     FechaFin: formatDate(v.fecha_fin),
     DiasSolicitados: v.dias_vacaciones_solicitados,
     Estado: v.estado_solicitud?.estado || 'Desconocido',
-    originalItem: v,
+    originalItem: v, // Mantener el objeto original completo para detalles
   }));
   console.log('Datos formateados para UiTable (ListaVacaciones):', formattedData);
   return formattedData;
 });
 
-// Función para determinar el color del badge según el estado
 const getEstadoColor = (estado) => {
-  switch (estado.toUpperCase()) { // Ensure case-insensitivity
+  switch (estado.toUpperCase()) {
     case 'PENDIENTE':
       return 'yellow';
     case 'APROBADO':
@@ -283,32 +420,22 @@ const getEstadoColor = (estado) => {
     case 'CANCELADO':
       return 'gray';
     default:
-      return 'gray'; // Color por defecto si el estado es desconocido
+      return 'gray';
   }
 };
 
-// --- Navegación ---
 const goCreateVacacion = () => {
   router.push({ name: 'crear-vacacion' });
 };
 
-// CORRECTED: Pass the ID directly to the router
 const editarVacacion = (vacacionId) => {
   router.push({ name: 'editar-vacacion', params: { id: vacacionId } });
 };
 
-const verDetallesVacacion = (vacacion) => {
-  // Asumiendo que tienes una ruta para ver detalles de una vacación
-  router.push({ name: 'ver-vacacion', params: { id: vacacion.id } });
-  // Si no tienes una ruta específica, podrías abrir un modal con los detalles.
-};
-
 const goToAdminSolicitudes = () => {
-  router.push({ name: 'administrar-estados-vacaciones' }) //ruta para visualizacion de secciond e vacaciones.
+  router.push({ name: 'administrar-estados-vacaciones' })
 };
 
-
-// --- Acciones CRUD y Modales (Estado de solicitud eliminado del frontend) ---
 const confirmarEliminarVacacion = (vacacion) => {
   vacacionAEliminarId.value = vacacion.id;
   empleadoAEliminarNombreCompleto.value = `${vacacion.empleado?.nombre || ''} ${vacacion.empleado?.ape_paterno || ''}`.trim();
@@ -320,7 +447,7 @@ const confirmarEliminarVacacion = (vacacion) => {
 const eliminarVacacion = async () => {
   try {
     await VacacionesService.delete(vacacionAEliminarId.value);
-    await cargarVacaciones(); // Reload the list after deletion
+    await cargarVacaciones();
     isDeleteConfirmOpen.value = false;
   } catch (err) {
     error.value = err.message || 'Error desconocido al eliminar la solicitud.';
