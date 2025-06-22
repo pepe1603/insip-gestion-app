@@ -37,7 +37,7 @@
                     <DialogTitle as="h3" class="text-lg font-semibold text-gray-900 text-center mb-4">
                       {{ titleToShow }}
                     </DialogTitle>
-                    <div class="mt-2">
+                    <div class="mt-2 mx-auto">
                       <slot name="body">
                         <p class="text-sm text-gray-500">{{ contentToShow }}</p>
                       </slot>

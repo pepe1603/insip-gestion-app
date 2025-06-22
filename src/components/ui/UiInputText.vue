@@ -1,6 +1,6 @@
 <!-- components/ui/UiInputText.vue -->
 <template>
-    <div class="sm:w-auto">
+    <div class=" sm:w-auto">
       <label :for="id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
         {{ label }}
       </label>

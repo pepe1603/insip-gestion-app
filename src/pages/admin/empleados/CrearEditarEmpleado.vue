@@ -40,6 +40,11 @@
     { type: 'text', model: 'nombre', label: 'Nombre:', placeholder: 'Ingrese el nombre', required: true },
     { type: 'text', model: 'ape_paterno', label: 'Apellido Paterno:', placeholder: 'Ingrese el apellido paterno', required: true },
     { type: 'text', model: 'ape_materno', label: 'Apellido Materno:', placeholder: 'Ingrese el apellido materno', required: true },
+    { type: 'email', model: 'email', label: 'Correo Electrónico:', placeholder: 'Ingrese un correo electrónico valido', required: true },
+    { type: 'text', model: 'telefono', label: 'Teléfono:', placeholder: 'Ingrese el teléfono' },
+    { type: 'date', model: 'fecha_nacimiento', label: 'Fecha de Nacimiento:', required: true },
+    { type: 'text', model: 'direccion', label: 'Dirección:', placeholder: 'Ingrese la dirección' },
+    { type: 'number', model: 'salario', label: 'Salario:', placeholder: 'Ingrese el salario mensual' },
     { type: 'date', model: 'fecha_ingreso', label: 'Fecha de Ingreso:', required: true },
     { type: 'text', model: 'puesto', label: 'Puesto:', placeholder: 'Ingrese el puesto', required: true },
     {
@@ -67,7 +72,6 @@
       options: [
         { label: 'Tiempo Completo', value: 'TIEMPO_COMPLETO' },
         { label: 'Medio Tiempo', value: 'MEDIO_TIEMPO' },
-        { label: 'Temporal', value: 'TEMPORAL' },
       ],
       required: true,
     },

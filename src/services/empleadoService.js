@@ -34,7 +34,7 @@ export default {
       return response.data.data;
     } catch (error) {
       console.error('Error al crear el empleado:', error);
-      const errorMessage = error.response?.data?.message || 'Error desconocido al crear el empleado.';
+      const errorMessage = error.response?.data?.message || error.response?.data?.data.error || 'Error desconocido al crear el empleado.';
       useToastService().error(errorMessage, { title: 'Error al crear' });
       throw errorMessage;
     }

@@ -6,7 +6,10 @@ import { es } from 'date-fns/locale'; // Si necesitas el idioma español
 export function formatDate(isoDateString) {
     try {
       const date = new Date(isoDateString);
-      const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+      //const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      console.log("Fecha original:", isoDateString);
+      //console.log("Fecha convertida:", date);
       return date.toLocaleDateString('es-MX', options); // 'es-MX' para formato en español de México
     } catch (error) {
       console.error("Error al formatear la fecha:", error);
@@ -27,6 +30,7 @@ export function formatDate(isoDateString) {
 //   }
 // }
 
+//funcion para formatear fecha y hora y retonarla en formato dd/MM/yyyy HH:mm
 export function formatDateTime(dateString) {
   if (!dateString) return 'N/A';
   try {

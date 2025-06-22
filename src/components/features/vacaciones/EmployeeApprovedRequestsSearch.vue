@@ -49,10 +49,13 @@
         No se encontraron solicitudes aprobadas para este empleado.
       </div>
     </div>
-    <div v-if="loadingEmpleadoSearch" class="text-center text-blue-500 py-4">Cargando solicitudes del empleado...</div>
+    <div v-if="loadingEmpleadoSearch" class="text-center text-blue-500 py-8">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+     <p class="ml-3 text-gray-600"> Cargando solicitudes del empleado...</p>
+    </div>
     <div v-if="errorEmpleadoSearch" class="text-red-500 text-center py-4">Error al cargar solicitudes del empleado: {{ errorEmpleadoSearch }}</div>
     <p class="mt-2 text-sm text-gray-500">
-      Esta sección permite buscar y visualizar las solicitudes de vacaciones **aprobadas** de un empleado específico en formato de lista de descripción.
+      Esta sección permite buscar y visualizar las solicitudes de vacaciones <span class="text-gray-600">aprobadas</span> de un empleado específico en formato de lista de descripción.
     </p>
   </div>
 </template>

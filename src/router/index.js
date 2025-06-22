@@ -283,6 +283,12 @@ const routes = [
       //mas rutas para Empleados, vacaciones, etc..
     ],
   },
+      //ruta para información del sistema
+    {
+      path: '/released',
+      name: 'released',
+      component: () => import('../views/SystemInfo.vue'), // Asegúrate de que este componente exista
+    },
   {
     path: "/:pathMatch(.*)*", // Ruta para 404 - Página no encontrada
     component: ErrorLayout,

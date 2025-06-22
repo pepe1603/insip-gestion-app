@@ -83,6 +83,22 @@
       </CrearEditarFormDinamico>
     </div>
   </div>
+
+  <!-- modal de informacion para prevenir uso de dias solicitados incluyendo los dias feriados-->
+  <ModalDynamic :isOpen="modalOpen"
+    title="Información Importante"
+    content="Los días solicitados incluyen los días feriados y no se pueden modificar una vez enviados. Por lo tanto deberias verificar las fechas en que realizas la solicitud."
+    type="informative"
+  >
+
+   <template #primary-action>
+      <UiButton type="button" variant="outline-info" @click="modalOpen = false">
+        Cerrar
+      </UiButton>
+    </template>
+  </ModalDynamic>
+
+
 </template>
 
 <script setup>
@@ -99,9 +115,14 @@ import UiTextarea from '../../../components/ui/UiTextArea.vue'; // Asegurada la 
 
 import { differenceInDays, parseISO, format } from 'date-fns';
 import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
+import { useToastService } from '../../../services/toastService';
+import ModalDynamic from '../../../components/modals/ModalDynamic.vue';
+import UiButton from '../../../components/ui/UiButton.vue';
 
 const router = useRouter();
 const route = useRoute();
+
+const modalOpen = ref(false); // Para el modal de información
 
 const modo = computed(() => route.name === 'editar-vacacion' ? 'editar' : 'crear');
 
@@ -247,12 +268,15 @@ const guardarVacacion = async (formData) => {
 
   try {
     if (!dataToSend.empleado_id) {
-      alert('Por favor, selecciona un empleado.');
+      //alert('Por favor, selecciona un empleado.');
+      useToastService.warning('Por favor, selecciona un empleado.');
       return;
     }
     if (modo.value === 'editar' && route.params.id) {
       await VacacionesService.update(route.params.id, dataToSend);
     } else if (modo.value === 'crear') {
+      //loagear datrs antes de nevio
+      console.log('Datos a enviar:', dataToSend);
       await VacacionesService.create(dataToSend);
     }
     router.push({ name: 'lista-vacaciones' });
@@ -287,6 +311,14 @@ watch([() => formValues.value.empleado_id, employeeSelectionMethod, empleados], 
     employeeSearchTerm.value = getSelectedEmployeeName.value;
   }
 }, { immediate: true });
+
+
+onMounted(() => {
+  modalOpen.value = true; // Asegúrate de que el modal esté cerrado al inicio
+  // Si estás en modo edición, puedes abrir el modal automáticamente
+})
+
+
 </script>
 
 <style scoped>

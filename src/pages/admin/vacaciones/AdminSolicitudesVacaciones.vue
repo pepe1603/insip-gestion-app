@@ -595,7 +595,7 @@ const confirmarCambioEstado = async () => {
     // Después de la acción exitosa, puedes recargar las solicitudes para actualizar la UI
     await cargarSolicitudes();
     isCambioEstadoModalOpen.value = false;
-    alert(`Solicitud #${solicitudId} ${nuevoEstadoDeseado.value.toLowerCase()} correctamente.`);
+    //alert(`Solicitud #${solicitudId} ${nuevoEstadoDeseado.value.toLowerCase()} correctamente.`);
 
   } catch (err) {
     // El 'error.response?.data?.message' sigue siendo relevante si el backend envía mensajes de error específicos.

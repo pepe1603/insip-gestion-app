@@ -26,7 +26,7 @@
         </p>
 
         <div class="col-span-full border-t pt-4 mt-4">
-          <h3 class="text-lg font-semibold text-gray-800 mb-3">Información del Empleado</h3>
+          <h3 class="text-lg font-semibold text-center text-gray-800 mb-3">Información del Empleado</h3>
         </div>
         <p class="text-base sm:text-lg">
           <strong class="font-semibold">Empleado:</strong> {{ vacacion.Empleado }}
@@ -41,7 +41,7 @@
           <strong class="font-semibold">Teléfono:</strong> {{ vacacion.originalItem.empleado?.telefono || 'Desconocido' }}
         </p>
         <div class="col-span-full border-t pt-4 mt-4">
-          <h3 class="text-lg font-semibold text-gray-800 mb-3">Detalles de la Solicitud</h3>
+          <h3 class="text-lg font-semibold text-center text-gray-800 mb-3">Detalles de la Solicitud</h3>
         </div>
         <p class="text-base sm:text-lg">
           <strong class="font-semibold">Días Vacaciones Totales:</strong> {{ vacacion.originalItem.dias_vacaciones_totales || 'N/A' }}
@@ -53,7 +53,7 @@
           <strong class="font-semibold">Días Vacaciones Disponibles:</strong> {{ vacacion.originalItem.dias_vacaciones_disponibles || 'N/A' }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Ciclo de Servicio ID:</strong> {{ vacacion.originalItem.ciclo_servicio_id || 'N/A' }}
+          <strong class="font-semibold">Ciclo de Servicio :</strong> {{ vacacion.originalItem.ciclo_servicio.anio || 'N/A' }}
         </p>
         <p class="text-base sm:text-lg col-span-full">
           <strong class="font-semibold">Motivo/Comentarios:</strong>
@@ -65,10 +65,13 @@
         </p>
         <p class="text-base sm:text-lg col-span-full">
           <strong class="font-semibold">Fecha de Aprobación:</strong>
+          <p class="text-gray-500">
           <span v-if="vacacion.originalItem.fecha_aprobacion===null"> La fecha de aprobación es desconocida. </span>
-          <span v-if="vacacion.Estado === 'PENDIENTE'">{{ vacacion.originalItem.fecha_aprobacion === 'APROBADA' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : 'Pendiente por aprobar' }}</span>
-          <span v-else-if="vacacion.Estado === 'RECHAZADA'">{{ vacacion.originalItem.fecha_aprobacion === 'RECHAZADA' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : 'Ha sido rechazada' }}</span>
-          <span v-else-if="vacacion.Estado === 'CANCELADA'">{{ vacacion.originalItem.fecha_aprobacion === 'CANCELADA' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : 'Ha sido cancelada' }}</span>
+          <span v-if="vacacion.Estado === 'PENDIENTE'">{{ vacacion.originalItem.fecha_aprobacion === 'PENDIENTE' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : ' Esta pendiente por aprobar' }}</span>
+          <span v-else-if="vacacion.Estado === 'RECHAZADO'">{{ vacacion.originalItem.fecha_aprobacion === 'RECHAZADO' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : ' Ha sido rechazada' }}</span>
+          <span v-else-if="vacacion.Estado === 'CANCELADO'">{{ vacacion.originalItem.fecha_aprobacion === 'CANCELADO' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : ' Ha sido cancelada' }}</span>
+          <span v-else-if="vacacion.Estado === 'APROBADO'">{{ vacacion.originalItem.fecha_aprobacion === 'APROBADO' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : ' Ha sido aprobada el ' + vacacion.originalItem.fecha_aprobacion }}</span>
+          </p>
         </p>
 
         <div class="col-span-full mt-4 border-t pt-4 text-sm text-gray-500">

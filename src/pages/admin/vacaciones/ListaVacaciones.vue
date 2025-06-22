@@ -5,7 +5,6 @@
       <p class="text-gray-600">Gestiona las solicitudes de vacaciones de los empleados.</p>
     </div>
 
-
     <div class="my-8 flex justify-between items-center">
       <UiButton variant="outline-success" @click="goCreateVacacion">
         <PlusCircleIcon class="w-6 h-6 mr-2" /> <span> Crear Nueva Solicitud</span>
@@ -106,7 +105,6 @@
     <div class="w-full my-4 text-sm text-gray-600 text-center">
       <p class="text-gray-600">
         Recuerda que las solicitudes eliminadas no se pueden recuperar.</p>
-      
     </div>
 
     <div class="my-4 h-14 text-base">
@@ -125,71 +123,42 @@
       <p class="text-gray-600 mt-2">Accede a la sección de administración de estados de solicitudes de vacaciones.</p>
     </div>
 
-    <!-- Contenedor de búsqueda rápida de disponibilidad de vacaciones -->
-    <div class="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-wrap items-center p-6 gap-6 min-h-40 max-h-max mb-8">
-      <div class="flex md:flex-col items-center self-start gap-3 w-full sm:w-auto">
-
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col md:flex-row items-stretch p-6 gap-6 min-h-40 max-h-max mb-8">
+      <div class="flex flex-col items-center self-start gap-3 w-full md:w-1/3">
         <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
           <SparklesIcon class="w-6 h-6 text-blue-500" />
-          Disponibilidad de Vacaciones
+          Búsqueda de Empleado
         </h2>
-
-        <article class="flex items-center gap-3 w-full sm:w-auto">
+        <article class="flex flex-col sm:flex-row items-center gap-3 w-full">
           <UiInputText
-          v-model="busquedaEmpleado"
-          placeholder="Buscar por ID o nombre del empleado..."
-          @keydown.enter="buscarDisponibilidadEmpleado"
-        />
-        <UiButton
-          variant="outline-secondary"
-          
-          @click="buscarDisponibilidadEmpleado"
-        >
-          Ver Disponibilidad
-        </UiButton>
+            v-model="busquedaEmpleado"
+            placeholder="Buscar por ID o nombre del empleado..."
+            @keydown.enter="triggerEmployeeSearch"
+            class="flex-1"
+          />
+          <UiButton
+            variant="outline-secondary"
+            @click="triggerEmployeeSearch"
+            class="w-full sm:w-auto"
+          >
+            Ver Historial
+          </UiButton>
         </article>
-      </div>
-      <div class="flex-1 px-4 h-64">
-      <div v-if="disponibilidadEmpleado === null" class="text-gray-400 text-base">
-        <p class="mb-1">Busca un empleado por su ID o nombre para ver su disponibilidad de vacaciones.</p>
-        <p class="mb-4">Puedes escribir el ID y presionar <UiKbd>Enter <ArrowTurnDownLeftIcon class="w-5 h-5 text-gray-400" /> </UiKbd> o el botón.</p>
-        
-        <span class="italic">No se ha buscado ningún empleado.</span>
-      </div>
-      <div v-if="disponibilidadEmpleado !== null" class="mt-2 text-left">
-        <div v-if="disponibilidadEmpleado.error" class="text-red-500 font-medium">
-        {{ disponibilidadEmpleado.error }}
-        </div>
-        <div v-else class="rounded-lg bg-gradient-to-br from-blue-50 to-blue-100 shadow p-5 border border-blue-100">
-        <p class="font-semibold text-lg mb-3 text-blue-800 flex items-center gap-2">
-          <SparklesIcon class="w-5 h-5 text-blue-400" />
-          <span >Disponibilidad de</span>
-          <span class="text-blue-700">{{ disponibilidadEmpleado.empleado }}</span>
+        <p class="text-gray-400 text-sm italic mt-2">
+          Ingresa el ID del empleado y presiona Enter o el botón.
         </p>
-        <ul class="divide-y divide-blue-100">
-          <li class="py-1 flex justify-between items-center">
-          <span class="text-gray-500">Días arrastrados</span>
-          <span class="font-semibold text-blue-700">{{ disponibilidadEmpleado.dias_arrastrados }}</span>
-          </li>
-          <li class="py-1 flex justify-between items-center">
-          <span class="text-gray-500">Días disponibles</span>
-          <span class="font-semibold text-green-600">{{ disponibilidadEmpleado.disponible }}</span>
-          </li>
-          <li class="py-1 flex justify-between items-center">
-          <span class="text-gray-500">Días asignados</span>
-          <span class="font-semibold text-blue-600">{{ disponibilidadEmpleado.total_asignado }}</span>
-          </li>
-          <li class="py-1 flex justify-between items-center">
-          <span class="text-gray-500">Días solicitados</span>
-          <span class="font-semibold text-yellow-600">{{ disponibilidadEmpleado.total_base_por_antiguedad }}</span>
-          </li>
-          <li class="py-1 flex justify-between items-center">
-          <span class="text-gray-500">Días usados</span>
-          <span class="font-semibold text-red-600">{{ disponibilidadEmpleado.usado }}</span>
-          </li>
-        </ul>
-        </div>
       </div>
+
+      <div class="flex-1 w-full md:w-2/3">
+        <EmployeeApprovedVacations
+          v-if="empleadoIdParaHistorial"
+          :empleado-id="empleadoIdParaHistorial"
+          :empleado-nombre="empleadoNombreParaHistorial"
+        />
+        <div v-else class="text-gray-400 text-center py-8">
+          <CalendarDaysIcon class="w-16 h-16 mx-auto mb-4 text-gray-300" />
+          <p>Usa la búsqueda para ver el historial de vacaciones y la disponibilidad de un empleado.</p>
+        </div>
       </div>
     </div>
 
@@ -243,7 +212,7 @@
           Cerrar
         </UiButton>
       </template>
-      </ModalDynamic>
+    </ModalDynamic>
   </div>
 </template>
 
@@ -255,41 +224,69 @@ import UiButton from '../../../components/ui/UiButton.vue';
 import UiBadge from '../../../components/ui/UiBadge.vue';
 import UiKbd from '../../../components/ui/UiKbd.vue';
 import ModalDynamic from '../../../components/modals/ModalDynamic.vue';
-import DetalleVacacion from '../../../components/features/vacaciones/DetalleVacacion.vue'; // <-- Importa el nuevo componente
-import { ClipboardDocumentCheckIcon, ExclamationTriangleIcon, FireIcon, PlusCircleIcon, SparklesIcon, TruckIcon,  } from '@heroicons/vue/20/solid';
+import DetalleVacacion from '../../../components/features/vacaciones/DetalleVacacion.vue';
+import EmployeeApprovedVacations from '../../../components/features/vacaciones/EmployeeApprovedVacations.vue'; // ¡Nuevo componente!
+
+import { ClipboardDocumentCheckIcon, ExclamationTriangleIcon, FireIcon, PlusCircleIcon, SparklesIcon, TruckIcon, CalendarDaysIcon, UserIcon } from '@heroicons/vue/20/solid'; // Agrega UserIcon si lo usas
+import { ArrowTurnDownLeftIcon, CheckCircleIcon, CalendarDaysIcon as OutlineCalendarDaysIcon } from '@heroicons/vue/24/outline'; // OutlineCalendarDaysIcon para el placeholder
 
 import VacacionesService from '../../../services/vacacionesService';
 import { formatDate } from '../../../utils/dateFormatter';
 import UiDivider from '../../../components/ui/UiDivider.vue';
-import { ArrowTurnDownLeftIcon, CheckCircleIcon } from '@heroicons/vue/24/outline';
 import UiInputText from '../../../components/ui/UiInputText.vue';
-// UiTag no se está usando en este componente, puedes removerlo si no lo necesitas.
-// import UiTag from '../../../components/ui/UiTag.vue';
+import { useToastService } from '../../../services/toastService';
 
-// Variables y métodos para la búsqueda de disponibilidad de vacaciones
+// --- Variables y métodos para la búsqueda de disponibilidad de vacaciones (MODIFICADO) ---
 const busquedaEmpleado = ref('');
-const disponibilidadEmpleado = ref(null);
+const empleadoIdParaHistorial = ref(null); // ID del empleado para pasar al nuevo componente
+const empleadoNombreParaHistorial = ref(''); // Nombre del empleado para pasar al nuevo componente
 
-const buscarDisponibilidadEmpleado = async () => {
-  disponibilidadEmpleado.value = null;
+const triggerEmployeeSearch = async () => {
   if (!busquedaEmpleado.value || !busquedaEmpleado.value.trim()) {
-    disponibilidadEmpleado.value = { error: 'Por favor ingresa un ID o nombre de empleado.' };
+    empleadoIdParaHistorial.value = null; // Reiniciar el componente si no hay búsqueda
+    empleadoNombreParaHistorial.value = '';
     return;
   }
+
+  // Intenta determinar si la entrada es un ID numérico o un nombre
+  const isNumeric = /^\d+$/.test(busquedaEmpleado.value);
+
+  // NOTA: Para buscar por nombre, tu VacacionesService.getByEmpleado()
+  // debería ser capaz de aceptar también un nombre y resolver el ID,
+  // o necesitarías un nuevo servicio/endpoint para buscar empleados por nombre.
+  // Por ahora, asumimos que 'busquedaEmpleado.value' es el ID.
+  // Si necesitas buscar por nombre, tendrías que adaptar tu backend o añadir una lógica de búsqueda de empleado aquí.
+
   try {
-    // Aquí deberías llamar a tu servicio real para obtener la disponibilidad
-    // Por ejemplo: 
-    const data = await VacacionesService.getDisponibilidad(busquedaEmpleado.value);
-    // Simulación de respuesta:
-    // Si no se encuentra el empleado, puedes simular un error:
-    disponibilidadEmpleado.value = { error: 'Empleado no encontrado.' };
-    disponibilidadEmpleado.value = data;
-    console.log('Disponibilidad del empleado:', disponibilidadEmpleado.value);
+    // Si la entrada es un ID numérico, úsalo directamente
+    if (isNumeric) {
+      empleadoIdParaHistorial.value = parseInt(busquedaEmpleado.value, 10);
+      // Opcional: Si quieres el nombre, podrías hacer una llamada adicional a tu servicio de empleados
+      // para obtener el nombre completo usando el ID.
+      // Por ahora, lo dejaremos vacío o intentaremos obtenerlo de la primera vacación aprobada si ya se cargó.
+      empleadoNombreParaHistorial.value = ''; // Se actualizará dentro de EmployeeApprovedVacations si hay datos
+    } else {
+      // Si no es numérico, asumimos que es un nombre.
+      // Aquí necesitarías una lógica para convertir el nombre a un ID de empleado.
+      // Por ejemplo, buscar en tu lista de 'vacaciones' cargadas o llamar a un servicio de empleados.
+      // Por simplicidad, si no es un número, por ahora no pasaremos un ID válido.
+      // Idealmente, tendrías un endpoint como `/empleados?nombre=X` que te devolvería el ID.
+      //alert('La búsqueda por nombre aún no está completamente implementada. Por favor, ingrese el ID numérico del empleado.');
+      useToastService.warning(
+        'Búsqueda por nombre no implementada',
+        'Por favor, ingresa el ID numérico del empleado.'
+      );
+      empleadoIdParaHistorial.value = null;
+      empleadoNombreParaHistorial.value = '';
+    }
+
   } catch (err) {
-    disponibilidadEmpleado.value = { error: err.message || 'Error al buscar disponibilidad.' };
+    console.error('Error al procesar la búsqueda del empleado:', err);
+    empleadoIdParaHistorial.value = null;
+    empleadoNombreParaHistorial.value = '';
   }
 };
-
+// --- FIN MODIFICACIÓN DE BÚSQUEDA ---
 
 const router = useRouter();
 
@@ -301,6 +298,7 @@ const globalFilterApplied = ref(false);
 const checkCircleIcon = CheckCircleIcon;
 const clipBoardDocumentIcon = ClipboardDocumentCheckIcon;
 const sparklesIcon = SparklesIcon;
+const calendarDaysIcon = OutlineCalendarDaysIcon; // Usamos la versión outline para el placeholder
 
 const tableHeaders = [
   'Id',
@@ -321,19 +319,16 @@ const fechaFinAEliminar = ref(null);
 const fechaInicioAEliminarFormatted = computed(() => formatDate(fechaInicioAEliminar.value));
 const fechaFinAEliminarFormatted = computed(() => formatDate(fechaFinAEliminar.value));
 
-// --- NUEVAS PROPIEDADES Y FUNCIONES PARA EL MODAL DE DETALLES ---
+// --- PROPIEDADES Y FUNCIONES PARA EL MODAL DE DETALLES ---
 const isDetallesModalOpen = ref(false); // Controla la visibilidad del modal de detalles
 const vacacionSeleccionada = ref(null); // Almacena la vacación seleccionada para mostrar en el modal
 
 const verDetallesVacacion = (item) => {
-
-  // Formatear el objeto para el modal de detalles
   if (!item || !item.originalItem) {
     console.error('No se pudo obtener la vacación original para mostrar los detalles.');
     return;
   }
-  // Asignamos el objeto formateado a la propiedad vacacionSeleccionada
-  vacacionSeleccionada.value = item; // item ya es el objeto formateado para la tabla
+  vacacionSeleccionada.value = item;
   isDetallesModalOpen.value = true;
 };
 
@@ -341,7 +336,7 @@ const cerrarDetallesModal = () => {
   isDetallesModalOpen.value = false;
   vacacionSeleccionada.value = null; // Limpiar los datos al cerrar el modal
 };
-// --- FIN NUEVAS PROPIEDADES Y FUNCIONES PARA EL MODAL DE DETALLES ---
+// --- FIN PROPIEDADES Y FUNCIONES PARA EL MODAL DE DETALLES ---
 
 const currentFilter = ref('Todos');
 
