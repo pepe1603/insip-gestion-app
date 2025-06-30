@@ -60,6 +60,7 @@ const ReporteVacacionesDiasTomadosMes = () => import('../pages/admin/vacaciones/
 const ReporteVacacionesDiasTomadosSemana = () => import('../pages/admin/vacaciones/reportes/ReporteVacacionesDiasTomadosSemana.vue');
 const ReporteVacacionesTopEmpleados = () => import('../pages/admin/vacaciones/reportes/ReporteVacacionesTopEmpleados.vue');
 const ReporteVacacionesResumen = () => import('../pages/admin/vacaciones/reportes/ReporteVacacionesResumen.vue');
+const TestPage = () => import('@/pages/TestPage.vue');
 
 
 
@@ -68,7 +69,7 @@ const routes = [
     path: "/",
     component: DefaultLayout,
     children: [
-      { path: "", component: Welcome },
+      { path: "", component: TestPage },
       { path: "/home", name: "Home", component: Home },
       { path: "/about", component: About },
     ],

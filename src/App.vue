@@ -1,6 +1,7 @@
 <template>
   <div id="app" class="bg-gray-50">
     <ToastContainer />
+    <ModalContainer />
 
     <router-view v-slot="{ Component }">
       <transition
@@ -15,8 +16,10 @@
 </template>
 
 <script setup>
-// Importa el componente ToastContainer. Ajusta la ruta si es necesario.
+//estas en app.vue
+// Importa el componente ToastContainer. Ajusta la ruta si es necesario. 
 import ToastContainer from './components/ToastContainer.vue';
+import ModalContainer from './components/ModalContainer.vue';
 </script>
 
 <style>
