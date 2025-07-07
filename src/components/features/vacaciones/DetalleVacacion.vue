@@ -63,16 +63,12 @@
           <strong class="font-semibold">Descripción del Estado:</strong>
           {{ vacacion.originalItem.estado_solicitud?.descripcion || 'No disponible' }}
         </p>
-        <p class="text-base sm:text-lg col-span-full">
+        <div class="text-base sm:text-lg col-span-full">
           <strong class="font-semibold">Fecha de Aprobación:</strong>
           <p class="text-gray-500">
-          <span v-if="vacacion.originalItem.fecha_aprobacion===null"> La fecha de aprobación es desconocida. </span>
-          <span v-if="vacacion.Estado === 'PENDIENTE'">{{ vacacion.originalItem.fecha_aprobacion === 'PENDIENTE' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : ' Esta pendiente por aprobar' }}</span>
-          <span v-else-if="vacacion.Estado === 'RECHAZADO'">{{ vacacion.originalItem.fecha_aprobacion === 'RECHAZADO' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : ' Ha sido rechazada' }}</span>
-          <span v-else-if="vacacion.Estado === 'CANCELADO'">{{ vacacion.originalItem.fecha_aprobacion === 'CANCELADO' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : ' Ha sido cancelada' }}</span>
-          <span v-else-if="vacacion.Estado === 'APROBADO'">{{ vacacion.originalItem.fecha_aprobacion === 'APROBADO' ? formatDateTime(vacacion.originalItem.fecha_aprobacion) : ' Ha sido aprobada el ' + vacacion.originalItem.fecha_aprobacion }}</span>
+            {{ getMensajeFechaAprobacion() }}  
           </p>
-        </p>
+        </div>
 
         <div class="col-span-full mt-4 border-t pt-4 text-sm text-gray-500">
           <h3 class="text-lg font-semibold text-gray-800 mb-3">Historial de Tiempos</h3>
@@ -118,6 +114,28 @@ const getEstadoColor = (estado) => {
       return 'gray';
     default:
       return 'gray';
+  }
+};
+
+const getMensajeFechaAprobacion = () => {
+  const { Estado, originalItem } = vacacion;
+  const fechaAprobacion = originalItem?.fecha_aprobacion;
+
+  if (!fechaAprobacion) return 'La fecha de aprobación es desconocida.';
+
+  switch (Estado.toUpperCase()) {
+    case 'PENDIENTE':
+      return 'Esta pendiente por aprobar';
+    case 'RECHAZADO':
+      return 'Ha sido rechazada';
+    case 'CANCELADO':
+      return 'Ha sido cancelada';
+    case 'APROBADO':
+      return fechaAprobacion === 'APROBADO'
+        ? formatDateTime(fechaAprobacion)
+        : 'Ha sido aprobada el ' + fechaAprobacion;
+    default:
+      return 'Estado no reconocido';
   }
 };
 

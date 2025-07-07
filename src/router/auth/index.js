@@ -12,37 +12,36 @@ import ResetPasswordPage from '@/pages/auth/ResetPasswordPage.vue';
 const authRoutes = {
   path: '/auth', // Prefijo para todas las rutas de autenticación
   component: AuthLayout, // O el layout que uses para tus páginas de auth
+  meta: { requiresAuth: false, guestOnly: true }, // Para manejo de middleware en Vue
   children: [
     {
       path: 'login',
       name: 'login',
       component: LoginPage,
-      meta: { requiresAuth: false, guestOnly: true } // Para manejo de middleware en Vue
     },
     
     {
       path: 'register', // Usamos 'register' para /sign-in de tu API
       name: 'register',
       component: RegisterPage,
-      meta: { requiresAuth: false, guestOnly: true }
     },
     {
       path: 'forgot-password',
       name: 'forgot-password',
       component: ForgotPasswordPage,
-      meta: { requiresAuth: false, guestOnly: true }
+      
     },
     {
       path: 'verify-reset-code',
       name: 'verify-reset-code',
       component: VerifyResetCodePage,
-      meta: { requiresAuth: false, guestOnly: true }
+      
     },
     {
       path: 'reset-password',
       name: 'reset-password',
       component: ResetPasswordPage,
-      meta: { requiresAuth: false, guestOnly: true }
+      
     },
 
     

@@ -30,7 +30,8 @@ export const authService = {
   },
 
   async getUser() {
-    const response = await api.get('/me');
+    const response = await api.get('/profile/me');
+    console.info(response);
     return response.data;
   },
 

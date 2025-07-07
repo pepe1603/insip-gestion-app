@@ -22,7 +22,7 @@ export const useAuthStore = defineStore('auth', {
 
     async fetchUser() {
       const data = await authService.getUser();
-      this.user = data;
+      this.user = data.data.user;
     },
 
     async logout() {

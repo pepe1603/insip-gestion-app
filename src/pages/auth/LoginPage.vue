@@ -51,22 +51,23 @@ const password = ref('');
 const router = useRouter();
 const auth = useAuthStore(); // ⬅️ tu store de auth
 
-const toast = useGlobalToast();
+const $toast = useGlobalToast();
 
   const showToast = () => {
-    toast?.success('¡Bienvenido al sistema!, Es un gusto tenerte de vuelta.');
+    $toast?.success('¡Bienvenido al sistema!, Es un gusto tenerte de vuelta.');
   };
 
 const handleLogin = async () => {
   try {
     await auth.login({ email: email.value, password: password.value });
     
-    router.push('/dashboard');
+    router.push('/profile');
     showToast();
 
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     // Aquí podrías usar un toast o modal para mostrar un error de login
+    $toast.error(error.response.data?.message);
   }
 };
 </script>

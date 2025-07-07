@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores/authStore';
 import { useGlobalModal } from '@/composables/useGlobalModal';
 
 // Importar los componentes de las páginas y layouts
-import DefaultLayout from "../layouts/DefaultLayout.vue";
+import PublicLayout from "../layouts/PublicLayout.vue";
 import Home from "../pages/Home.vue";
 import About from "../pages/About.vue";
 import Welcome from "../pages/Welcome.vue";
@@ -72,24 +72,29 @@ import InfoMessageModal from '@/components/modals/InfoMessageModal.vue';
 
 //rutass modulo auth
 import authRoutes from  './auth'
+import profileRoutes from "./profile";
+import employeeRoutes from "./employee";
 import UnauthorizedPage from "../pages/errors/UnauthorizedPage.vue";
 
 const routes = [
+  // --- Rutas Públicas (usando PublicLayout) ---
   {
     path: "/",
-    component: DefaultLayout,
+    component: PublicLayout, 
     children: [
-      { path: "", component: TestPage },
-      { path: "/home", name: "Home", component: Home },
-      { path: "/about", component: About },
+      { path: "", component: Welcome, name: "Welcome" }, // Página de bienvenida por defecto
+      { path: "home", name: "Home", component: Home },
+      { path: "about", name: "About", component: About },
+      { path: "test", name: "TestPage", component: TestPage }, // Tu página de pruebas de modales
     ],
   },
-  {
 //tutass de authenticacion publicass
-    ...authRoutes,
-
-  },
-
+    {...authRoutes},
+  // ---- Rutas de Perfile
+    {...profileRoutes},
+  // --- Rutas de usuario con rol empleados
+    {...employeeRoutes},
+  // --- Rutas del Panel Administrativo/Supervisor (usando AdminLayout) ---
   {
     path: "/admin",
     component: AdminLayout,
@@ -333,48 +338,85 @@ const router = createRouter({
 
 // Guard para verificar si está autenticado antes de acceder a rutas protegidas
 router.beforeEach(async (to, from, next) => {
-  const auth = useAuthStore();
+  const authStore = useAuthStore();
   const $modal = useGlobalModal();
 
-  //1.-  Verificar Authenticacion (RequiredAuth) Si ya hay token pero no hay user en memoria, intenta cargarlo
-  if (auth.token && !auth.user) {
+  // 1. **Cargar usuario si hay token pero no está en el store (al recargar, por ejemplo)**
+  if (authStore.token && !authStore.user) {
     try {
-      await auth.fetchUser(); // Intenta obtener al usuario desde el backend
+      console.log('Token presente pero usuario no cargado. Intentando cargar usuario...');
+      await authStore.fetchUser();
+      console.log('Usuario cargado con éxito.');
     } catch (error) {
-      console.error('Error al recuperar el usuario:', error);
-      auth.logout(); // Por si el token es inválido
+      console.error('Error al recuperar el usuario con token existente:', error);
+      authStore.logout(); // Limpiar token inválido
+      // No redirigimos aquí inmediatamente para permitir que los siguientes checks lo hagan
     }
   }
 
   // Protección para rutas privadas
-  if (to.meta.requiresAuth && !auth.isAuthenticated) {
-    return next('/auth/login');
-  }
-
-  //1.- Verificar Role(roles)
-  // Protección para rutas solo de invitados (login, register, etc.)
-  if (to.meta.guestOnly && auth.isAuthenticated) {
-
-      $modal?.showModal(
-      InfoMessageModal, // El componente a renderizar dentro del modal
+// Verificar si la ruta requiere autenticación y el usuario NO está autenticado
+  if (to.matched.some(record => record.meta.requiresAuth) && !authStore.isAuthenticated) {
+    console.warn(`[Guard] Redirigiendo a login: Ruta '${to.fullPath}' requiere autenticación.`);
+    await $modal?.showModal(
+      InfoMessageModal,
       {
-        // Props para ConfirmActionModal
-        message: '¡Ya estas autenticado!, Puedes continuar navegando sin preocuparte de hacer login otra vez.',
-        buttonText: '¡Ok!',
+        message: 'Necesitas iniciar sesión para acceder a esta sección.',
+        buttonText: 'Ir a Iniciar Sesión'
       },
       {
-        // Opciones para el UiModal base (el contenedor)
-        title: 'Notificacion',
+        title: 'Acceso Restringido'
       }
-    ).then(modalId => {
-      console.log('Modal de confirmación simple abierto con ID:', modalId);
-    });
-    return next('/'); // o redirige a donde tú quieras
+    );
+    // IMPORTANTE: usar `return next(...)` después de `await` para evitar doble navegación
+    return next({ name: 'login', query: { redirect: to.fullPath } });
   }
-//4.- contirnuar con la navewgacion ssiu toto esta bienb. 
+
+   // 2. **Verificar Acceso de Invitados** (`guestOnly`)
+  // Si la ruta es solo para invitados Y el usuario SÍ está autenticado
+  if (to.matched.some(record => record.meta.guestOnly) && authStore.isAuthenticated) {
+    console.log(`[Guard] Redirigiendo desde ruta de invitado: Usuario ya autenticado.`);
+    await $modal?.showModal(
+      InfoMessageModal,
+      {
+        message: 'Ya estás autenticado. Redirigiendo a tu dashboard.',
+        buttonText: 'Aceptar'
+      },
+      {
+        title: 'Ya Iniciaste Sesión'
+      }
+    );
+    // Redirige al dashboard apropiado según el rol del usuario
+    const userRole = authStore.user?.role;
+    if (userRole === 'admin' || userRole === 'supervisor') {
+      return next({ name: 'admin-base' });
+    } else if (userRole === 'employee') {
+      return next({ name: 'employee-dashboard' });
+    } else {
+      // Un rol desconocido o por defecto
+      return next({ name: 'profile' }); // O a una página general para autenticados
+    }
+  }
+
+// 3. **Verificar Roles** (`roles`)
+  // Si la ruta tiene roles definidos Y el usuario SÍ está autenticado (ya cubierto por requiresAuth si no)
+  if (to.matched.some(record => record.meta.roles) && authStore.isAuthenticated) {
+    const requiredRoles = to.matched
+      .flatMap(record => record.meta.roles || [])
+      .filter((value, index, self) => self.indexOf(value) === index); // Obtener roles únicos de todas las metas coincidentes
+
+    const userRole = authStore.user?.role;
+
+    // Si hay roles requeridos y el rol del usuario no está en ellos
+    if (requiredRoles.length > 0 && (!userRole || !requiredRoles.includes(userRole))) {
+      console.warn(`[Guard] Acceso denegado: Rol '${userRole}' no autorizado para la ruta '${to.fullPath}'. Requeridos: ${requiredRoles.join(', ')}`);
+      return next({ name: 'Unauthorized' }); // Redirige a la página de "Acceso Denegado"
+    }
+  }
+
+
+// 4. **Continuar la navegación si todas las verificaciones pasan**
   return next();
 });
-
-
 
 export default router;
