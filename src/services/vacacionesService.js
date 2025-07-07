@@ -77,7 +77,7 @@ export default {
       return true
     } catch (error) {
       console.error(`Error al eliminar la solicitud de vacación con ID ${id}:`, error)
-      const errorMessage = error.response?.data?.error || `Error desconocido al eliminar la solicitud de vacación con ID ${id}.`
+      const errorMessage = error.response?.data?.data.error || `Error desconocido al eliminar la solicitud de vacación con ID ${id}.`
       useToastService().error(errorMessage, { title: 'Error al eliminar' })
       throw new Error(errorMessage)
     }

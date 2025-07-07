@@ -104,7 +104,6 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import VacacionesService from '../../../services/vacacionesService';
 import EmpleadoService from '../../../services/empleadoService';
 import CrearEditarFormDinamico from '../../../components/forms/CreateEdithFormDynamic.vue';
 import UiSelect from '../../../components/ui/UiSelect.vue';
@@ -118,9 +117,14 @@ import { MagnifyingGlassIcon } from '@heroicons/vue/20/solid';
 import { useToastService } from '../../../services/toastService';
 import ModalDynamic from '../../../components/modals/ModalDynamic.vue';
 import UiButton from '../../../components/ui/UiButton.vue';
+import { useGlobalToast } from '../../../composables/useGlobalToast';
+import vacacionesService from '../../../services/vacacionesService';
 
 const router = useRouter();
 const route = useRoute();
+
+
+const $toast = useGlobalToast(); // Si lo usas, también lo obtienes de tu composable
 
 const modalOpen = ref(false); // Para el modal de información
 
@@ -228,7 +232,7 @@ const cargarRelaciones = async () => {
 
 const cargarVacacion = async (id) => {
   try {
-    const vacacion = await VacacionesService.getById(id);
+    const vacacion = await vacacionesService.getById(id);
     if (vacacion) {
       formValues.value = {
         empleado_id: vacacion.empleado_id,
@@ -269,15 +273,15 @@ const guardarVacacion = async (formData) => {
   try {
     if (!dataToSend.empleado_id) {
       //alert('Por favor, selecciona un empleado.');
-      useToastService.warning('Por favor, selecciona un empleado.');
+      $toast?.warning('Por favor, selecciona un empleado.');
       return;
     }
     if (modo.value === 'editar' && route.params.id) {
-      await VacacionesService.update(route.params.id, dataToSend);
+      await vacacionesService.update(route.params.id, dataToSend);
     } else if (modo.value === 'crear') {
       //loagear datrs antes de nevio
       console.log('Datos a enviar:', dataToSend);
-      await VacacionesService.create(dataToSend);
+      await vacacionesService.create(dataToSend);
     }
     router.push({ name: 'lista-vacaciones' });
   } catch (error) {

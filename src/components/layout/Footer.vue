@@ -1,9 +1,9 @@
 <template>
 
-  <footer class="bg-transparent text-sm ">
+  <footer class="bg-white text-sm ">
     <!-- Componente de LogosCloud -->
 
-    <div class="mx-auto p-4 md:px-14 space-y-10">
+    <div class="mx-auto px-2 md:px-14">
 
       <div class="w-full border-b border-b-gray-200 py-10">
 
@@ -12,7 +12,7 @@
         
       </div>
 
-      <div class="w-full flex flex-col py-6 sm:flex-row justify-between items-center">
+      <div class="w-full flex flex-col py-4 sm:flex-row justify-between items-center">
          <!-- Izquierda -->
         <div class="flex items-center space-x-2 mb-2 sm:mb-0">
           <span class="text-gray-500">© {{ year }} INSIP</span>

@@ -1,8 +1,5 @@
-<!-- src/components/modals/ConfirmActionModal.vue -->
 <script setup>
-import { defineProps, defineEmits } from 'vue';
 
-// Definimos las props que este modal de confirmación puede recibir
 const props = defineProps({
   message: {
     type: String,
@@ -16,21 +13,26 @@ const props = defineProps({
     type: String,
     default: 'Cancelar',
   },
+  // INYECTADO POR EL SERVICIO DE MODALES
+  __onConfirm: Function,
+  __onCancel: Function,
+  __onClose: Function, // También para cerrar de forma genérica
 });
 
-// Definimos los eventos que este componente puede emitir
-const emit = defineEmits(['confirm', 'cancel', 'close']);
-
-// Función para manejar la confirmación
+// Ahora, tus manejadores llamarán a las funciones inyectadas
 const handleConfirm = () => {
-  emit('confirm'); // Emitimos el evento 'confirm'
-  emit('close');    // Y también el evento 'close' para cerrar el modal
+  if (props.__onConfirm) {
+    props.__onConfirm(); // Llama a la función inyectada para resolver la promesa
+  }
+  // No necesitas emitir 'close' aquí, ya que la función __onConfirm/__onCancel del servicio
+  // se encargará de llamar a hideModal.
 };
 
-// Función para manejar la cancelación
 const handleCancel = () => {
-  emit('cancel'); // Emitimos el evento 'cancel'
-  emit('close');    // Y también el evento 'close' para cerrar el modal
+  if (props.__onCancel) {
+    props.__onCancel(); // Llama a la función inyectada para resolver la promesa
+  }
+  // No necesitas emitir 'close' aquí.
 };
 </script>
 
@@ -53,7 +55,3 @@ const handleCancel = () => {
     </div>
   </div>
 </template>
-
-<style scoped>
-/* No se necesitan estilos específicos aquí, Tailwind CSS es suficiente */
-</style>

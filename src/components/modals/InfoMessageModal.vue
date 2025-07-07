@@ -1,24 +1,3 @@
-<script setup>
-import { defineProps } from 'vue';
-
-// Recibe la función de cierre inyectada por modalService
-const props = defineProps({
-  message: {
-    type: String,
-    required: true,
-  },
-  buttonText: {
-    type: String,
-    default: 'Entendido',
-  },
-  __onClose: Function, // Esta prop la inyecta el modalService para cerrar el modal
-});
-
-const closeAndProceed = () => {
-  props.__onClose(); // Llama a la función de cierre
-};
-</script>
-
 <template>
   <div class="text-center p-4">
     <p class="text-lg text-gray-700 dark:text-gray-300 mb-6">{{ message }}</p>
@@ -30,3 +9,31 @@ const closeAndProceed = () => {
     </button>
   </div>
 </template>
+
+<script setup>
+
+const props = defineProps({
+  message: {
+    type: String,
+    required: true,
+  },
+  buttonText: {
+    type: String,
+    default: 'Entendido',
+  },
+  // La función inyectada por modalService para cerrar el modal y resolver la promesa
+  __onClose: Function,
+});
+
+const closeAndProceed = () => {
+  // Aquí es donde necesitamos asegurar que el modal se cierra y la promesa se resuelve.
+  // La función __onClose inyectada ya está diseñada para hacer ambas cosas.
+  if (props.__onClose) {
+    props.__onClose(); // Llama a la función inyectada para resolver la promesa y ocultar el modal
+  }
+};
+</script>
+
+<style scoped>
+/* No se necesitan estilos específicos aquí, Tailwind CSS es suficiente */
+</style>

@@ -19,9 +19,12 @@
       <template #NombreCompleto="{ item }">
         <strong>{{ item.Nombre }} {{ item.ApellidoPaterno }} {{ item.ApellidoMaterno }}</strong>
       </template>
+      <template #Email="{ item }">
+        <span class="">{{ item.Email }}</span>
+      </template>
 
       <template #FechaIngreso="{ item }">
-        <span class="text-gray-400">{{ item.FechaIngreso }}</span>
+        <span class="">{{ item.FechaIngreso }}</span>
       </template>
 
       <template #Puesto="{ item }">
@@ -199,13 +202,14 @@ const goCreateElement = () => {
   router.push({ name: 'crear-empleado' });
 };
 
-const tableHeaders = ['Id', 'NombreCompleto', 'FechaIngreso', 'Puesto', 'Departamento', 'Status', 'TipoContrato', 'Acciones'];
+const tableHeaders = ['Id', 'NombreCompleto', 'Email', 'FechaIngreso', 'Puesto', 'Departamento', 'Status', 'TipoContrato', 'Acciones'];
 
 const cargarEmpleados = async () => {
   cargando.value = true;
   error.value = null;
   try {
     empleados.value = await EmpleadoService.getAll({ with: 'departamento' });
+    console.info(empleados.value);
   } catch (err) {
     error.value = err;
   } finally {
@@ -219,6 +223,7 @@ const empleadosFormatted = computed(() => {
     Nombre: empleado.nombre,
     ApellidoPaterno: empleado.ape_paterno,
     ApellidoMaterno: empleado.ape_materno,
+    Email: empleado.email,
     FechaIngreso: formatDate(empleado.fecha_ingreso),
     Puesto: empleado.puesto,
     Departamento: empleado.departamento?.nombre || 'Sin departamento',
@@ -227,6 +232,7 @@ const empleadosFormatted = computed(() => {
     originalItem: empleado, // Mantener el objeto original completo para detalles y otras acciones
   }));
 });
+
 
 const editarEmpleado = (originalItem) => {
   router.push({ name: 'editar-empleado', params: { id: originalItem.id } });

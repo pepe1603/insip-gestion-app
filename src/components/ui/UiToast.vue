@@ -15,7 +15,7 @@
       <component :is="icon" :class="title ? 'w-6' : 'w-4'" v-if="icon" />
 
       <div class="flex-1 flex flex-col items-center">
-        <p v-if="title" class="font-semibold text-base">{{ title }}</p> <p class="font-normal font-sans text-gray-600 dark:text-gray-100 text-sm">{{ message }}</p>
+        <p v-if="title" class="font-semibold text-base">{{ title }}</p> <p class="font-normal font-sans text-gray-700 dark:text-gray-100 text-sm">{{ message }}</p>
       </div>
 
       <button

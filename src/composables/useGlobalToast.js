@@ -1,7 +1,11 @@
 // composables/useGlobalToast.js
-import { getCurrentInstance } from 'vue';
+import { inject } from 'vue'; // ¡Necesitarás inject aquí!
 
 export const useGlobalToast = () => {
-  const instance = getCurrentInstance();
-  return instance?.appContext.config.globalProperties.$toast;
+  try {
+    // Intenta acceder desde el contexto si estamos dentro de un componente
+    return inject('$toast') || window.__global_toast__;
+  } catch {
+    return window.__global_toast__;
+  }
 };

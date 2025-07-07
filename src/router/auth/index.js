@@ -8,6 +8,7 @@ import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage.vue';
 import VerifyResetCodePage from '@/pages/auth/VerifyResetCodePage.vue';
 import ResetPasswordPage from '@/pages/auth/ResetPasswordPage.vue';
 
+
 const authRoutes = {
   path: '/auth', // Prefijo para todas las rutas de autenticación
   component: AuthLayout, // O el layout que uses para tus páginas de auth
@@ -18,6 +19,7 @@ const authRoutes = {
       component: LoginPage,
       meta: { requiresAuth: false, guestOnly: true } // Para manejo de middleware en Vue
     },
+    
     {
       path: 'register', // Usamos 'register' para /sign-in de tu API
       name: 'register',
@@ -42,6 +44,8 @@ const authRoutes = {
       component: ResetPasswordPage,
       meta: { requiresAuth: false, guestOnly: true }
     },
+
+    
     // Si tienes una página de "user verification" o algo similar después del registro, agrégala aquí
   ]
 };

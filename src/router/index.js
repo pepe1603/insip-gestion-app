@@ -1,4 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
+
+import { useAuthStore } from '@/stores/authStore';
+import { useGlobalModal } from '@/composables/useGlobalModal';
+
 // Importar los componentes de las páginas y layouts
 import DefaultLayout from "../layouts/DefaultLayout.vue";
 import Home from "../pages/Home.vue";
@@ -62,7 +66,13 @@ const ReporteVacacionesTopEmpleados = () => import('../pages/admin/vacaciones/re
 const ReporteVacacionesResumen = () => import('../pages/admin/vacaciones/reportes/ReporteVacacionesResumen.vue');
 const TestPage = () => import('@/pages/TestPage.vue');
 
+//modals 
+import InfoMessageModal from '@/components/modals/InfoMessageModal.vue';
 
+
+//rutass modulo auth
+import authRoutes from  './auth'
+import UnauthorizedPage from "../pages/errors/UnauthorizedPage.vue";
 
 const routes = [
   {
@@ -74,6 +84,12 @@ const routes = [
       { path: "/about", component: About },
     ],
   },
+  {
+//tutass de authenticacion publicass
+    ...authRoutes,
+
+  },
+
   {
     path: "/admin",
     component: AdminLayout,
@@ -283,6 +299,7 @@ const routes = [
 }
       //mas rutas para Empleados, vacaciones, etc..
     ],
+    meta:{ requiresAuth: true },
   },
       //ruta para información del sistema
     {
@@ -290,21 +307,74 @@ const routes = [
       name: 'released',
       component: () => import('../views/SystemInfo.vue'), // Asegúrate de que este componente exista
     },
+// --- Rutas de Error (usando ErrorLayout) ---
+  {
+    path: "/error",
+    component: ErrorLayout,
+    children: [
+      { path: "500", name: "ServerError", component: ServerError },
+      { path: "403", name: "Unauthorized", component: UnauthorizedPage }, // Página de acceso denegado
+    ],
+  },
+   // --- Catch-all para 404 (siempre al final) ---
   {
     path: "/:pathMatch(.*)*", // Ruta para 404 - Página no encontrada
     component: ErrorLayout,
     children: [{ path: "", component: NotFound }],
   },
-  {
-    path: "/error/500", // Ruta para 500 - Error del servidor
-    component: ErrorLayout,
-    children: [{ path: "", component: ServerError }],
-  },
+
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+/**-------------------------------- GUardianes de Rutas --------------------------------------- */
+
+// Guard para verificar si está autenticado antes de acceder a rutas protegidas
+router.beforeEach(async (to, from, next) => {
+  const auth = useAuthStore();
+  const $modal = useGlobalModal();
+
+  //1.-  Verificar Authenticacion (RequiredAuth) Si ya hay token pero no hay user en memoria, intenta cargarlo
+  if (auth.token && !auth.user) {
+    try {
+      await auth.fetchUser(); // Intenta obtener al usuario desde el backend
+    } catch (error) {
+      console.error('Error al recuperar el usuario:', error);
+      auth.logout(); // Por si el token es inválido
+    }
+  }
+
+  // Protección para rutas privadas
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return next('/auth/login');
+  }
+
+  //1.- Verificar Role(roles)
+  // Protección para rutas solo de invitados (login, register, etc.)
+  if (to.meta.guestOnly && auth.isAuthenticated) {
+
+      $modal?.showModal(
+      InfoMessageModal, // El componente a renderizar dentro del modal
+      {
+        // Props para ConfirmActionModal
+        message: '¡Ya estas autenticado!, Puedes continuar navegando sin preocuparte de hacer login otra vez.',
+        buttonText: '¡Ok!',
+      },
+      {
+        // Opciones para el UiModal base (el contenedor)
+        title: 'Notificacion',
+      }
+    ).then(modalId => {
+      console.log('Modal de confirmación simple abierto con ID:', modalId);
+    });
+    return next('/'); // o redirige a donde tú quieras
+  }
+//4.- contirnuar con la navewgacion ssiu toto esta bienb. 
+  return next();
+});
+
+
 
 export default router;
