@@ -5,196 +5,239 @@
       'text-white',
       'flex',
       'flex-col',
+      'min-h-screen0...',
       'transition-all',
       'duration-300',
-      isSidebarExpanded ? 'w-64' : 'w-fit',
+      isExpanded ? 'w-64' : 'w-20',
       'rounded-lg',
       'm-2',
       'py-2',
-      'gap-4',
+      'shadow-md',
     ]"
   >
-    <div class="p-4 flex items-center justify-center transition-all duration-300">
-      <h1
-        v-if="isSidebarExpanded"
-        class="font-semibold transition-opacity duration-300"
-        :class="isSidebarExpanded ? 'text-xl' : 'text-xs'"
-      >
-        Menú Principal
-      </h1>
-      <h1
-        v-else
-        class="font-bold transition-opacity duration-600"
-        :class="isSidebarExpanded ? 'text-xl' : 'text-xs'"
-      >
-        Menú
-      </h1>
+    <div class="p-4 flex items-center" :class="isExpanded ? 'justify-start' : 'justify-center'">
+      <font-awesome-icon :icon="['fas', 'chart-simple']" class="w-8 h-8 text-indigo-400 shrink-0" />
+      <h2 v-if="isExpanded" class="ml-3 text-xl font-semibold whitespace-nowrap overflow-hidden">Panel Admin</h2>
     </div>
 
-    <nav class="flex-grow p-4 transition-all duration-300">
-      <ul>
-        <li
-          v-for="link in navigationLinksWithChildren"
-          :key="link.path || link.label"
-          class="mb-2 transition-all duration-600 cursor-pointer"
-          :class="isSidebarExpanded ? 'w-auto' : 'w-fit'"
-        >
+    <nav class="flex-grow p-4 space-y-2 overflow-y-auto custom-scrollbar">
+      <ul class="space-y-2">
+        <li v-for="link in filteredLinks" :key="link.path || link.label">
           <div v-if="link.children && link.children.length > 0">
             <button
               @click="toggleSubMenu(link.label)"
-              class="flex items-center justify-between w-full hover:bg-gray-700 p-2 rounded transition-opacity duration-400 opacity-100"
-              :class="isSidebarExpanded ? 'w-auto' : 'w-fit'"
+              class="flex items-center justify-between w-full p-2 rounded transition-colors duration-200 text-sm"
+              :class="[
+                'hover:bg-gray-700',
+                (openMenus[link.label] || isAnyChildRouteActive(link.children)) ? 'bg-gray-700 text-indigo-300' : 'text-gray-200'
+              ]"
             >
-              <div class="flex items-center" :class="!isSidebarExpanded ? 'justify-center' : ''">
-                <component
-                  :is="link.icon"
-                  class="w-5 h-5 fill-current text-gray-400 transition-all duration-400"
-                  :class="!isSidebarExpanded ? 'mr-0' : ''"
+              <div class="flex items-center" :class="!isExpanded ? 'justify-center w-full' : ''">
+                <font-awesome-icon
+                  :icon="link.icon"
+                  class="w-5 h-5 fill-current shrink-0"
+                  :class="isExpanded ? 'mr-3' : ''"
                 />
-                <span
-                  v-if="isSidebarExpanded"
-                  class="ml-2 transition-opacity duration-400 opacity-100"
-                >
-                  {{ link.label }}
-                </span>
+                <span v-if="isExpanded" class="whitespace-nowrap overflow-hidden">{{ link.label }}</span>
               </div>
               <svg
-                class="w-4 h-4 fill-current text-gray-400 transition-transform duration-300"
-                :class="[ { 'rotate-90': openSubMenus[link.label] }, !isSidebarExpanded ? 'hidden' : '' ]"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+                v-if="isExpanded"
+                class="w-4 h-4 fill-current text-gray-400 transition-transform duration-300 shrink-0"
+                :class="{ 'rotate-90': openMenus[link.label] || isAnyChildRouteActive(link.children) }"
+                viewBox="0 0 20 20" fill="currentColor"
               >
                 <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
               </svg>
             </button>
             <ul
-              v-if="(openSubMenus[link.label] && isSidebarExpanded)"
-              class="transition-all duration-300"
-              :class="!isSidebarExpanded ? 'opacity-0 h-0' : 'opacity-100 h-auto ml-6 mt-1'"
+              v-show="(openMenus[link.label] || isAnyChildRouteActive(link.children)) && isExpanded"
+              class="pl-4 ml-2 mt-1 border-l border-gray-600 space-y-1"
             >
-              <li v-for="subLink in link.children" :key="subLink.path" class="mb-1">
+              <li v-for="child in link.children" :key="child.path">
                 <router-link
-                  :to="subLink.path"
-                  class="flex items-center hover:bg-gray-700 p-2 rounded transition-opacity duration-400 opacity-100"
-                  active-class="bg-gray-700"
+                  :to="child.path"
+                  class="flex items-center p-2 rounded hover:bg-gray-700 transition-colors duration-200 text-xs"
+                  :class="route.path.startsWith(child.path) ? 'bg-gray-700 text-indigo-300' : 'text-gray-300'"
                 >
-                  <span v-if="isSidebarExpanded" class="ml-2 text-sm transition-opacity duration-400 opacity-100">
-                    {{ subLink.label }}
-                  </span>
+                  <span class="ml-1 whitespace-nowrap overflow-hidden">{{ child.label }}</span>
                 </router-link>
               </li>
             </ul>
           </div>
+
           <router-link
             v-else
             :to="link.path"
-            class="flex items-center hover:bg-gray-700 p-2 rounded transition-opacity duration-400 opacity-100"
-            active-class="bg-gray-700"
-            :class="!isSidebarExpanded ? 'justify-center' : ''"
+            class="flex items-center p-2 rounded transition-colors duration-200 text-sm"
+            :class="[
+              'hover:bg-gray-700',
+              (link.path === route.path) ||
+              (link.path === '/admin' && (route.path === '/admin' || route.name === 'intro' || route.name === 'dashboard')) ||
+              (route.path.startsWith(link.path) && link.path !== '/admin' && link.path !== '/') // Para que los links padres sin hijos sigan activos si están en una subruta
+                ? 'bg-gray-700 text-indigo-300'
+                : 'text-gray-200',
+              !isExpanded ? 'justify-center' : '' // Centrar el icono si el sidebar está colapsado
+            ]"
+            active-class="bg-gray-700 text-indigo-300"
           >
-            <component
-              :is="link.icon"
-              class="w-5 h-5 fill-current text-gray-400 transition-all duration-400"
-              :class="!isSidebarExpanded ? 'mr-0' : ''"
+            <font-awesome-icon
+              :icon="link.icon"
+              class="w-5 h-5 fill-current shrink-0"
+              :class="isExpanded ? 'mr-3' : ''"
             />
-            <span v-if="isSidebarExpanded" class="ml-2 transition-opacity duration-400 opacity-100">
-              {{ link.label }}
-            </span>
+            <span v-if="isExpanded" class="whitespace-nowrap overflow-hidden">{{ link.label }}</span>
           </router-link>
         </li>
       </ul>
     </nav>
 
     <div
-      class="p-4 flex justify-center"
-      :class="isSidebarExpanded ? 'justify-end' : 'justify-center'"
+      class="p-4 flex"
+      :class="isExpanded ? 'justify-end' : 'justify-center'"
     >
       <button
         @click="toggleSidebar"
         class="bg-gray-700 hover:bg-gray-600 text-white rounded-full p-2 focus:outline-none transition-all duration-300"
       >
-        <svg
-          v-if="isSidebarExpanded"
-          class="w-6 h-6 fill-current text-gray-400 transition-all duration-300"
-          viewBox="0 0 24 24"
-        >
-          <path d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z" />
-        </svg>
-        <svg
-          v-else
-          class="w-6 h-6 fill-current text-gray-400 transition-all duration-300"
-          viewBox="0 0 24 24"
-        >
-          <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
-        </svg>
+        <font-awesome-icon :icon="['fas', 'chevron-left']" v-if="isExpanded" class="w-6 h-6 fill-current text-gray-400" />
+        <font-awesome-icon :icon="['fas', 'chevron-right']" v-else class="w-6 h-6 fill-current text-gray-400" />
       </button>
     </div>
   </aside>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue'; // Importa 'watch' en lugar de 'watchEffect' para este caso
 import { useRouter, useRoute } from 'vue-router';
-import { HomeIcon, UserIcon } from '@heroicons/vue/24/solid';
-import { ClipboardDocumentCheckIcon, FolderIcon, RocketLaunchIcon, SquaresPlusIcon } from '@heroicons/vue/20/solid';
-import { BuildingOffice2Icon, ChartBarIcon, DocumentCheckIcon, DocumentTextIcon, NewspaperIcon } from '@heroicons/vue/24/outline';
+import { useAuthStore } from '@/stores/authStore';
+import { useUiStore } from '@/stores/uiStore';
 
 const router = useRouter();
 const route = useRoute();
-const isSidebarExpanded = ref(false);
-const openSubMenus = ref({});
+const authStore = useAuthStore();
+const uiStore = useUiStore();
 
-// Define la estructura de tus links de navegación para que coincida con tus rutas
+// Sincroniza el estado local `isExpanded` y `openMenus` con el store de Pinia
+const isExpanded = computed(() => uiStore.isSidebarExpanded);
+const openMenus = computed(() => uiStore.openSidebarMenus);
+
+// Acciones del store
+const toggleSidebar = () => {
+  uiStore.toggleSidebar();
+  console.log('Sidebar: isExpanded (after toggle):', uiStore.isSidebarExpanded);
+};
+const toggleSubMenu = (label) => {
+  uiStore.toggleSubMenu(label);
+  console.log('Sidebar: Submenu toggled manually:', label, 'Open state:', uiStore.openSidebarMenus[label]);
+};
+
+// Define la estructura explícita de tus links de navegación con iconos de Font Awesome
 const navigationLinks = ref([
-  { path: '/dashboard', label: 'Dashboard', icon: SquaresPlusIcon },
+  { path: '/admin', label: 'Inicio', icon: ['fas', 'home'], roles: ['admin', 'supervisor'] },
+  { path: '/admin/dashboard', label: 'Dashboard', icon: ['fas', 'chart-simple'], roles: ['admin', 'supervisor'] },
   {
-    label: 'Administración',
-    icon: UserIcon,
+    label: 'Recursos Humanos',
+    icon: ['fas', 'user-group'],
     children: [
-      { path: '/admin/dashboard', label: 'Panel Principal' }, // Asegúrate que coincida con tu ruta
-      { path: '/admin/tipos-asistencia/lista', label: 'Tipos de Asistencia' },
-      { path: '/admin/departamentos/lista', label: 'Departamentos' },
-      { path: '/admin/estados-solicitud/lista', label: 'Status Solicitud Vacaciones' },
-      { path: '/admin/vacaciones-oficiales/lista', label: 'Vacaciones Oficiales' },
-      { path: '/admin/empleados/lista', label: 'Empleados' },
-      { path: '/admin/asistencias/lista', label: 'Asistencias' },
-      { path: '/admin/vacaciones/lista', label: 'Vacaciones' },
-      
-      // Agrega más subrutas de administración aquí
+      { path: '/admin/empleados/lista', label: 'Gestión de Empleados', roles: ['admin', 'supervisor'] },
+      { path: '/admin/departamentos/lista', label: 'Departamentos', roles: ['admin'] },
+      { path: '/admin/empleados/export', label: 'Exportar Empleados', roles: ['admin', 'supervisor'] },
+      { path: '/admin/departamentos/export', label: 'Exportar Departamentos', roles: ['admin'] },
     ],
   },
-  { path: '/projects', label: 'Proyectos', icon: FolderIcon },
-  { path: '/Empresas', label: 'Empresas', icon: BuildingOffice2Icon },
-  { path: '/reportes', label: 'Reportes', icon: ClipboardDocumentCheckIcon },
-  { path: '/charts', label: 'Gráficos', icon: ChartBarIcon },
-  { path: '/released', label: 'Versión', icon: RocketLaunchIcon },
-  // Agrega más links aquí con sus respectivos iconos de Heroicons
+  {
+    label: 'Tiempo y Asistencia',
+    icon: ['fas', 'clock'],
+    children: [
+      { path: '/admin/asistencias/lista', label: 'Registros de Asistencia', roles: ['admin', 'supervisor'] },
+      { path: '/admin/asistencias/reportes/empleado', label: 'Reportes de Asistencia', roles: ['admin', 'supervisor'] },
+      { path: '/admin/tipos-asistencia/lista', label: 'Tipos de Asistencia', roles: ['admin'] },
+    ],
+  },
+  {
+    label: 'Vacaciones y Permisos',
+    icon: ['fas', 'calendar-days'],
+    children: [
+      { path: '/admin/vacaciones/lista', label: 'Solicitudes de Vacaciones', roles: ['admin', 'supervisor'] },
+      { path: '/admin/vacaciones/administrar', label: 'Administrar Solicitudes', roles: ['admin', 'supervisor'] },
+      { path: '/admin/vacaciones/reportes/resumen', label: 'Reportes de Vacaciones', roles: ['admin', 'supervisor'] },
+      { path: '/admin/vacaciones-oficiales/lista', label: 'Días Festivos Oficiales', roles: ['admin'] },
+      { path: '/admin/estados-solicitud/lista', label: 'Config. Estados Solicitud', roles: ['admin'] },
+      { path: '/admin/vacaciones/opciones-avanzadas', label: 'Config. Avanzada Vacaciones', roles: ['admin'] },
+    ],
+  },
+  { path: '/admin/configuracion/general', label: 'Configuración del Sistema', icon: ['fas', 'gear'], roles: ['admin'] },
+  { path: '/released', label: 'Información del Sistema', icon: ['fas', 'circle-question'], roles: ['admin', 'supervisor', 'employee'] },
 ]);
 
-// Filtra los links que tienen rutas hijas para el menú desplegable
-const navigationLinksWithChildren = computed(() => {
-  return navigationLinks.value.map(link => {
-    const routeRecord = router.getRoutes().find(r => r.path === link.path);
-    if (routeRecord && routeRecord.children && routeRecord.children.length > 0 && !link.children) {
-      return {
-        ...link,
-        children: routeRecord.children.map(childRoute => ({
-          path: link.path + '/' + childRoute.path,
-          label: childRoute.name ? childRoute.name.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : 'Sub-elemento', // Puedes personalizar la etiqueta
-        })),
-      };
+// Filtra los links de navegación basándose en los roles del usuario logueado
+const filteredLinks = computed(() => {
+  const userRoles = authStore.user?.role ? [authStore.user.role] : [];
+  console.log('--- Sidebar Debug: Computing filteredLinks ---');
+  console.log('Current User Role(s):', userRoles);
+
+  const filtered = navigationLinks.value.filter(link => {
+    // Si el link tiene hijos, filtra los hijos
+    if (link.children) {
+      const accessibleChildren = link.children.filter(childLink => {
+        const hasAccess = childLink.roles ? childLink.roles.some(role => userRoles.includes(role)) : true;
+        // console.log(`  Child "${childLink.label}" (${childLink.path}) - Roles: ${childLink.roles || 'None'}, Has Access: ${hasAccess}`); // Descomentar para depuración granular de hijos
+        return hasAccess;
+      });
+      // Creamos una copia del link y le asignamos los hijos filtrados
+      const newLink = { ...link, children: accessibleChildren };
+      const parentVisible = newLink.children.length > 0;
+      // console.log(`Parent "${newLink.label}" - Has Accessible Children: ${newLink.children.length} > 0 (${parentVisible})`); // Descomentar para depuración granular de padres
+      return parentVisible; // El menú padre solo es visible si tiene hijos accesibles
     }
-    return link;
+    // Si no tiene hijos, es visible si el usuario tiene los roles requeridos
+    const hasAccess = link.roles ? link.roles.some(role => userRoles.includes(role)) : true;
+    // console.log(`  Link "${link.label}" (${link.path}) - Roles: ${link.roles || 'None'}, Has Access: ${hasAccess}`); // Descomentar para depuración granular de enlaces directos
+    return hasAccess;
   });
+
+  console.log('Filtered Links Result:', JSON.parse(JSON.stringify(filtered.map(l => ({ label: l.label, path: l.path, children: l.children ? l.children.map(c => ({ label: c.label, path: c.path })) : undefined })))));
+  return filtered;
 });
 
-const toggleSidebar = () => {
-  isSidebarExpanded.value = !isSidebarExpanded.value;
+/**
+ * Verifica si alguna de las rutas hijas de un menú está activa actualmente.
+ * Esto se usa para mantener el submenú abierto si el usuario está en una de sus rutas.
+ * @param {Array<Object>} children - Array de objetos de rutas hijas.
+ * @returns {boolean} - True si alguna ruta hija está activa, false de lo contrario.
+ */
+const isAnyChildRouteActive = (children) => {
+  return children.some(child => route.path.startsWith(child.path));
 };
 
-const toggleSubMenu = (label) => {
-  openSubMenus.value[label] = !openSubMenus.value[label];
-};
+// --- CAMBIO CLAVE AQUÍ: Usamos 'watch' para la ruta en lugar de 'watchEffect' ---
+watch(() => route.path, (newPath, oldPath) => {
+  console.log(`--- Sidebar Debug: Route changed from ${oldPath} to ${newPath} ---`);
+  // Cierra todos los submenús excepto el que contiene la nueva ruta activa (o el que ya estaba abierto manualmente)
+  filteredLinks.value.forEach(link => {
+    if (link.children && link.children.length > 0) {
+      const shouldBeOpen = isAnyChildRouteActive(link.children);
+      if (uiStore.openSidebarMenus[link.label] !== shouldBeOpen) {
+          uiStore.setSubMenuState(link.label, shouldBeOpen);
+          console.log(`Watch: Setting subMenu "${link.label}" to ${shouldBeOpen} (due to active child route change)`);
+      }
+    }
+  });
+  console.log('openSidebarMenus state after route change:', uiStore.openSidebarMenus);
+}, { immediate: true }); // 'immediate: true' para que se ejecute al inicio
+
+// Inicializa los menús en el store al montar el componente (para el estado inicial de Pinia)
+onMounted(() => {
+  console.log('Sidebar Component Mounted!');
+  console.log('Current Auth User:', authStore.user);
+  console.log('Current Route:', route.fullPath, 'Name:', route.name);
+  console.log('Initial isExpanded state:', uiStore.isSidebarExpanded);
+  // Asegura que los menús estén inicializados en el store.
+  // Esto debe suceder solo una vez, o cuando la estructura de navigationLinks cambie.
+  uiStore.initializeSidebarMenus(navigationLinks.value);
+  console.log('Initial openSidebarMenus state (from onMounted):', uiStore.openSidebarMenus);
+});
+
 </script>
 
 <style scoped>
@@ -202,5 +245,20 @@ const toggleSubMenu = (label) => {
 
 aside {
   font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Estilos para el scrollbar personalizado */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #333;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: #777;
 }
 </style>

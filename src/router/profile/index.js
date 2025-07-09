@@ -8,6 +8,8 @@ import ProfilePage from '@/pages/profile/ProfilePage.vue';
 import EditProfilePage from '@/pages/profile/EditProfilePage.vue';
 import ChangePasswordPage from '@/pages/profile/ChangePasswordPage.vue';
 import DashboardInfoPage from '@/pages/profile/DashboardInfoPage.vue';
+import VerifyEmailPage from '@/pages/profile/VerifyEmailPage.vue';
+import SecurityPage from '@/pages/profile/SecurityPage.vue';
 // import DashboardInfoPage from '@/pages/profile/DashboardInfoPage.vue'; // Opcional, si es una página única de perfil/dashboard
 
 const profileRoutes = {
@@ -33,6 +35,18 @@ const profileRoutes = {
       name: 'change-password',
       component: ChangePasswordPage,
       meta: { title: 'Cambiar Contraseña' }
+    },
+    {
+      path: 'verify-email', // <-- ruta Verifiacr EMail
+      name: 'verify-email',
+      component: VerifyEmailPage,
+      meta: { title: 'Verificar Email' }
+    },
+    {
+      path: 'security', // <-- Ruta de seguridad
+      name: 'security',
+      component: SecurityPage,
+      meta: { title: 'Seguridad' }
     },
     // Si tu DashboardInfoPage es una vista que encaja *dentro* del layout de perfil, inclúyela.
     // Si es una página de "dashboard" principal que solo MUESTRA info del usuario,

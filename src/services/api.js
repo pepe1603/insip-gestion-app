@@ -4,6 +4,7 @@ import { useSessionStore } from '../stores/useSessionStore';
 import { useGlobalModal } from '@/composables/useGlobalModal'; // Ajusta la ruta si es necesario
 // Importa tu modal de no autorizado
 import UnauthorizedModal from '@/components/modals/UnauthorizedModal.vue'; // Ajusta la ruta si es necesario
+import { useAuthStore } from '@/stores/authStore';
 
 const api = axios.create({
   baseURL: 'http://localhost:8000/api',
@@ -29,11 +30,21 @@ api.interceptors.response.use(
 
       // --- Manejo de 401: No Autorizado (Sesión Expirada/Inválida) ---
       if (status === 401) {
+        const authStore = useAuthStore();
+        // CRÍTICO: Si el frontend cree que está autenticado, pero el backend dice 401,
+        // significa que el token local ya no es válido.
+        // Llamamos al método de limpieza forzada para romper el ciclo.
+        if (authStore.isAuthenticated) { // Solo si el store cree que hay un usuario logueado
+          console.warn("401 Unauthorized: Token inválido o expirado. Limpiando sesión local.");
+          await authStore.clearAuthData(); // Llama a la acción logout del authStore
+        }
+        // Ahora que el estado está limpio, podemos proceder a informar al usuario
+        // y redirigir al login.
+        
         const sessionStore = useSessionStore();
         // Llama a tu función que limpia la sesión y redirige al login
         await sessionStore.handleSessionExpired();
-        // Puedes también mostrar un toast o modal aquí si lo deseas
-        // Pero handleSessionExpired ya debería manejar la notificación al usuario
+        
       }
       // --- Manejo de 403: Prohibido (Permisos Insuficientes) ---
       else if (status === 403) {
