@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps } from 'vue';
+import { ref } from 'vue';
 
 // Recibe las funciones inyectadas por modalService para resolver la promesa
 const props = defineProps({

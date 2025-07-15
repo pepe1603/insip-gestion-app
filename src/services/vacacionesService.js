@@ -1,3 +1,4 @@
+//src/services/vacacionesService.js
 import api from './api'
 import { useToastService } from './toastService'
 
@@ -149,6 +150,7 @@ export default {
   async getDisponibilidad(empleadoId) {
     try {
       const response = await api.get(`/vacaciones/disponibilidad/${empleadoId}`)
+      console.log(`getDisponibilida or emeplado ${ empleadoId } `, response);
       return response.data.data
     } catch (error) {
       console.error(`Error al obtener la disponibilidad de vacaciones del empleado ${empleadoId}:`, error)

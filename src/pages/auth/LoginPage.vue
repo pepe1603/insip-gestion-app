@@ -1,13 +1,13 @@
 <template>
-  <div class="w-full  p-4 sm:max-w-md md:max-w-xl lg:max-w-3xl sm:px-8">
+  <div class="w-full p-4 sm:max-w-md md:max-w-xl lg:max-w-3xl sm:px-8">
     <div class="space-x-4 mb-4 sm:mb-10">
-      <h1 class="text-2xl sm:text-4xl font-bold ">Iniciar sesión</h1>
+      <h1 class="text-2xl sm:text-4xl font-bold">Iniciar sesión</h1>
       <p class="text-gray-600 text-sm sm:text-base">welcome back to the app</p>
     </div>
 
     <form @submit.prevent="handleLogin" class="mt-4 flex flex-col items-center text-sm sm:text-base">
 
-      <UiInputEmail label="Email Address" class="mb-4 " v-model="email" required="true" placeholder="example@example.com"/>
+      <UiInputEmail label="Email Address" class="mb-4 " v-model="email" placeholder="example@example.com"/>
       <UiInputPassword label="Password" class="mb-2" v-model="password" placelholder="password-example" />
 
       <div class="w-full flex justify-between text-xs sm:text-sm mb-6 sm:mb-12">
@@ -19,7 +19,6 @@
 
     </form>
 
-
     <UiDivider label="Or" class="my-8" />
 
     <div class="self-center flex flex-col items-center gap-2">
@@ -30,9 +29,6 @@
         <font-awesome-icon :icon="['fab', 'facebook-square']" class="text-lg mr-2" />
         use Facebook Account</div>
     </div>
-
-    
-
   </div>
 </template>
 
@@ -49,30 +45,36 @@ import { useGlobalToast } from '../../composables/useGlobalToast';
 const email = ref('');
 const password = ref('');
 const router = useRouter();
-const auth = useAuthStore(); // ⬅️ tu store de auth
+const auth = useAuthStore();
 
 const $toast = useGlobalToast();
 
-  const showToast = () => {
-    $toast?.success('¡Bienvenido al sistema!, Es un gusto tenerte de vuelta.');
-  };
+const showToast = () => {
+  $toast?.success('¡Bienvenido al sistema!, Es un gusto tenerte de vuelta.');
+};
 
 const handleLogin = async () => {
   try {
-    await auth.login({ email: email.value, password: password.value });
+    const loginResult = await auth.login({ email: email.value, password: password.value });
     
-    router.push('/profile');
-    showToast();
+    if (loginResult === 'CHANGE_PASSWORD_REQUIRED') {
+      // Redirigir a la página de cambio de contraseña forzado
+      $toast.info('Debe cambiar su contraseña para continuar.');
+      router.push({ name: 'force-password-change' }); // Usamos el nombre de la nueva ruta
+    } else if (loginResult === 'LOGIN_SUCCESS') {
+      // Login normal exitoso
+      router.push('/profile'); // O a tu dashboard principal
+      showToast();
+    }
 
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     // Aquí podrías usar un toast o modal para mostrar un error de login
-    $toast.error(error.response.data?.message);
+    $toast.error(error.response.data?.message || 'Error desconocido al iniciar sesión.');
   }
 };
 </script>
 
-
 <style scoped>
-
+/* Tu estilo aquí */
 </style>

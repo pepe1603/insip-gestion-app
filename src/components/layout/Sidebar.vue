@@ -3,12 +3,12 @@
     :class="[
       'bg-gray-800',
       'text-white',
+      'w-auto h-auto',
       'flex',
       'flex-col',
-      'min-h-screen0...',
       'transition-all',
       'duration-300',
-      isExpanded ? 'w-64' : 'w-20',
+      isExpanded ? 'w-72' : 'w-20',
       'rounded-lg',
       'm-2',
       'py-2',
@@ -133,8 +133,18 @@ const toggleSubMenu = (label) => {
 
 // Define la estructura explícita de tus links de navegación con iconos de Font Awesome
 const navigationLinks = ref([
-  { path: '/admin', label: 'Inicio', icon: ['fas', 'home'], roles: ['admin', 'supervisor'] },
+  { path: '/admin', label: 'Inicio del Panel', icon: ['fas', 'home'], roles: ['admin', 'supervisor'] },
   { path: '/admin/dashboard', label: 'Dashboard', icon: ['fas', 'chart-simple'], roles: ['admin', 'supervisor'] },
+  {
+    label: 'Administración de Usuarios', // Nuevo menú padre
+    icon: ['fas', 'users-cog'], // Un ícono sugerido, asegúrate de tenerlo disponible
+    children: [
+      { path: '/admin/users/list', label: 'Lista de Usuarios', roles: ['admin', 'supervisor'] }, // Supervisor podría ver la lista pero no editar
+      { path: '/admin/users/create', label: 'Crear Usuario', roles: ['admin'] },
+      // Podrías añadir más si tienes secciones para roles, permisos, etc.
+      // { path: '/admin/users/roles', label: 'Roles y Permisos', roles: ['admin'] },
+    ],
+  },
   {
     label: 'Recursos Humanos',
     icon: ['fas', 'user-group'],

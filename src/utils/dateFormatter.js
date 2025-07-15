@@ -8,11 +8,11 @@ export function formatDate(isoDateString) {
       const date = new Date(isoDateString);
       //const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
 const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      console.log("Fecha original:", isoDateString);
+    //  console.log("Fecha original:", isoDateString);
       //console.log("Fecha convertida:", date);
       return date.toLocaleDateString('es-MX', options); // 'es-MX' para formato en español de México
     } catch (error) {
-      console.error("Error al formatear la fecha:", error);
+     // console.error("Error al formatear la fecha:", error);
       return 'Fecha inválida';
     }
   }
@@ -37,7 +37,7 @@ export function formatDateTime(dateString) {
     const date = parseISO(dateString);
     return format(date, 'dd/MM/yyyy HH:mm', { locale: es });
   } catch (e) {
-    console.error('Error formatting date-time:', dateString, e);
+   // console.error('Error formatting date-time:', dateString, e);
     return dateString; // Fallback to original string
   }
 }

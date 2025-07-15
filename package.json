@@ -20,6 +20,8 @@
     "@vuepic/vue-datepicker": "^11.0.2",
     "@vueuse/core": "^13.1.0",
     "axios": "^1.9.0",
+    "chart.js": "^4.5.0",
+    "lodash": "^4.17.21",
     "masonry-layout": "^4.2.2",
     "pinia": "^3.0.3",
     "pinia-plugin-persistedstate": "^4.4.1",
@@ -27,9 +29,12 @@
     "tailwindcss": "^4.1.4",
     "tempojs": "^1.0.3",
     "tippy.js": "^6.3.7",
+    "vee-validate": "^4.15.1",
     "vue": "^3.5.13",
+    "vue-chartjs": "^5.3.2",
     "vue-router": "^4.5.1",
-    "vue-tippy": "^6.7.0"
+    "vue-tippy": "^6.7.0",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.2",

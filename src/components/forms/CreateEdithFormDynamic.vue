@@ -165,7 +165,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue';
+import { ref, watch } from 'vue';
 import UiInputText from '../ui/UiInputText.vue';
 import UiTextarea from '../ui/UiTextArea.vue';
 import UiButton from '../ui/UiButton.vue';

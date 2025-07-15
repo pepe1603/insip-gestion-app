@@ -11,6 +11,7 @@
   </template>
   
   <script setup>
+  //este archivo se ubnica en src/pages/admin/asistencias/AsistenciasPage.vue
   import UiTab from '../../../components/ui/UiTab.vue';
   import { ref } from 'vue';
   import { useRoute } from 'vue-router';

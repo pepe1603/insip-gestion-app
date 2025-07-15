@@ -12,7 +12,7 @@
         <svg class="mx-auto h-16 w-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <p class="text-lg font-semibold">¡Tu correo electrónico ha sido verificado!</p>
         <p class="mt-2 text-gray-600 dark:text-gray-300">Gracias por verificar tu cuenta. Ya puedes disfrutar de todas las funcionalidades.</p>
-        <UiButton @click="$router.push({ name: 'profile' })" class="mt-6">
+        <UiButton @click="$router.push({ name: 'profile-overview' })" class="mt-6">
           Volver a Mi Perfil
         </UiButton>
       </div>

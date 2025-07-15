@@ -53,7 +53,7 @@
         </div>
 
         <div class="mt-8 flex justify-end space-x-3">
-          <router-link :to="{ name: 'profile' }">
+          <router-link :to="{ name: 'profile-details' }">
             <UiButton variant="secondary" type="button" :disabled="isUpdating">
               Cancelar
             </UiButton>
@@ -113,7 +113,7 @@ const updateProfile = async () => {
   try {
     const response = await profileService.updateProfile(profileForm);
     $toast?.success(response.message || 'Perfil actualizado exitosamente.');
-    router.push({ name: 'profile' }); // Redirigir al perfil view
+    router.push({ name: 'profile-overview' }); // Redirigir al perfil view
   } catch (err) {
     console.error("Error al actualizar perfil:", err);
     if (err.response && err.response.status === 422) {

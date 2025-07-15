@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex justify-between items-center h-16">
         <div class="flex-shrink-0 flex items-center gap-2">
-          <UiAvatar src="nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
+          <UiAvatar src="/public/nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
           <router-link to="/" class="text-xl font-bold text-green-500">RH-flow</router-link>
         </div>
 
@@ -29,6 +29,7 @@
                 {{ cPanelButtonText }}
               </button>
             </template>
+            <!--
             <template v-else>
               <router-link
                 :to="{ name: 'login' }"
@@ -37,6 +38,8 @@
                 Iniciar Sesión
               </router-link>
             </template>
+
+          -->
           </li>
         </ul>
       </div>
@@ -92,9 +95,9 @@ const getCPanelPath = () => {
     case 'supervisor':
       return { name: 'dashboard' }; // Assuming 'employee-dashboard' for both supervisors and employees
     case 'employee':
-      return { name: 'employee-dashboard' }; // Assuming 'employee-dashboard' for both supervisors and employees
+      return { name: 'employee-overview' }; // Assuming 'employee-dashboard' for both supervisors and employees
     case 'user':
-      return { name: 'profile-info' }; // Standard users go to their profile
+      return { name: 'profile-overview' }; // Standard users go to their profile
     default:
       return { name: 'home' }; // Fallback to public home or login if role is unknown
   }
@@ -114,8 +117,8 @@ watch(() => authStore.isAuthenticated, (newVal) => {
   if (newVal && authStore.user?.role === 'user') {
     // If a 'user' role logs in and is on a public page, redirect them to their profile
     // We'll also check if the current route is not already their profile to avoid loops
-    if (route.name !== 'profile-info') {
-      router.push({ name: 'profile-info' });
+    if (route.name !== 'profile-overview') {
+      router.push({ name: 'profile-overview' });
     }
   }
 }, { immediate: true }); // `immediate: true` to run the watcher once on component mount
@@ -123,8 +126,8 @@ watch(() => authStore.isAuthenticated, (newVal) => {
 // Redirect 'user' roles if they somehow land on the PublicLayout and are authenticated
 onMounted(() => {
   if (authStore.isAuthenticated && authStore.user?.role === 'user') {
-    if (route.name !== 'profile-info') {
-      router.push({ name: 'profile-info' });
+    if (route.name !== 'profile-overview') {
+      router.push({ name: 'profile-overview' });
     }
   }
 });

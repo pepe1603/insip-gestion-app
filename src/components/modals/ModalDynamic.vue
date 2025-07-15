@@ -1,7 +1,5 @@
 <template>
-  <TransitionRoot as="template" :show="isOpen" @close="handleClose">
-    <Dialog class="relative z-10">
-      <TransitionChild
+  <TransitionRoot as="template" :show="isOpen"> <Dialog class="relative z-10" @close="handleClose"> <TransitionChild
         as="template"
         enter="ease-out duration-300"
         enter-from-class="opacity-0"
@@ -24,11 +22,11 @@
             leave-from-class="opacity-100 translate-y-0 sm:scale-100"
             leave-to-class="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg md:max-w-2xl lg:max-w-4xl">
+            <DialogPanel class="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md md:max-w-xl lg:max-w-2xl">
               <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div class="sm:flex gap-2 sm:items-start relative">
                   <div
-                    class="mx-auto flex size-12 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-10 absolute -top-4 -left-2"
+                    class="mx-auto flex size-10 shrink-0 items-center justify-center rounded-full sm:mx-0 sm:size-10 absolute -top-4 -left-2"
                     :class="iconClass"
                   >
                     <component :is="icon" class="size-6" aria-hidden="true" />
@@ -71,7 +69,7 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits, computed } from 'vue'
+import { computed } from 'vue'
 import {
   Dialog,
   DialogPanel,
@@ -172,14 +170,25 @@ const icon = computed(() => modal.value.icon)
 const buttonClass = computed(() => modal.value.buttonClass)
 const iconClass = computed(() => modal.value.iconClass)
 
-const handleClose = () => emit('update:isOpen', false)
+// Modificación importante aquí:
+const handleClose = () => {
+  emit('update:isOpen', false); // Emitir para cerrar el modal desde el padre
+  // No emitir primary-action o secondary-action aquí, ya que esto es solo para cerrar
+};
+
 const handlePrimaryAction = () => {
-  emit('primary-action')
-  emit('update:isOpen', false)
-}
+  emit('primary-action');
+  emit('update:isOpen', false); // Asegurarse de que el modal se cierre después de la acción
+};
+
+// Esta función es para cuando se usa el slot y el botón está fuera del control del modal dinámico
+// No es necesario llamar a handleClose aquí, ya que se espera que el botón en el slot
+// maneje su propia emisión o el componente padre cierre el modal.
+// PERO, para consistencia, si el botón secundario cierra el modal, debería emitir update:isOpen.
+// Aquí lo mantengo como lo tenías, pero el 'cancelarEliminar' en el padre ya lo cierra.
 const handleSecondaryAction = () => {
-  emit('secondary-action')
-  emit('update:isOpen', false)
+  emit('secondary-action');
+  emit('update:isOpen', false); // Asegurarse de que el modal se cierre después de la acción
 }
 </script>
 

@@ -74,6 +74,19 @@ export default {
       throw errorMessage;
     }
   },
+      async attendanceByEmployee(empleadoId) {
+    try {
+      const response = await api.get(`/asistencias/por-empleado/${empleadoId}`);
+        console.log('getAsistenciasPorEMpleado->get(): ', response);
+      return response;
+    } catch (error) {
+      console.error(`Error al obenter asistencias del empleado ${empleadoId}:`, error);
+      const errorMessage = error.response?.data?.message || `Error desconocido al 
+      obtenerr del empleado ${empleadoId}.`;
+      useToastService().error(errorMessage, { title: 'Error al obtener el las asitencias del empleado' });
+      throw errorMessage;
+    }
+  },
 
   // Sección 2: Métodos para endpoints de reportes de asistencias
   async exportarTodo(params = {}, options = {}) {
@@ -127,6 +140,7 @@ export default {
          ...options,
           responseType: 'blob' 
         });
+        console.log('porEMpleado->get(): ', response);
       return response;
     } catch (error) {
       console.error(`Error al exportar asistencias del empleado ${empleadoId}:`, error);

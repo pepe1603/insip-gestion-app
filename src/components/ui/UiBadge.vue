@@ -1,7 +1,7 @@
 <template>
   <span
     :class="badgeClasses"
-    class="inline-flex items-center rounded-md font-medium ring-1 ring-inset
+    class="inline-flex items-center ring-1 ring-inset leading-5 font-semibold rounded-full
            transform hover:scale-105 cursor-pointer transition duration-200 ease-in-out"
   >
     <div v-if="Icon" :class="iconWrapperClasses">

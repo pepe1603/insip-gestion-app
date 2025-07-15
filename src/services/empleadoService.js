@@ -1,3 +1,4 @@
+//empleadoService.js
 import api from './api';
 import { useToastService } from './toastService'; // Asegúrate de la ruta correcta
 
@@ -18,6 +19,7 @@ export default {
   async getById(id) {
     try {
       const response = await api.get(`/empleados/${id}`);
+      console.log(response.data);
       return response.data.data;
     } catch (error) {
       console.error(`Error al obtener el empleado con ID ${id}:`, error);

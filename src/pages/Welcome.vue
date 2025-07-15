@@ -19,16 +19,14 @@
 
       <div class="space-x-4 animate-scale-in">
         <router-link
-          
+          to="auth/login"
           class="inline-flex items-center px-8 py-3 border border-transparent text-base font-medium rounded-full shadow-lg text-indigo-700 bg-white hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-300"
         >
           Iniciar Sesión
-          <svg class="ml-2 -mr-1 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M10 2a8 8 0 100 16 8 8 0 000-16zM8.293 8.293a1 1 0 011.414 0L12 10.586l2.293-2.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-          </svg>
+          <font-awesome-icon class="ml-2 bg-indigo-500 text-white rounded-full p-0.5" :icon="['fas', 'chevron-down']" />
         </router-link>
         <router-link
-          
+          to="/auth/register"
           class="inline-flex items-center px-8 py-3 border border-white text-base font-medium rounded-full shadow-lg text-white hover:bg-white hover:text-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white transition-all duration-300"
         >
           Registrarse
@@ -54,6 +52,7 @@
 </template>
 
 <script setup>
+import { icon } from '@fortawesome/fontawesome-svg-core';
 import { computed } from 'vue';
 
 const currentYear = computed(() => new Date().getFullYear());

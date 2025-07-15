@@ -40,7 +40,7 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: 'md', // Valor por defecto a 'md'
+    default: 'sm', // Valor por defecto a 'sm'
     validator: (value) => ['xs', 'sm', 'md', 'lg', 'xl'].includes(value),
   },
   disabled: {

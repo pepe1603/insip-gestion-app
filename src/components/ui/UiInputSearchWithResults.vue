@@ -1,3 +1,4 @@
+// src/components/ui/UiSearchWithResults.vue
 <template>
   <div class="relative flex items-center w-full max-w-md">
     <div class="absolute left-4 text-xl text-gray-600 dark:text-gray-300">
@@ -12,11 +13,14 @@
       :placeholder="placeholder"
       type="text"
       :aria-label="placeholder"
-      :disabled="disabled" class="w-full pl-12 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-700 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-      :class="{ 'cursor-not-allowed bg-gray-100 dark:bg-gray-800 opacity-60': disabled }" />
+      :disabled="disabled"
+      class="w-full pl-12 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-700 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+      :class="{ 'cursor-not-allowed bg-gray-100 dark:bg-gray-800 opacity-60': disabled }"
+    />
 
     <ul
-      v-if="searchResults && searchResults.length > 0 && !disabled" class="absolute left-0 mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600 z-10"
+      v-if="searchResults && searchResults.length > 0 && !disabled"
+      class="absolute left-0 top-full mt-2 w-full bg-white border border-gray-300 rounded-md shadow-lg dark:bg-gray-800 dark:border-gray-600 z-10 max-h-60 overflow-y-auto"
     >
       <li
         v-for="result in searchResults"
@@ -35,7 +39,7 @@ import { ref, watch } from 'vue';
 
 const props = defineProps({
   placeholder: String,
-  label: String, // La prop label está aquí pero no se usa en la plantilla actual del componente.
+  label: String,
   searchServiceMethod: {
     type: Function,
     required: true,
@@ -46,7 +50,7 @@ const props = defineProps({
   },
   minSearchLength: {
     type: Number,
-    default: 2,
+    default: 1, // Cambiado a 1 para búsqueda más flexible por ID
   },
   searchDelay: {
     type: Number,
@@ -56,7 +60,7 @@ const props = defineProps({
     type: [String, Function],
     default: 'id',
   },
-  disabled: { // AÑADIDO: Definición de la prop disabled
+  disabled: {
     type: Boolean,
     default: false,
   },
@@ -69,17 +73,15 @@ const searchResults = ref([]);
 const selectedItem = ref(null);
 let searchTimeout = null;
 
-// Observador para limpiar el término de búsqueda y resultados cuando se deshabilita
 watch(() => props.disabled, (isDisabled) => {
   if (isDisabled) {
-    searchTerm.value = ''; // Limpia el término de búsqueda
-    searchResults.value = []; // Limpia los resultados
-    clearTimeout(searchTimeout); // Limpia cualquier timeout de búsqueda pendiente
+    searchTerm.value = '';
+    searchResults.value = [];
+    clearTimeout(searchTimeout);
   }
 });
 
 async function buscar(termino) {
-  // No buscar si el componente está deshabilitado
   if (props.disabled) {
     searchResults.value = [];
     return;
@@ -87,9 +89,10 @@ async function buscar(termino) {
   try {
     if (props.searchServiceMethod) {
       const results = await props.searchServiceMethod(termino);
-      searchResults.value = results;
+      // Asegurarse de que `results` sea un array, incluso si la API devuelve uno o ninguno.
+      searchResults.value = Array.isArray(results) ? results : [];
     } else {
-      console.warn('searchServiceMethod prop is not provided to UiInputSearchWithResults.');
+      console.warn('searchServiceMethod prop is not provided to UiSearchWithResults.');
       searchResults.value = [];
     }
   } catch (error) {
@@ -99,7 +102,6 @@ async function buscar(termino) {
 }
 
 const handleInput = (event) => {
-  // No permitir input si el componente está deshabilitado
   if (props.disabled) {
     event.preventDefault();
     return;
@@ -117,7 +119,6 @@ const handleInput = (event) => {
 };
 
 const triggerSearch = () => {
-  // No gatillar búsqueda si el componente está deshabilitado
   if (props.disabled) {
     searchResults.value = [];
     return;
@@ -131,7 +132,6 @@ const triggerSearch = () => {
 };
 
 const seleccionarResultado = (item) => {
-  // No seleccionar resultado si el componente está deshabilitado
   if (props.disabled) return;
 
   selectedItem.value = item;
@@ -148,5 +148,14 @@ const getKey = (item) => {
 <style scoped>
 .z-10 {
   z-index: 10;
+}
+.top-full {
+  top: 100%;
+}
+.max-h-60 {
+  max-height: 15rem; /* 60 * 0.25rem = 15rem */
+}
+.overflow-y-auto {
+  overflow-y: auto;
 }
 </style>

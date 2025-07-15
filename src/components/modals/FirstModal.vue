@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from 'vue';
 import { useGlobalModal } from '../../composables/useGlobalModal'; // O inject('$modal')
 import SecondModal from './SecondModal.vue'; // El modal que abrirá
 

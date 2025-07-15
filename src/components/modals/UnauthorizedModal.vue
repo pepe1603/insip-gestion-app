@@ -30,7 +30,6 @@
 </template>
 
 <script setup>
-import { defineProps } from 'vue';
 import { useAuthStore } from '@/stores/authStore'; // Tu store de Pinia para auth
 import { useRouter } from 'vue-router'; // Para la navegación
 
@@ -54,14 +53,14 @@ const handleGoToHome = () => {
   if (props.__onClose) {
     props.__onClose({ action: 'home' }); // Resolver con acción 'home'
   }
-  router.push('/dashboard'); // Redirige al dashboard o la ruta principal
+  router.push({name: 'Welcome'}); // Redirige al dashboard o la ruta principal
 };
 
 const handleGoToLogin = () => {
   if (props.__onClose) {
     props.__onClose({ action: 'login' }); // Resolver con acción 'login'
   }
-  router.push('/auth/login'); // Redirige a la página de login
+  router.push({name: 'login'}); // Redirige a la página de login
 };
 </script>
 

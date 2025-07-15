@@ -65,7 +65,6 @@
 <script setup>
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue';
 import { ChevronDownIcon } from '@heroicons/vue/20/solid'; // Assumes you have this installed: npm install @heroicons/vue
-import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
   label: {

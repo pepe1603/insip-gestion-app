@@ -1,7 +1,7 @@
 // src/router/admin/index.js
 
 import AdminLayout from "@/layouts/AdminLayout.vue";
-import Dashboard from "@/pages/admin/Dashboard.vue";
+import AdminDashboardPage from "@/pages/admin/AdminDashboardPage.vue";
 import IntroPage from "@/pages/admin/introPage.vue"; // Asegúrate de que este archivo exista
 
 // Importaciones para Tipos de Asistencia
@@ -45,6 +45,13 @@ import VacacionesPage from "@/pages/admin/vacaciones/VacacionesPage.vue";
 import ListaVacaciones from "@/pages/admin/vacaciones/ListaVacaciones.vue";
 import ReportesVacacionesView from '@/pages/admin/vacaciones/ReportesVacacionesView.vue';
 
+// IMPORTACIONES PARA GESTIÓN DE USUARIOS (NUEVAS O MOVIDAS AQUÍ)
+import UserManagementPage from '@/pages/admin/users/UserManagementPage.vue';
+import UserListPage from '@/pages/admin/users/UserListPage.vue';
+import UserDetailPage from "@/pages/admin/users/UserDetailPage.vue";
+import UserCreatePage from "@/pages/admin/users/UserCreatePage.vue";
+import UserEditPage from "@/pages/admin/users/UserEditPage.vue";
+
 // Importaciones de los componentes de reportes de vacaciones (lazy loaded)
 const CrearEditarVacacion = () => import('@/pages/admin/vacaciones/CrearEditarVacacion.vue');
 const AdminSolicitudesVacaciones = () => import('@/pages/admin/vacaciones/AdminSolicitudesVacaciones.vue');
@@ -65,14 +72,53 @@ const adminRoutes = {
   children: [
     {
       path: "",
-      name: "intro", // Cambiado de "admin-base" a "intro" para tu IntroPage
+      name: "intro",
       component: IntroPage,
     },
     {
       path: "dashboard",
       name: "dashboard",
-      component: Dashboard,
+      component: AdminDashboardPage,
     },
+    // INICIO DE LAS RUTAS DE USUARIO AHORA INTEGRADAS DIRECTAMENTE AQUÍ
+    {
+      path: 'users', // La ruta completa será /admin/users
+      component: UserManagementPage, // Este es el componente contenedor con las tabs
+      meta: { roles: ['admin', 'supervisor'] },
+      children: [
+        {
+          path: 'list', // La ruta completa será /admin/users/list
+          name: 'admin-user-list',
+          component: UserListPage,
+          meta: { roles: ['admin', 'supervisor'], title: 'listado de eususario' },
+        },
+        {
+          path: 'create', // La ruta completa será /admin/users/create
+          name: 'admin-user-create',
+          component: UserCreatePage,
+          meta: { roles: ['admin'], title: 'Registro de Usuarios' }, // Solo el admin puede crear
+        },
+        {
+          path: 'edit/:id', // La ruta completa será /admin/users/edit/:id
+          name: 'admin-user-edit',
+          component: UserEditPage, // Reutilizamos el componente
+          props: true, // Pasa el parámetro :id como prop
+          meta: { roles: ['admin'], title: 'Edicion de usuario' }, // Solo el admin puede editar
+        },
+        {
+          path: ':id', // La ruta completa será /admin/users/:id (Para ver detalles)
+          name: 'admin-user-detail',
+          component: UserDetailPage, // Usa el componente de detalles si lo necesitas
+          props: true,
+          meta: { roles: ['admin', 'supervisor'] , title: 'Detalles de usuario en especifico'}, // Ambos pueden ver los detalles
+        },
+        {
+          path: '', // Redirige la ruta base /admin/users a /admin/users/list
+          redirect: { name: 'admin-user-list' },
+        },
+      ],
+    },
+    // FIN DE LAS RUTAS DE USUARIO
     {
       path: "tipos-asistencia",
       component: TipoAsistenciaPage,

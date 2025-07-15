@@ -38,7 +38,21 @@ import {
   faBell, // Para notificaciones
   faChevronDown, // Para dropdowns
   faChevronLeft, // Para toggle sidebar
-  faChevronRight, // Para toggle sidebar
+  faChevronRight,
+  faChartBar,
+  faPlusCircle,
+  faSyncAlt,
+  faCogs,
+  faUserTie,
+  faDollarSign,
+  faClipboardList,
+  faEnvelopeOpenText,
+  faCalendarCheck,
+  faChartLine,
+  faHollyBerry,
+  faInfoCircle,
+  faExclamationTriangle,
+  faUsersCog, // Para toggle sidebar
 } from '@fortawesome/free-solid-svg-icons'
 
 // Íconos regulares (far)
@@ -46,6 +60,7 @@ import { faSmile as farSmile, faClock as farClock } from '@fortawesome/free-regu
 
 // Íconos de marcas (fab)
 import { faFacebookF, faFacebookSquare, faGithub, faGoogle } from '@fortawesome/free-brands-svg-icons'
+import { ClipboardDocumentListIcon, EnvelopeOpenIcon, ExclamationCircleIcon, InformationCircleIcon } from '@heroicons/vue/24/outline'
 
 // Añade todos los íconos a la librería global de Font Awesome
 library.add(
@@ -55,9 +70,27 @@ library.add(
   faRightFromBracket,
   faUsers,
   faUser,
+  faUsersCog,
   faBuilding,
   faCalendarDays,
+  faCalendarCheck,
+  faChartLine,
+  faHollyBerry,
+  InformationCircleIcon,
+  ExclamationCircleIcon,
+  faInfoCircle,
+  faExclamationTriangle,
   faClock,
+  faClipboardList,
+  faEnvelopeOpenText,
+  faChartBar,
+  faPlusCircle,
+  faSyncAlt,
+  faCogs,
+  faUserTie,
+  EnvelopeOpenIcon,
+  faDollarSign,
+  ClipboardDocumentListIcon,
   faBriefcase,
   faChartSimple,
   faFileLines,

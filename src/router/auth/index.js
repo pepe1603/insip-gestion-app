@@ -1,12 +1,13 @@
 // src/router/auth/index.js
 
-// Importa los componentes de tus páginas de autenticación
+// Importa los componentes de tus páginas de autenticación que sera importada desde el router/index.js 
 import AuthLayout from '@/layouts/AuthLayout.vue'; // Asume que tienes un layout específico para autenticación
 import LoginPage from '@/pages/auth/LoginPage.vue';
 import RegisterPage from '@/pages/auth/RegisterPage.vue'; // Asumo que signIn es tu registro
 import ForgotPasswordPage from '@/pages/auth/ForgotPasswordPage.vue';
 import VerifyResetCodePage from '@/pages/auth/VerifyResetCodePage.vue';
 import ResetPasswordPage from '@/pages/auth/ResetPasswordPage.vue';
+import ForcePasswordChangePage from '@/pages/auth/ForcePasswordChangePage.vue';
 
 
 const authRoutes = {
@@ -44,7 +45,14 @@ const authRoutes = {
       
     },
 
-    
+    // --- NUEVA RUTA PARA CAMBIO DE CONTRASEÑA FORZADO ---
+    {
+      path: 'force-password-change',
+      name: 'force-password-change',
+      component: ForcePasswordChangePage,
+      meta: { guestOnly: false, requiresLimitedToken: true }, // Protegida, pero permite el token limitado
+    },
+    // ----------------------------------------------------
     // Si tienes una página de "user verification" o algo similar después del registro, agrégala aquí
   ]
 };

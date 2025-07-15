@@ -1,8 +1,15 @@
 <template>
-  <header class="bg-white shadow-sm px-6 py-4 flex justify-between items-center z-10 border-b border-gray-200">
-    <h1 class="text-2xl font-semibold text-gray-800">
-      {{ pageTitle }}
-    </h1>
+  <header class="bg-white shadow-sm px-4 py-2 flex flex-col sm:flex-row justify-between items-center z-10 border-b border-gray-200">
+    <div class="flex-shrink-0 flex items-center text-center gap-2">
+      <router-link to="/" class="flex flex-col justify-center items-center text-xs sm:text-sm font-bold text-center text-green-500">
+        <UiAvatar src="/public/nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
+        <span class="text-center">RH-flow</span>
+      </router-link>
+      <h1 class="text-center text-gray-700 break-keep text-wrap">
+        {{ pageTitle }}
+      </h1>
+    </div>
+
 
     <div class="flex items-center space-x-4">
       <button class="text-gray-600 hover:text-gray-800 relative focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-1">
@@ -104,8 +111,20 @@ const pageTitle = computed(() => {
     case 'reporte-vacaciones-dias-tomados-semana': return 'Reporte Días Tomados por Semana';
     case 'reporte-vacaciones-top-empleados': return 'Top Empleados con Vacaciones';
     case 'reporte-vacaciones-resumen': return 'Resumen de Vacaciones';
-    case 'profile-info': return 'Mi Perfil';
-    case 'employee-dashboard': return 'Panel de Empleado';
+    case 'profile-overview': return 'Bienvenido a tu Perfil'; // Para /profile
+    case 'profile-details': return 'Mi Perfil'; // Para /profile/details
+    case 'edit-profile': return 'Editar Perfil';
+    case 'change-password': return 'Cambiar Contraseña';
+    case 'verify-email': return 'Verificar Email';
+    case 'security': return 'Seguridad';
+
+    case 'employee-overview': return 'Panel de Empleado'; // Para /employee
+    case 'employee-dashboard': return 'Dashboard Empleado'; // Para /employee/dashboard
+    case 'employee-my-data': return 'Mis Datos de Empleado';
+    case 'employee-attendance': return 'Mis Asistencias';
+    case 'employee-vacations': return 'Mis Vacaciones';
+    case 'employee-request-vacation': return 'Solicitar Vacaciones';
+    case 'employee-consultations': return 'Consultas';
     case 'released': return 'Información del Sistema';
     default:
       // Intenta formatear el nombre de la ruta si no hay una coincidencia directa
@@ -119,7 +138,7 @@ const pageTitle = computed(() => {
 // Definimos los ítems del menú de usuario de forma programática
 const userMenuItems = computed(() => {
   const items = [
-    { label: 'Mi Perfil', to: { name: 'profile' }, icon: ['fa', 'user'], class: 'text-gray-700 hover:bg-gray-100' },
+    { label: 'Mi Perfil', to: { name: 'profile-overview' }, icon: ['fa', 'user'], class: 'text-gray-700 hover:bg-gray-100' },
   ];
 
   // CAMBIO CLAVE: Añadir "Panel de Empleado" si el rol del usuario NO es 'user'.
@@ -127,7 +146,7 @@ const userMenuItems = computed(() => {
   if (authStore.user?.role && authStore.user.role !== 'user') {
     items.push({
       label: 'Panel de Empleado',
-      to: { name: 'employee-dashboard' },
+      to: { name: 'employee-overview' },
       icon: ['fas', 'chart-pie'],
       class: 'text-gray-700 hover:bg-gray-100'
     });

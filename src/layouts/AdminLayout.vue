@@ -1,11 +1,11 @@
 <template>
-  <div class="flex h-screen bg-gray-100 font-sans text-gray-900 overflow-hidden p-0.5">
+  <div class="h-screen bg-gray-100 text-gray-900 overflow-hidden p-0.5 flex flex-col md:flex-row">
     <Sidebar />
 
-    <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex-1 flex flex-col gap-2 p-2.5 overflow-hidden">
       <ProfileHeader />
 
-      <main class="flex-1 overflow-y-auto p-4 md:p-6 bg-gray-50 rounded-tl-lg shadow-inner">
+      <main class="flex-1 overflow-y-auto bg-gray-50 rounded-tl-lg shadow-inner">
         <router-view />
       </main>
     </div>

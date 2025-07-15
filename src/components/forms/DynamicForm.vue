@@ -49,7 +49,7 @@
   </template>
   
   <script setup>
-  import { ref, computed, defineProps, defineEmits, watch } from 'vue';
+  import { ref, computed, watch } from 'vue';
   
   // Importación de los componentes
   import UiInputText from '../ui/UiInputText.vue';

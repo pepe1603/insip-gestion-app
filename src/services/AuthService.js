@@ -9,6 +9,7 @@ export const authService = {
 
   async register(userData) {
     const response = await api.post('/register', userData);
+    console.log('api response service Register(): ', response.data)
     return response.data;
   },
 
@@ -48,5 +49,12 @@ export const authService = {
   async verifyEmail() {
     const response = await api.post('/verify-email');
     return response.data;
-  }
+  },
+  // --- NUEVO MÉTODO PARA CAMBIO DE CONTRASEÑA FORZADO ---
+  async forceChangePassword(passwords) {
+      // Asegúrate de que el token temporal ya esté en los headers de Axios
+      const response = await api.post('/auth/force-password-change', passwords);
+      return response.data; // Debería devolver el nuevo token de acceso completo
+  },
+  // ----------------------------------------------------
 };

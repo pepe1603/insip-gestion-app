@@ -328,7 +328,7 @@ const verDetallesVacacion = (item) => {
     console.error('No se pudo obtener la vacación original para mostrar los detalles.');
     return;
   }
-  vacacionSeleccionada.value = item;
+  vacacionSeleccionada.value = item.originalItem;
   isDetallesModalOpen.value = true;
 };
 

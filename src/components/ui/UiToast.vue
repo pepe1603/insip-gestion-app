@@ -5,14 +5,14 @@
     @leave="onLeave"
   ><div
       v-if="visible"
-      class="relative z-50 flex items-center gap-2  mb-4  rounded-lg border-l-4 px-3 py-4 transition duration-200 ease-in-out transform hover:scale-105 pointer-events-auto"
+      class="relative z-50 flex items-center gap-2  mb-4  rounded-md border-l-4 px-3 py-4 transition duration-200 ease-in-out transform hover:scale-105 pointer-events-auto"
       :class="[typeClasses, { 'animate-vibrate': props.type === 'notify' }]"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
     >
     <!--Si es una notificacion vamsoa mostrar el incono , y aplicar la animacion de campana timbrarndo y termine antes de que se elimine el toast -->
-      <component :is="icon" :class="title ? 'w-6' : 'w-4'" v-if="icon" />
+      <component :is="icon" :class="title ? 'w-7' : 'w-7'" v-if="icon" />
 
       <div class="flex-1 flex flex-col items-center">
         <p v-if="title" class="font-semibold text-base">{{ title }}</p> <p class="font-normal font-sans text-gray-700 dark:text-gray-100 text-sm">{{ message }}</p>

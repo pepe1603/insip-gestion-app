@@ -42,7 +42,7 @@
         </div>
 
         <div class="mt-8 flex justify-end space-x-3">
-          <router-link :to="{ name: 'profile' }">
+          <router-link :to="{ name: 'profile-details' }">
             <UiButton variant="secondary" type="button" :disabled="isChangingPassword">Cancelar</UiButton>
           </router-link>
           <UiButton variant="primary" type="submit" :disabled="isChangingPassword">
@@ -89,7 +89,7 @@ const changePassword = async () => {
     passwordForm.password = '';
     passwordForm.password_confirmation = '';
 
-    router.push({ name: 'profile' }); // Redirigir de vuelta al perfil
+    router.push({ name: 'profile-overview' }); // Redirigir de vuelta al perfil
   } catch (err) {
     console.error("Error al cambiar contraseña:", err);
     if (err.response && err.response.status === 422) {

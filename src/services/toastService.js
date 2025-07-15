@@ -5,7 +5,7 @@ const useToastServiceState = createGlobalState(() => {
   const toasts = ref([]);
   let nextId = 0;
 
-  const addToast = (message, type = 'info', position = 'top-right', duration = 3000, title = '') => {
+  const addToast = (message, type = 'info', position = 'top-right', duration = 7000, title = '') => {
     const id = nextId++;
     toasts.value.push({ id, message, type, position, duration, title });
     return id; // Return the ID in case the caller needs to manually close it

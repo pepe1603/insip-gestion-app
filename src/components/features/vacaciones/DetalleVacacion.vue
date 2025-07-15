@@ -2,71 +2,71 @@
   <div class="p-4 sm:p-6 bg-white rounded-lg shadow-md">
     <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Detalles Completos de la Solicitud de Vacaciones</h2>
 
-    <div v-if="vacacion && vacacion.originalItem">
+    <div v-if="vacacion">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">ID Solicitud:</strong> #{{ vacacion.Id }}
+          <strong class="font-semibold">ID Solicitud:</strong> #{{ vacacion.id }}
         </p>
         <p class="text-base sm:text-lg">
           <strong class="font-semibold">Estado Actual:</strong>
-          <UiBadge :text="vacacion.Estado" :color="getEstadoColor(vacacion.Estado)" size="sm" class="ml-2" />
+          <UiBadge :text="vacacion.estado_solicitud?.estado || 'Desconocido'" :color="getEstadoColor(vacacion.estado_solicitud?.estado)" size="sm" class="ml-2" />
         </p>
         <p class="text-base sm:text-lg">
           <strong class="font-semibold">Fecha de Solicitud:</strong>
-          {{ vacacion.originalItem.fecha_solicitud ? formatDate(vacacion.originalItem.fecha_solicitud) : 'N/A' }}
+          {{ vacacion.fecha_solicitud ? formatDate(vacacion.fecha_solicitud) : 'N/A' }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Fecha de Inicio:</strong> {{ vacacion.FechaInicio }}
+          <strong class="font-semibold">Fecha de Inicio:</strong> {{ formatDate(vacacion.fecha_inicio) }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Fecha de Fin:</strong> {{ vacacion.FechaFin }}
+          <strong class="font-semibold">Fecha de Fin:</strong> {{ formatDate(vacacion.fecha_fin) }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Días Solicitados:</strong> <span class="font-medium text-blue-600">{{ vacacion.DiasSolicitados }}</span>
+          <strong class="font-semibold">Días Solicitados:</strong> <span class="font-medium text-blue-600">{{ vacacion.dias_vacaciones_solicitados }}</span>
         </p>
 
         <div class="col-span-full border-t pt-4 mt-4">
           <h3 class="text-lg font-semibold text-center text-gray-800 mb-3">Información del Empleado</h3>
         </div>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Empleado:</strong> {{ vacacion.Empleado }}
+          <strong class="font-semibold">Empleado:</strong> {{ `${vacacion.empleado?.nombre || ''} ${vacacion.empleado?.ape_paterno || ''} ${vacacion.empleado?.ape_materno || ''}`.trim() }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">ID Empleado:</strong> {{ vacacion.originalItem.empleado?.id || 'Desconcido' }}
+          <strong class="font-semibold">ID Empleado:</strong> {{ vacacion.empleado?.id || 'Desconocido' }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Correo Electrónico:</strong> {{ vacacion.originalItem.empleado?.email || 'Desconocido' }}
+          <strong class="font-semibold">Correo Electrónico:</strong> {{ vacacion.empleado?.email || 'Desconocido' }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Teléfono:</strong> {{ vacacion.originalItem.empleado?.telefono || 'Desconocido' }}
+          <strong class="font-semibold">Teléfono:</strong> {{ vacacion.empleado?.telefono || 'Desconocido' }}
         </p>
         <div class="col-span-full border-t pt-4 mt-4">
           <h3 class="text-lg font-semibold text-center text-gray-800 mb-3">Detalles de la Solicitud</h3>
         </div>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Días Vacaciones Totales:</strong> {{ vacacion.originalItem.dias_vacaciones_totales || 'N/A' }}
+          <strong class="font-semibold">Días Vacaciones Totales:</strong> {{ vacacion.dias_vacaciones_totales || 'N/A' }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Días Vacaciones Disfrutados:</strong> {{ vacacion.originalItem.dias_vacaciones_disfrutados || 'N/A' }}
+          <strong class="font-semibold">Días Vacaciones Disfrutados:</strong> {{ vacacion.dias_vacaciones_disfrutados || 'N/A' }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Días Vacaciones Disponibles:</strong> {{ vacacion.originalItem.dias_vacaciones_disponibles || 'N/A' }}
+          <strong class="font-semibold">Días Vacaciones Disponibles:</strong> {{ vacacion.dias_vacaciones_disponibles || 'N/A' }}
         </p>
         <p class="text-base sm:text-lg">
-          <strong class="font-semibold">Ciclo de Servicio :</strong> {{ vacacion.originalItem.ciclo_servicio.anio || 'N/A' }}
+          <strong class="font-semibold">Ciclo de Servicio :</strong> {{ vacacion.ciclo_servicio?.anio || 'N/A' }}
         </p>
         <p class="text-base sm:text-lg col-span-full">
           <strong class="font-semibold">Motivo/Comentarios:</strong>
-          {{ vacacion.originalItem.observaciones || 'No especificado' }}
+          {{ vacacion.observaciones || 'No especificado' }}
         </p>
         <p class="text-base sm:text-lg col-span-full">
           <strong class="font-semibold">Descripción del Estado:</strong>
-          {{ vacacion.originalItem.estado_solicitud?.descripcion || 'No disponible' }}
+          {{ vacacion.estado_solicitud?.descripcion || 'No disponible' }}
         </p>
         <div class="text-base sm:text-lg col-span-full">
           <strong class="font-semibold">Fecha de Aprobación:</strong>
           <p class="text-gray-500">
-            {{ getMensajeFechaAprobacion() }}  
+            {{ getMensajeFechaAprobacion() }}  
           </p>
         </div>
 
@@ -74,11 +74,11 @@
           <h3 class="text-lg font-semibold text-gray-800 mb-3">Historial de Tiempos</h3>
           <p>
             <strong class="font-semibold">Creado el:</strong>
-            {{ vacacion.originalItem.created_at ? formatDateTime(vacacion.originalItem.created_at) : 'N/A' }}
+            {{ vacacion.created_at ? formatDateTime(vacacion.created_at) : 'N/A' }}
           </p>
           <p>
             <strong class="font-semibold">Última Actualización:</strong>
-            {{ vacacion.originalItem.updated_at ? formatDateTime(vacacion.originalItem.updated_at) : 'N/A' }}
+            {{ vacacion.updated_at ? formatDateTime(vacacion.updated_at) : 'N/A' }}
           </p>
         </div>
       </div>
@@ -91,8 +91,8 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import UiBadge from '../../ui/UiBadge.vue'; // Asegúrate de que esta ruta sea correcta para tu proyecto
-import { formatDate, formatDateTime } from '../../../utils/dateFormatter'; // Asegúrate de que estas rutas sean correctas
+import UiBadge from '../../ui/UiBadge.vue';
+import { formatDate, formatDateTime } from '../../../utils/dateFormatter';
 
 const props = defineProps({
   vacacion: {
@@ -118,30 +118,26 @@ const getEstadoColor = (estado) => {
 };
 
 const getMensajeFechaAprobacion = () => {
-  const { Estado, originalItem } = vacacion;
-  const fechaAprobacion = originalItem?.fecha_aprobacion;
+  const { estado_solicitud, fecha_aprobacion } = props.vacacion; // Accede directamente a las propiedades del objeto original
+  const estado = estado_solicitud?.estado;
 
-  if (!fechaAprobacion) return 'La fecha de aprobación es desconocida.';
-
-  switch (Estado.toUpperCase()) {
-    case 'PENDIENTE':
-      return 'Esta pendiente por aprobar';
-    case 'RECHAZADO':
-      return 'Ha sido rechazada';
-    case 'CANCELADO':
-      return 'Ha sido cancelada';
-    case 'APROBADO':
-      return fechaAprobacion === 'APROBADO'
-        ? formatDateTime(fechaAprobacion)
-        : 'Ha sido aprobada el ' + fechaAprobacion;
-    default:
-      return 'Estado no reconocido';
+  if (!fecha_aprobacion) {
+    if (estado?.toUpperCase() === 'PENDIENTE') return 'Está pendiente por aprobar.';
+    return 'La fecha de aprobación es desconocida.';
   }
+
+  // Refina la lógica para la fecha de aprobación
+  if (estado?.toUpperCase() === 'APROBADO') {
+    return 'Ha sido aprobada el ' + formatDate(fecha_aprobacion); // Usar formatDate para asegurar formato
+  } else if (estado?.toUpperCase() === 'RECHAZADO') {
+    return 'Ha sido rechazada.';
+  } else if (estado?.toUpperCase() === 'CANCELADO') {
+    return 'Ha sido cancelada.';
+  }
+  return 'Estado no reconocido';
 };
 
-// No es necesario onMounted en este caso si solo haces un console.log,
-// pero lo mantengo si tienes planes futuros para él.
-// import { onMounted } from 'vue';
+
 onMounted(() => {
   console.log('DetalleVacacion montado');
   console.log('Vacación recibida:', props.vacacion);
