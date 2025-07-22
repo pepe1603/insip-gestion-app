@@ -1,6 +1,5 @@
 <template>
     <div class="">
-      <h1 class="text-3xl text-[#FFA000] font-semibold text-end">Gestión de Estados de Solicitud</h1>
   
       <UiTab :tabs="estadosSolicitudTabs" :currentRoute="$route" />
   

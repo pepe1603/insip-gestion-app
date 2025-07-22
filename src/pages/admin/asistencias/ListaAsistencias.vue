@@ -21,7 +21,7 @@
         </template>
   
         <template #Fecha="{ item }">
-          <span class="text-gray-400">{{ item.Fecha }}</span>
+          <span >{{ item.Fecha }}</span>
         </template>
   
         <template #HoraEntrada="{ item }">
@@ -44,7 +44,7 @@
           <div class="w-fit flex gap-1 flex-wrap" :class=" 'max-w-sm' ? 'flex-wrap' : 'flex-nowrap' ">
             <UiButton
               variant="outline-primary"
-              size="sm"
+              size="xs"
               class="mr-1"
               @click="editarAsistencia(item.originalItem)"
             >
@@ -52,7 +52,7 @@
             </UiButton>
             <UiButton
               variant="outline-error"
-              size="sm"
+              size="xs"
               @click="confirmarEliminarAsistencia(item.originalItem)"
             >
               Eliminar

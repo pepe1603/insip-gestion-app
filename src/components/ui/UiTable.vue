@@ -169,6 +169,7 @@ const handleSort = (columnKey) => {
 .overflow-auto {
   max-height: 520px;
   overflow-y: auto;
+  overflow-x: scroll;
 }
 
 .min-w-full {

@@ -64,6 +64,7 @@ const ReporteVacacionesDiasTomadosSemana = () => import('@/pages/admin/vacacione
 const ReporteVacacionesTopEmpleados = () => import('@/pages/admin/vacaciones/reportes/ReporteVacacionesTopEmpleados.vue');
 const ReporteVacacionesResumen = () => import('@/pages/admin/vacaciones/reportes/ReporteVacacionesResumen.vue');
 
+const GeneralSettings = () => import('@/pages/admin/configuracion/GeneralSettings.vue'); // Asegúrate de que este archivo exista|
 
 const adminRoutes = {
   path: "/admin",
@@ -218,6 +219,12 @@ const adminRoutes = {
         },
       ]
     },
+      {
+        path: 'configuracion/general', // La ruta específica para esta configuración
+        name: 'configuracion-general', // Un nombre de ruta único
+        component: GeneralSettings,
+        meta: { requiresAuth: true, roles: ['admin'], title: 'Configuración General' } // Roles solo para administradores
+      },
   ],
 };
 

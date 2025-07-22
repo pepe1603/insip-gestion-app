@@ -28,10 +28,11 @@
           <p v-if="departmentError" class="text-red-500 text-sm mt-1 w-full">
             Error al cargar departamentos: {{ departmentError.message }}
           </p>
-          <UiSelect v-model="empleado.tipo_contrato" label="Tipo de Contrato" :options="tiposContrato" required />
+          <!-- Tipo de Contrato pero este sera semana completa o l-v -->
+          <UiSelect v-model="empleado.tipo_contrato" label="Tipo Horario" :options="tiposContrato" required />
           <UiInputDate v-model="empleado.fecha_ingreso" label="Fecha de Ingreso" required />
           <!-- Estado del Empleado -->
-         <UiSelect v-model="empleado.status" label="Estado" :options="estadosEmpleado" required />
+         <UiSelect v-model="empleado.status" label="Estado Inicial" :options="estadosEmpleado" required />
         </div>
         
         <UiDivider label="Vacaciones Históricas" size="sm" />
@@ -102,8 +103,8 @@ const diasArrestados = ref(0)
 const departamentos = ref([]) // Se poblará con los datos de departamentosService.getAll()
 
 const tiposContrato = [
-  { value: 'MEDIO_TIEMPO', label: 'Medio Tiempo' },
-  { value: 'TIEMPO_COMPLETO', label: 'Tiempo Completo' },
+  { value: 'MEDIO_TIEMPO', label: 'Lunes a Viernes' },
+  { value: 'TIEMPO_COMPLETO', label: 'Semana Completa' },
 ]
 
 const estadosEmpleado = [

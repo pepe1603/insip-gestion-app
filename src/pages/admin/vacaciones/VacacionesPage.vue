@@ -1,6 +1,5 @@
 <template>
   
-    <h1 class="text-3xl text-[#4CAF50] font-semibold text-right">Gestión de Vacaciones</h1>
 
     <UiTab :tabs="vacacionesTabs" :currentRoute="$route" />
 

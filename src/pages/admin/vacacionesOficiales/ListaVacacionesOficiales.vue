@@ -4,7 +4,27 @@
         <h1 class="text-2xl font-semibold mb-1">Administración de Vacaciones Oficiales</h1>
         <p class="text-gray-600">Gestiona las reglas de vacaciones oficiales según el tiempo de servicio.</p>
       </div>
-  
+
+      <UiAlert
+        type="info"
+        class="mb-6"
+        :dismissible="true"
+      >
+        <p class="text-gray-600">
+          Aquí puedes crear, editar y eliminar reglas de vacaciones oficiales. Estas reglas determinan los días de vacaciones que corresponden a cada empleado según su tiempo de servicio.
+        </p>
+      </UiAlert>
+      <!-- informar que aun esta en beta-->
+       <UiAlert
+        type="purple-power"
+        class="mb-6"
+        :dismissible="true"
+      >
+        <p class="text-gray-600">
+          Esta funcionalidad aún está en beta. Puede haber errores o comportamientos inesperados.
+        </p>
+      </UiAlert>
+
       <div class="my-4">
         <UiButton variant="outline-success" @click="goCreateElement">
           <PlusCircleIcon class="w-6 h-6 mr-2" /> <span> Crear Nueva Regla</span>
@@ -25,18 +45,18 @@
         </template>
   
         <template #FechaCreación="{ item }">
-          <span class="text-gray-400">{{ item.fechaCreación }}</span>
+          <span >{{ item.fechaCreación }}</span>
         </template>
   
         <template #FechaActualización="{ item }">
-          <span class="text-gray-400">{{ item.fechaActualización }}</span>
+          <span >{{ item.fechaActualización }}</span>
         </template>
   
         <template #Acciones="{ item }">
           <div class="w-fit flex gap-1 flex-nowrap">
             <UiButton
               variant="outline-primary"
-              size="small"
+              size="xs"
               class="mr-1"
               @click="editarVacacionOficial(item.originalItem)"
             >
@@ -44,7 +64,7 @@
             </UiButton>
             <UiButton
               variant="outline-error"
-              size="small"
+              size="xs"
               @click="confirmarEliminarVacacionOficial(item.originalItem)"
             >
               Eliminar
@@ -94,6 +114,7 @@
   import { formatDate } from '../../../utils/dateFormatter';
   import UiButton from '../../../components/ui/UiButton.vue';
   import { PlusCircleIcon } from '@heroicons/vue/20/solid';
+import UiAlert from '../../../components/ui/UiAlert.vue';
   
   const router = useRouter();
   const vacacionesOficiales = ref([]);

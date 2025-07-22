@@ -42,12 +42,33 @@ watch(
   }
 )
 
+
+// Modificación clave: Nueva función de cierre que respeta closeOnClickOutside
+const handleDialogClose = () => {
+  // Si closeOnClickOutside es false, SOLO permitimos cerrar si 'isOpen' es false (ya se inició el cierre desde el servicio)
+  // o si el modal tiene un botón que llama directamente a closeModal().
+  // Headless UI llama a @close por varias razones (ESC, clic fuera, o cambios internos).
+  // Aquí interceptamos para asegurar que solo se cierre si se permite por 'closeOnClickOutside'
+  // o si ya estamos en proceso de cerrar el modal (isOpen es false).
+  if (props.closeOnClickOutside || !isOpen.value) {
+    closeModal();
+  } else {
+    // Si closeOnClickOutside es false y Headless UI intenta cerrarlo (ej. por clic fuera),
+    // no hacemos nada para mantenerlo abierto.
+    console.log("Intento de cierre bloqueado por closeOnClickOutside: false");
+  }
+}
+
 // Función para cerrar el modal. Emite el evento 'close'
 // para que el componente padre pueda reaccionar.
+
+// Función original para cerrar el modal. Esta debe ser llamada SÓLO por tus botones internos
+// o cuando el modalService.js le dice que se oculte (cuando 'show' pasa a false).
 const closeModal = () => {
   isOpen.value = false
-  emit('close')
+  emit('close') // Emite el evento 'close' para que ModalContainer lo maneje
 }
+
 
 // Puedes añadir una función onBeforeEnter si necesitas lógica
 // justo antes de que la transición de entrada comience.
@@ -70,7 +91,7 @@ const onAfterLeave = () => {
     @before-enter="onBeforeEnter"
     @after-leave="onAfterLeave"
   >
-    <Dialog as="div" @close="closeModal" class="relative z-50">
+    <Dialog as="div" @close="handleDialogClose" class="relative z-50">
       <TransitionChild
         as="template"
         enter="duration-300 ease-out"

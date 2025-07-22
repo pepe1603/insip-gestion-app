@@ -5,7 +5,7 @@
     <div class="flex-1 flex flex-col gap-2 p-2.5 overflow-hidden">
       <ProfileHeader />
 
-      <main class="flex-1 overflow-y-auto bg-gray-50 rounded-tl-lg shadow-inner">
+      <main class="flex-1 overflow-y-auto p-4 bg-gray-50 rounded-tl-lg shadow-inner">
         <router-view />
       </main>
     </div>

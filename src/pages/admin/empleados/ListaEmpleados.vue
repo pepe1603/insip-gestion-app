@@ -20,7 +20,8 @@
         <strong>{{ item.Nombre }} {{ item.ApellidoPaterno }} {{ item.ApellidoMaterno }}</strong>
       </template>
       <template #Email="{ item }">
-        <span class="">{{ item.Email }}</span>
+        <span >{{ item.Email  || 'No disponible' }}</span>
+
       </template>
 
       <template #FechaIngreso="{ item }">
@@ -48,7 +49,7 @@
         <div class="w-fit flex gap-1 flex-wrap" :class=" 'max-w-sm' ? 'flex-wrap' : 'flex-nowrap' ">
           <UiButton
             variant="outline-info"
-            size="sm"
+            size="xs"
             class="mr-1"
             @click="verDetallesEmpleado(item.originalItem)"
           >
@@ -56,7 +57,7 @@
           </UiButton>
           <UiButton
             variant="outline-primary"
-            size="sm"
+            size="xs"
             class="mr-1"
             @click="editarEmpleado(item.originalItem)"
           >
@@ -64,7 +65,7 @@
           </UiButton>
           <UiButton
             variant="outline-warning"
-            size="sm"
+            size="xs"
             class="mr-1"
             @click="cambiarEstadoEmpleado(item.originalItem)"
           >
@@ -72,7 +73,7 @@
           </UiButton>
           <UiButton
             variant="outline-error"
-            size="sm"
+            size="xs"
             @click="confirmarEliminarEmpleado(item.originalItem)"
           >
             Eliminar

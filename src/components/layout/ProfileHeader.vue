@@ -5,7 +5,7 @@
         <UiAvatar src="/public/nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
         <span class="text-center">RH-flow</span>
       </router-link>
-      <h1 class="text-center text-gray-700 break-keep text-wrap">
+      <h1 class="text-center text-indigo-600 break-keep text-wrap">
         {{ pageTitle }}
       </h1>
     </div>

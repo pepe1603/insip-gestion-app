@@ -1,7 +1,5 @@
 <template>
-    <div>
-      <h1 class="text-3xl text-[#4CAF50] font-semibold text-end">Gestión de Asistencias</h1>
-  
+    <div>  
       <UiTab :tabs="asistenciasTabs" :currentRoute="$route" />
   
       <div class="container sm:mx-auto md:mx-0 mt-8">

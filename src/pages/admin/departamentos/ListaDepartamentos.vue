@@ -25,18 +25,18 @@
         </template>
   
         <template #FechaCreación="{ item }">
-          <span class="text-gray-400">{{ item.fechaCreación }}</span>
+          <span >{{ item.fechaCreación }}</span>
         </template>
   
         <template #FechaActualización="{ item }">
-          <span class="text-gray-400">{{ item.fechaActualización }}</span>
+          <span>{{ item.fechaActualización }}</span>
         </template>
   
         <template #Acciones="{ item }">
           <div class="w-fit flex gap-1 flex-nowrap">
             <UiButton
               variant="outline-primary"
-              size="small"
+              size="xs"
               class="mr-1"
               @click="editarDepartamento(item.originalItem)"
             >
@@ -44,7 +44,7 @@
             </UiButton>
             <UiButton
               variant="outline-error"
-              size="small"
+              size="xs"
               @click="confirmarEliminarDepartamento(item.originalItem)"
             >
               Eliminar

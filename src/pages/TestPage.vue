@@ -8,6 +8,7 @@ import { useGlobalToast } from '../composables/useGlobalToast'; // Si también u
 import ConfirmActionModal from '../components/modals/ConfirmActionModal.vue'; // Importa el componente de tu modal de ejemplo
 import InfoMessageModal from '../components/modals/InfoMessageModal.vue';
 import FirstModal from '../components/modals/FirstModal.vue';
+import UiToast from '../components/ui/UiToast.vue';
 
 // Accedemos a los servicios a través de nuestros composables
 const $modal = useGlobalModal(); // ¡Usas tu composable aquí!
@@ -110,6 +111,59 @@ const showChainModal = () => {
     <p class="mt-8 text-gray-600 dark:text-gray-400">
       Haz clic en los botones para probar los modales.
     </p>
+
+    <p class="mt-2 text-gray-500 dark:text-gray-300">
+      Esta es una página de prueba para verificar el funcionamiento de los modales.
+    </p>
+
+    
+    <div class="mt-6 space-y-2">
+      <UiToast message="¡Bienvenido a la aplicación!" type="info" />
+      <UiToast message="Este toast no tiene borde." :showLeftBorder="false" />
+      <UiToast message="Mensaje sutil en modo Ghost." type="ghost" title="Información General" />
+      <UiToast message="¡Has desbloqueado un nuevo nivel!" type="purple-power" title="¡Poder Púrpura!" />
+      <UiToast message="Elemento destacado actualizado." type="highlight" title="Destacado" />
+      <UiToast message="¡Esta es una nueva notificación importante!" type="notify" title="Notificación del Sistema" />
+      <UiToast message="¡Todo está funcionando correctamente!" type="success" title="Éxito" />
+      <UiToast message="¡Algo salió mal!" type="error" title="Error Crítico" />
+      <UiToast message="¡Atención! Algo necesita tu revisión." type="warning" title="Advertencia" />
+      <UiToast message="Información adicional para tu referencia." type="info" title="Información" />
+      <UiToast message="¡Genial! Tu conexión a internet ha vuelto y está lista." type="success" title="Conexión Restablecida" />
+      <UiToast message="¡Sigue explorando!" type="notify" title="Exploración" />
+
+
+      
+  <UiToast message="Elemento destacado actualizado." type="highlight" title="Destacado" :show-left-border="false" :dismissible="false"/>
+      <UiToast message="¡Esta es una nueva notificación importante!" type="notify" title="Notificación del Sistema" :show-left-border="false" :dismissible="false"/>
+      <UiToast message="¡Todo está funcionando correctamente!" type="success" title="Éxito" :show-left-border="false" :dismissible="false"/>
+      <UiToast message="¡Algo salió mal!" type="error" title="Error Crítico" :show-left-border="false" :dismissible="false"/>
+      <UiToast message="¡Atención! Algo necesita tu revisión." type="warning" title="Advertencia" :show-left-border="false" :dismissible="false"/>
+      <UiToast message="Información adicional para tu referencia." type="info" title="Información" :show-left-border="false" :dismissible="false"/>
+      <UiToast message="¡Genial! Tu conexión a internet ha vuelto y está lista." type="success" title="Conexión Restablecida" :show-left-border="false" :dismissible="false"/>
+      <UiToast message="¡Sigue explorando!" type="notify" title="Exploración" :show-left-border="false" :dismissible="false"/>
+
+      <ui-toast
+        message="¡Bienvenido a la aplicación! Esta es una notificación de bienvenida. Y puedes personalizarla con diferentes estilos. y animaciones. Podemos usar diferentes tipos de notificaciones como éxito, error, advertencia, información y más."
+        type="info"
+        title="Bienvenida"
+        :show-left-border="true"
+        :dismissible="false"
+        :position="'top-center'"
+        show-left-border="false"
+        :duration="15000"
+      />
+      <ui-toast
+        message="¡Genial! Tu conexión a internet ha vuelto y está lista."
+        type="success"
+        title="Conexión Restablecida"
+        :show-left-border="true"
+        :dismissible="false"
+        :position="'top-center'"
+        :duration="16000"
+        show-left-border="false"
+      />
+
+    </div>
   </div>
 </template>
 

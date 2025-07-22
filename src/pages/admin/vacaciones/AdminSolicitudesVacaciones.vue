@@ -5,6 +5,17 @@
       <p class="text-gray-600">Revisa y gestiona el estado de las solicitudes de vacaciones de los empleados.</p>
     </div>
 
+    <!--Indicaciones cone l UiAlert-->
+    <UiAlert :show-icon="false" type="warning" class="mb-6" :dismissible="true">
+      <div class="flex items-center">
+        <span class="text-yellow-600 font-semibold mr-2">Nota:</span>
+        <p class="text-gray-600">
+          Esta sección te permite gestionar todas las solicitudes de vacaciones, incluyendo la posibilidad de cancelar solicitudes por ID o empleado.
+          Asegúrate de que las solicitudes estén en estado PENDIENTE o APROBADO para poder cancelarlas.
+        </p>
+      </div>
+    </UiAlert>
+
     <div class="my-4 flex justify-between items-center flex-wrap gap-2">
       <UiButton variant="outline-secondary" @click="cargarSolicitudes">
         <ArrowPathIcon class="w-5 h-5 mr-2" />
@@ -72,6 +83,16 @@
           />
         </UiButton>
       </div>
+
+      <p class="text-gray-500 text-sm text-center mb-4">
+        Filtra las solicitudes por estado para ver solo las que te interesan.
+      </p>
+
+      <UiAlert  type="info" class="my-6">
+        <p class="text-gray-600">
+          Al hacer clic en un estado, se filtrarán las solicitudes en la tabla general.
+        </p>
+      </UiAlert>
 
       <UiTablestriped
         :headers="tableHeaders"
@@ -307,6 +328,7 @@ import ModalDynamic from '../../../components/modals/ModalDynamic.vue';
 import DetalleVacacion from '../../../components/features/vacaciones/DetalleVacacion.vue';
 import UiInputSearchwithResult from '../../../components/ui/UiInputSearchWithResults.vue';
 import UiDescriptionList from '../../../components/ui/UiDescriptionList.vue';
+import UiAlert from '../../../components/ui/UiAlert.vue';
 
 // NUEVOS COMPONENTES FACTORIZADOS
 import EmployeeApprovedRequestsSearch from '../../../components/features/vacaciones/EmployeeApprovedRequestsSearch.vue';

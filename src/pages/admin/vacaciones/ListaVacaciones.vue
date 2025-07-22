@@ -80,21 +80,21 @@
         <div class="w-fit flex gap-1 flex-wrap">
           <UiButton
             variant="outline-info"
-            size="sm"
+            size="xs"
             @click="verDetallesVacacion(item)"
           >
             Detalles
           </UiButton>
           <UiButton
             variant="outline-primary"
-            size="sm"
+            size="xs"
             @click="editarVacacion(item.Id)"
           >
             Editar
           </UiButton>
           <UiButton
             variant="outline-error"
-            size="sm"
+            size="xs"
             @click="confirmarEliminarVacacion(item.originalItem)"
           >
             Eliminar

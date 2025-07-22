@@ -51,7 +51,7 @@
         <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg flex items-center justify-between">
           <div>
             <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Vacaciones Pendientes</p>
-            <p class="mt-1 text-3xl font-semibold text-yellow-600 dark:text-yellow-400">{{ vacacionesStatus.Pendiente || 0 }}</p>
+            <p class="mt-1 text-3xl font-semibold text-yellow-600 dark:text-yellow-400">{{ vacacionesPendientesCount }}</p>
           </div>
           <CalendarIcon class="h-10 w-10 text-yellow-500" />
         </div>
@@ -365,6 +365,7 @@
 import { ref, onMounted, computed } from 'vue'; // Importar 'computed'
 import adminDashboardService from '@/services/adminDashboardService';
 import { useGlobalToast } from '@/composables/useGlobalToast';
+import vacacionesService from '@/services/vacacionesService'
 import UiSpinner from '@/components/ui/UiSpinner.vue';
 import UiChart from '@/components/ui/UiChart.vue'; // Importar el nuevo componente de gráfico
 
@@ -380,6 +381,7 @@ const recentlyHiredEmployees = ref([]);
 const asistenciasHoy = ref([]);
 const latestAsistencias = ref([]);
 const vacacionesStatus = ref({});
+const vacacionesPendientesCount = ref(0);
 const proximasVacaciones = ref([]);
 const diasVacacionesPorMes = ref([]);
 const usersCountByRole = ref({});
@@ -639,6 +641,17 @@ const loadDashboardData = async () => {
     adminDashboardService.getResumenEstadosVacaciones(currentYear)
       .then(data => { vacacionesStatus.value = data; })
       .catch(error => { $toast.error(`No se pudo cargar el resumen de vacaciones para el año ${currentYear}.`); console.error(error); vacacionesStatus.value = {}; })
+  );
+  dataPromises.push(
+    vacacionesService.getPendientes()
+    .then(data => {
+      vacacionesPendientesCount.value = data.length;
+    })
+    .catch(error => {
+       $toast.error('No se pudo cargar el número de vacaciones pendientes.');
+        console.error('Error al obtener vacaciones pendientes:', error);
+        vacacionesPendientesCount.value = 0; // Asegura que el contador sea 0 en caso de error
+    })
   );
   dataPromises.push(
     adminDashboardService.getProximasVacaciones()

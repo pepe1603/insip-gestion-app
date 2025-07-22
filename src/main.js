@@ -52,7 +52,8 @@ import {
   faHollyBerry,
   faInfoCircle,
   faExclamationTriangle,
-  faUsersCog, // Para toggle sidebar
+  faUsersCog,
+  faWifi, // Para toggle sidebar
 } from '@fortawesome/free-solid-svg-icons'
 
 // Íconos regulares (far)
@@ -69,6 +70,7 @@ library.add(
   faChartPie,
   faRightFromBracket,
   faUsers,
+  faWifi,
   faUser,
   faUsersCog,
   faBuilding,

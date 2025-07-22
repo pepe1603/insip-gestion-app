@@ -1,6 +1,5 @@
 <template>
     <div class="">
-      <h1 class="text-3xl text-[#2979FF] font-semibold text-end">Gestión de Departamentos</h1>
   
       <UiTab :tabs="departamentosTabs" :currentRoute="$route" />
   

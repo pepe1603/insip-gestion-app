@@ -34,15 +34,14 @@
 
         <UiInputText
             v-model="nombreArchivo"
-            type="text"
             id="nombreArchivo"
             label="Nombre del Archivo (opcional):"
             placeholder="reporte_empleados"
         />
 
         <div class="flex justify-center mt-6">
-        <UiButton variant="primary" size="large" @click="exportarReporte">
-          <DocumentArrowDownIcon class="w-6 h-6 mr-2" /> Exportar Reporte
+        <UiButton variant="primary" @click="exportarReporte">
+          <DocumentArrowDownIcon class="size-10 " /> Exportar Reporte
         </UiButton>
       </div>
 

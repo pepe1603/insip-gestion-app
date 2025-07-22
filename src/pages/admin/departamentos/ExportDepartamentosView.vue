@@ -20,8 +20,8 @@
       </div>
   
       <div class="flex justify-center">
-        <UiButton variant="primary" size="large" @click="descargarReporte">
-          <DocumentArrowDownIcon class="w-6 h-6 mr-2" /> Descargar Reporte
+        <UiButton variant="primary" size="sm" @click="descargarReporte">
+          <DocumentArrowDownIcon class="size-6 mr-1" /> Descargar Reporte
         </UiButton>
       </div>
   

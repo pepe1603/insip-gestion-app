@@ -28,6 +28,8 @@ import {
   CheckCircleIcon,
   ExclamationTriangleIcon,
   XCircleIcon,
+  SparklesIcon,
+  StarIcon,
   XMarkIcon // Para el botón de cerrar
 } from '@heroicons/vue/20/solid';
 
@@ -38,7 +40,7 @@ const props = defineProps({
   type: {
     type: String,
     default: 'info',
-    validator: (value) => ['info', 'success', 'warning', 'error'].includes(value),
+    validator: (value) => ['info', 'success', 'warning', 'error', 'ghost', 'purple-power'].includes(value),
   },
   /**
    * Clases CSS adicionales para personalizar el estilo.
@@ -77,6 +79,14 @@ const typeClasses = computed(() => {
       return 'bg-yellow-50 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 ring-yellow-600/20';
     case 'error':
       return 'bg-red-50 text-red-800 dark:bg-red-900 dark:text-red-200 ring-red-600/20';
+      case 'ghost':
+      // Estilo minimalista, casi transparente o con solo borde.
+      // Dependerá de tu preferencia de "ghost". Aquí una opción sutil.
+      return 'bg-transparent border border-gray-200 text-gray-700 dark:border-gray-700 dark:text-gray-300 shadow-sm';
+    case 'purple-power':
+      // Un estilo más impactante con colores morados.
+      return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200 ring-purple-600/20 border border-purple-300';
+    
     default:
       return '';
   }
@@ -92,6 +102,10 @@ const iconComponent = computed(() => {
       return ExclamationTriangleIcon;
     case 'error':
       return XCircleIcon;
+    case 'ghost':
+      return StarIcon; // O un icono más sutil como 'LinkIcon', 'MinusIcon'
+    case 'purple-power':
+      return SparklesIcon; // Un icono llamativo para "purple-power"
     default:
       return null;
   }
@@ -107,6 +121,10 @@ const iconColorClass = computed(() => {
       return 'text-yellow-400';
     case 'error':
       return 'text-red-400';
+    case 'ghost':
+      return 'text-gray-400'; // Color sutil para el icono ghost
+    case 'purple-power':
+      return 'text-purple-600'; // Color del icono para purple-power
     default:
       return '';
   }
@@ -122,6 +140,12 @@ const dismissButtonClasses = computed(() => {
       return 'text-yellow-500 hover:bg-yellow-100 focus:ring-yellow-600 focus:ring-offset-yellow-50';
     case 'error':
       return 'text-red-500 hover:bg-red-100 focus:ring-red-600 focus:ring-offset-red-50';
+    case 'ghost':
+      // Botón de cerrar para el modo ghost, sutil pero visible al hover
+      return 'text-gray-500 hover:bg-gray-100 focus:ring-gray-600 focus:ring-offset-gray-50 dark:hover:bg-gray-700 dark:text-gray-400 dark:focus:ring-gray-500 dark:focus:ring-offset-gray-800';
+    case 'purple-power':
+      // Botón de cerrar para el modo purple
+      return 'text-purple-500 hover:bg-purple-200 focus:ring-purple-600 focus:ring-offset-purple-50 dark:hover:bg-purple-800 dark:text-purple-300 dark:focus:ring-purple-500 dark:focus:ring-offset-purple-900';
     default:
       return '';
   }

@@ -1,5 +1,35 @@
 <template>
     <div class="container mx-auto p-4">
+
+      <!-- Indicaciones de aceurdo al modo (contendort de alerts) -->
+       <div class="mb-4">
+            <UiAlert
+        v-if="modo === 'editar'"
+      >
+        Estás editando una asistencia existente. Asegúrate de guardar los cambios.
+      </UiAlert>
+      <UiAlert
+
+        v-else
+      >
+        Estás creando una nueva asistencia. Completa todos los campos requeridos.
+      </UiAlert>
+      
+      
+      <UiAlert type="purple-power" class="my-4">
+        <!-- Mesage de indicaciones que debe hjacer el usuario para crear o editar la asistencia-->
+         <p>Por favor, complete todos los campos obligatorios para continuar.</p>
+         <ul class="list-disc pl-5">
+           <li>Seleccione un empleado.</li>
+           <li>Ingrese la fecha de la asistencia.</li>
+           <li>Ingrese la hora de entrada y salida.</li>
+           <li>Seleccione el tipo de asistencia.</li>
+         </ul>
+
+      </UiAlert>
+       </div>
+
+
       <CrearEditarFormDinamico
         :title="modalTitle"
         :subtitle="modalSubtitle"
@@ -22,6 +52,7 @@
   import TiposAsistenciaService from '../../../services/tiposAsistenciaService';
   import CrearEditarFormDinamico from '../../../components/forms/CreateEdithFormDynamic.vue';
   import { format } from 'date-fns'; // Para formatear la fecha para el input
+import UiAlert from '../../../components/ui/UiAlert.vue';
   
   const router = useRouter();
   const route = useRoute();
