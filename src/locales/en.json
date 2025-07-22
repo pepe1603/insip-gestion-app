@@ -1,0 +1,122 @@
+{
+  "general": {
+    "generalSettingsTitle": "General System Settings",
+    "generalSettingsDescription": "Manage primary company information and application localization preferences.",
+
+    "companyInfo": "Company Information",
+    "companyInfoDescription": "Fundamental organization details used in reports and communications.",
+    "companyName": "Company Name",
+    "companyPhone": "Contact Phone",
+    "companyAddress": "Address",
+    "companyEmail": "Email Address",
+    "companyLogo": "Company Logo",
+    "companyLogoHelp": "This logo will be used in reports and headers. (Simulated upload functionality)",
+    "noLogoLoaded": "No logo loaded",
+    "changeLogo": "Change Logo",
+    "addressPlaceholder": "Street, number, neighborhood, postal code, city, country",
+    "emailPlaceholder": "contact@company.com",
+    "phonePlaceholder": "+XX XXX XXX XXXX",
+    "namePlaceholder": "Full company name",
+
+    "localePreferences": "Language and Region Preferences",
+    "localePreferencesDescription": "Adjust date, time, currency formats, and the application's default language.",
+    "defaultLanguage": "Default Language",
+    "systemTimezone": "System Timezone",
+    "dateFormat": "Date Format",
+    "currencyFormat": "Currency Format",
+
+    "themePreferences": "Theme Preferences",            
+    "themePreferencesDescription": "Customize the application's visual appearance.", 
+    "selectTheme": "Select Theme",                      
+    "themeLight": "Light",                              
+    "themeDark": "Dark",                                
+    "themeChangedTo": "Theme changed to {theme}.",      
+
+    "soundAndNotifications": "Sounds and Notifications",
+    "soundAndNotificationsDescription": "Control sound playback for application alerts and notifications.",
+    "activateAlertSounds": "Activate Alert Sounds",
+    "activateAlertSoundsHelp": "Play a sound when a notification appears (e.g., success, error).",
+    "browserAutoplayNote": "Note: Browsers may require initial user interaction to allow sound playback.",
+
+    "editSettings": "Edit Settings",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "saving": "Saving...",
+
+    "settingsSavedSuccess": "Settings saved successfully.",
+    "editCanceled": "Editing canceled. Changes were not saved.",
+    "logoUploadSimulated": "Logo upload functionality simulated. In a real application, a file selector would open.",
+    "alertSoundsMuted": "Alert sounds muted.",
+    "alertSoundsActivated": "Alert sounds activated.",
+    "languageChangedTo": "Language changed to {lang}.",
+    "languageOptions": {
+      "es": "Spanish (ES)",
+      "en": "English (EN)",
+      "fr": "French (FR)"
+    },
+    "alertSoundsEnabled": "Alert sounds enabled.",
+    "alertSoundsDisabled": "Alert sounds disabled."
+  },
+  "validation": {
+    "requiredField": "This field is required."
+  },
+  "messages": {
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "supervisor": "Supervisor",
+    "employee": "Employee",
+    "user": "User"
+  },
+  "navigation": {
+    "home": "Home",
+    "about": "About",
+    "login": "Log In",
+    "register": "Register",
+    "dashboard": "Dashboard",
+    "adminPanel": "Admin Panel",
+    "employeePanel": "Employee Panel",
+    "profile": "Profile",
+    "settings": "Settings",
+    "generalSettings": "General Settings",
+    "userManagement": "User Management",
+    "attendanceTypes": "Attendance Types",
+    "departments": "Departments",
+    "requestStates": "Request States",
+    "officialHolidays": "Official Holidays",
+    "employees": "Employees",
+    "attendances": "Attendances",
+    "vacations": "Vacations",
+    "myProfile": "My Profile",
+    "editProfile": "Edit Profile",
+    "changePassword": "Change Password",
+    "security": "Security",
+    "myAttendance": "My Attendances",
+    "myVacations": "My Vacations",
+    "requestVacation": "Request Vacation",
+    "consultations": "Consultations",
+    "myData": "My Data"
+  },
+  "auth": {
+    "passwordRequiredModalMessage": "You must change your password to access other sections.",
+    "passwordRequiredModalButton": "Go to Change Password",
+    "passwordRequiredModalTitle": "Password Required",
+    "loginRequiredModalMessage": "You need to log in to access this section.",
+    "loginRequiredModalButton": "Go to Login",
+    "loginRequiredModalTitle": "Access Restricted",
+    "alreadyLoggedInModalMessage": "You are already authenticated. Redirecting to your dashboard.",
+    "alreadyLoggedInModalButton": "Accept",
+    "alreadyLoggedInModalTitle": "Already Logged In"
+  },
+  "logoutModal": {
+    "title": "Log Out?",
+    "description": "You are about to log out of your current session. You'll need to sign in again to access your account.",
+    "warning": "Make sure you've saved any important changes.",
+    "confirmButton": "Log Out",
+    "cancelButton": "Cancel"
+  }
+}

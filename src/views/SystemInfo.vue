@@ -1,5 +1,6 @@
 <template>
-  <div class="container mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md my-8">
+<div class="min-w-screen h-full overflow-hidden bg-gray-50 dark:bg-gray-900 pt-4">
+    <div class="container mx-auto p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md my-8">
     <div class="text-center mb-8">
       <h1 class="text-3xl font-bold text-gray-800 dark:text-white mb-2">Información del Sistema</h1>
       <p class="text-gray-600 dark:text-gray-400">Detalles técnicos de la aplicación y la API de Gestión de Vacaciones.</p>
@@ -132,7 +133,8 @@
         </div>
       </div>
     </div>
-    </div>
+  </div>
+</div>
 </template>
 
 <script setup>

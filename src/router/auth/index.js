@@ -50,7 +50,7 @@ const authRoutes = {
       path: 'force-password-change',
       name: 'force-password-change',
       component: ForcePasswordChangePage,
-      meta: { guestOnly: false, requiresLimitedToken: true }, // Protegida, pero permite el token limitado
+      meta: { guestOnly: false }, // Protegida, pero permite el token limitado
     },
     // ----------------------------------------------------
     // Si tienes una página de "user verification" o algo similar después del registro, agrégala aquí

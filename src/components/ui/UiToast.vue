@@ -6,13 +6,13 @@
   >
     <div
       v-if="visible"
-      class="relative z-50 flex items-center gap-2 mb-4 rounded-md px-3 py-4 transition duration-200 ease-in-out transform hover:scale-105 pointer-events-auto min-w-[280px] max-w-md"
+      class="relative z-50 flex items-center gap-2 rounded-md px-3 py-4 transition duration-200 ease-in-out pointer-events-auto min-w-[280px] max-w-md"
       :class="[typeClasses, { 'border-l-4': showLeftBorder }]"
       role="alert"
       aria-live="assertive"
       aria-atomic="true"
     >
-      <component :is="icon" :class="title ? 'w-7' : 'w-7'" v-if="icon && props.type !== 'notify'" />
+      <component :is="icon" class="w-7" v-if="icon && props.type !== 'notify'" />
 
       <div class="flex-1 flex flex-col">
         <p v-if="title" class="font-semibold text-base">{{ title }}</p>
@@ -21,9 +21,9 @@
 
       <button
         type="button"
-        class="flex-col items-center justify-center transition-300 transform hover:scale-110"
+        class="flex items-center justify-center transition-300 transform hover:scale-110"
         @click="closeToast"
-        v-if="dismissible" 
+        v-if="dismissible"
       >
         <span class="sr-only">Cerrar</span>
         <svg class="w-2.5 h-2.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -36,6 +36,8 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { useUiStore } from '../../stores/uiStore';
+
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
@@ -66,7 +68,7 @@ const props = defineProps({
     type: Number,
     default: 7000,
   },
-  dismissible: { 
+  dismissible: {
     type: Boolean,
     default: true,
   },
@@ -79,13 +81,14 @@ const props = defineProps({
 const emit = defineEmits(['close']);
 const visible = ref(true);
 const timeoutId = ref(null);
+const uiStore = useUiStore();
 
 const beforeLeave = () => {
-  // Puedes añadir lógica antes de que la transición de salida comience
+  // Lógica antes de que la transición de salida comience
 };
 
 const onLeave = () => {
-  // Esta función se ejecuta cuando la transición de salida termina
+  // Función que se ejecuta cuando la transición de salida termina
 };
 
 const typeClasses = computed(() => {
@@ -96,8 +99,8 @@ const typeClasses = computed(() => {
       return 'border-red-500 dark:border-red-700 bg-red-50 dark:bg-red-900 text-red-700 dark:text-red-300';
     case 'warning':
       return 'border-yellow-500 dark:border-yellow-700 bg-yellow-50 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300';
-    case 'notify': // Modificado para el tipo 'notify'
-      return 'border-sky-500 dark:border-sky-700 bg-sky-50 dark:bg-sky-900 text-sky-700 dark:text-sky-300 outline outline-1 outline-sky-500 dark:outline-sky-700'; // Añadido outline
+    case 'notify':
+      return 'border-sky-500 dark:border-sky-700 bg-sky-50 dark:bg-sky-900 text-sky-700 dark:text-sky-300 outline outline-1 outline-sky-500 dark:outline-sky-700';
     case 'ghost':
       return 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300';
     case 'purple-power':
@@ -118,8 +121,8 @@ const icon = computed(() => {
       return XCircleIcon;
     case 'warning':
       return ExclamationCircleIcon;
-    case 'notify': // Ahora 'notify' no tiene icono en el template, pero mantenemos BellAlertIcon como su valor si se accediera directamente.
-      return null; // Retorna null para que el v-if del template no lo renderice.
+    case 'notify':
+      return null;
     case 'ghost':
       return LightBulbIcon;
     case 'purple-power':
@@ -133,29 +136,38 @@ const icon = computed(() => {
 });
 
 onMounted(() => {
-  let audio;
-  switch (props.type) {
-    case 'success':
-      audio = new Audio('/audios/tada.wav');
-      break;
-    case 'error':
-      audio = new Audio('/audios/error.wav');
-      break;
-    case 'warning':
-      audio = new Audio('/audios/exclamation.wav');
-      break;
-    case 'notify':
-    case 'info':
-    case 'ghost':
-    case 'purple-power':
-    case 'highlight':
-    default:
-      audio = new Audio('/audios/MessageNudge.wav');
-      break;
-  }
+  if (uiStore.hasUserInteracted && !uiStore.areAlertSoundsMuted) {
+    let audio;
+    switch (props.type) {
+      case 'success':
+        audio = new Audio('/audios/tada.wav');
+        break;
+      case 'error':
+        audio = new Audio('/audios/error.wav');
+        break;
+      case 'warning':
+        audio = new Audio('/audios/exclamation.wav');
+        break;
+      case 'notify':
+      case 'info':
+      case 'ghost':
+      case 'purple-power':
+      case 'highlight':
+      default:
+        audio = new Audio('/audios/MessageNudge.wav');
+        break;
+    }
 
-  if (audio) {
-    audio.play();
+    if (audio) {
+      audio.play().catch(error => {
+        console.warn('Error al reproducir el audio del toast:', error.message);
+        if (error.name !== 'NotAllowedError') {
+          console.error('Otro error al reproducir el audio del toast:', error);
+        }
+      });
+    }
+  } else {
+    console.log('Audio de Toast omitido: usuario no ha interactuado o sonidos silenciados.');
   }
 
   if (props.duration > 0) {
@@ -171,22 +183,19 @@ const closeToast = () => {
     timeoutId.value = null;
   }
   visible.value = false;
-  setTimeout(() => { 
+  setTimeout(() => {
     emit('close', props.id);
-  }, 400); 
+  }, 400);
 };
 </script>
 
 <style scoped>
-/* Añadir transiciones de opacidad y transformación para hacer la animación más fluida */
 .toast-fade-enter-active, .toast-fade-leave-active {
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
-.toast-fade-enter, .toast-fade-leave-to {
+.toast-fade-enter-from, .toast-fade-leave-to {
   opacity: 0;
   transform: scale(0.95);
 }
-
-
 </style>

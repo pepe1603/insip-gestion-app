@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-100 text-gray-900 min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="bg-gray-100 text-gray-900 min-h-screen flex flex-col items-center justify-center p-4 dark:bg-gray-900 dark:text-gray-200">
     <div class="mx-auto max-w-7xl py-12 sm:py-20 lg:py-24">
       <div class="relative isolate overflow-hidden bg-gray-900 px-6 pt-16 shadow-2xl sm:rounded-3xl sm:px-16 md:pt-24 lg:flex lg:gap-x-20 lg:px-24 lg:pt-0">
         <svg viewBox="0 0 1024 1024" class="absolute top-1/2 left-1/2 -z-10 size-[64rem] -translate-y-1/2 [mask-image:radial-gradient(closest-side,white,transparent)] sm:left-full sm:-ml-80 lg:left-1/2 lg:ml-0 lg:-translate-x-1/2 lg:translate-y-0" aria-hidden="true">
@@ -35,22 +35,22 @@
     </div>
 
     <div class="mt-16 w-full max-w-4xl text-center">
-      <h3 class="text-2xl font-bold text-gray-800 mb-4">Lo que puedes lograr con nosotros</h3>
-      <p class="text-lg text-gray-600 mb-8">
+      <h3 class="text-2xl font-bold text-gray-800 mb-4 dark:text-gray-100">Lo que puedes lograr con nosotros</h3>
+      <p class="text-lg text-gray-600 mb-8 dark:text-gray-400">
         Nuestra plataforma está diseñada para ofrecerte herramientas intuitivas y potentes que te ayudarán a alcanzar tus objetivos de manera más eficiente.
       </p>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
           <h4 class="font-semibold text-xl mb-2">Simplicidad</h4>
-          <p class="text-gray-700 text-sm">Interfaz limpia y fácil de usar, reduce la curva de aprendizaje.</p>
+          <p class="text-gray-600 text-sm">Interfaz limpia y fácil de usar, reduce la curva de aprendizaje.</p>
         </div>
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
           <h4 class="font-semibold text-xl mb-2">Eficiencia</h4>
-          <p class="text-gray-700 text-sm">Automatiza tareas y gestiona tu trabajo con menos esfuerzo.</p>
+          <p class="text-gray-600 text-sm">Automatiza tareas y gestiona tu trabajo con menos esfuerzo.</p>
         </div>
-        <div class="bg-white p-6 rounded-lg shadow-md">
+        <div class="bg-white p-6 rounded-lg shadow-md dark:bg-gray-800">
           <h4 class="font-semibold text-xl mb-2">Control</h4>
-          <p class="text-gray-700 text-sm">Obtén una visión clara de tus operaciones y toma decisiones informadas.</p>
+          <p class="text-gray-600 text-sm">Obtén una visión clara de tus operaciones y toma decisiones informadas.</p>
         </div>
       </div>
     </div>

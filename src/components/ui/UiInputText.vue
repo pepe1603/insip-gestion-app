@@ -25,7 +25,7 @@ defineProps({
   disabled: { // Added new prop
     type: Boolean,
     default: false
-  }
+  },
 });
 
 defineEmits(['update:modelValue']);

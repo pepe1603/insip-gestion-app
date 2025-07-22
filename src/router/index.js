@@ -26,6 +26,8 @@ import UnauthorizedPage from "../pages/errors/UnauthorizedPage.vue";
 // Modals
 import InfoMessageModal from '@/components/modals/InfoMessageModal.vue';
 import SystemInfo from "../views/SystemInfo.vue";
+import AuthRequiredModal from "../components/modals/AuthRequiredModal.vue";
+import ForcePasswordChangeModal from "../components/modals/ForcePasswordChangeModal.vue";
 
 
 const routes = [
@@ -109,7 +111,7 @@ router.beforeEach(async (to, from, next) => {
     }
   }
 
-  // --- NUEVA LÓGICA PARA EL CAMBIO DE CONTRASEÑA FORZADO (Paso 2.5 y 3) ---
+  // --- Manejo DEL CAMBIO DE CONTRASEÑA FORZADO ---
   const isPasswordChangeRoute = to.name === 'force-password-change';
   
   if (authStore.isAuthenticated && authStore.isPasswordChangeRequired) {
@@ -118,13 +120,14 @@ router.beforeEach(async (to, from, next) => {
       // ...y NO está intentando ir a la ruta de cambio de contraseña forzado:
       console.warn(`[Guard] Redirigiendo a cambio de contraseña: Ruta '${to.fullPath}' bloqueada hasta el cambio.`);
       await $modal?.showModal(
-        InfoMessageModal,
+        ForcePasswordChangeModal,
         {
           message: 'Debe cambiar su contraseña para poder acceder a otras secciones.',
           buttonText: 'Ir a Cambiar Contraseña'
         },
         {
-          title: 'Contraseña Requerida'
+          title: 'Contraseña Requerida',
+          closeOnClickOutside: false // Evita que el modal se cierre al hacer clic fuera
         }
       );
       return next({ name: 'force-password-change' }); // Redirige a la página de cambio de contraseña
@@ -141,13 +144,14 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth) && !authStore.isAuthenticated) {
     console.warn(`[Guard] Redirigiendo a login: Ruta '${to.fullPath}' requiere autenticación.`);
     await $modal?.showModal(
-      InfoMessageModal,
+      AuthRequiredModal,
       {
         message: 'Necesitas iniciar sesión para acceder a esta sección.',
         buttonText: 'Ir a Iniciar Sesión'
       },
       {
-        title: 'Acceso Restringido'
+        title: 'Acceso Restringido',
+        closeOnClickOutside: false // Evita que el modal se cierre al hacer clic fuera
       }
     );
     return next({ name: 'login', query: { redirect: to.fullPath } });

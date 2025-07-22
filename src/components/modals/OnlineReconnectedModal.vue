@@ -1,18 +1,31 @@
-<script setup>
-// Props inyectadas por el servicio de modales
-const props = defineProps({
-  // Función para confirmar que el usuario ha 'entendido'
-  __onConfirm: Function, 
-  __onClose: Function, // También para un cierre genérico, aunque aquí el botón será '__onConfirm'
-});
+<script>
+import { defineComponent } from 'vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-// Cuando el usuario hace clic en "Entendido"
-const handleUnderstood = () => {
-  if (props.__onConfirm) {
-    // Resolvemos la promesa que espera el 'App.vue' con una acción específica
-    props.__onConfirm({ action: 'understood' }); 
-  }
-};
+export default defineComponent({
+  name: 'OnlineReconnectedModal', // Aquí definimos el nombre del componente
+  components: {
+    FontAwesomeIcon,
+  },
+  props: {
+    // Función para confirmar que el usuario ha 'entendido'
+    __onConfirm: Function,
+    __onClose: Function, // También para un cierre genérico
+  },
+  setup(props) {
+    // Cuando el usuario hace clic en "Entendido"
+    const handleUnderstood = () => {
+      if (props.__onConfirm) {
+        // Resolvemos la promesa que espera el 'App.vue' con una acción específica
+        props.__onConfirm({ action: 'understood' });
+      }
+    };
+
+    return {
+      handleUnderstood,
+    };
+  },
+});
 </script>
 
 <template>

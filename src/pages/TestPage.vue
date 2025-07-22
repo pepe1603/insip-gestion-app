@@ -10,6 +10,12 @@ import InfoMessageModal from '../components/modals/InfoMessageModal.vue';
 import FirstModal from '../components/modals/FirstModal.vue';
 import UiToast from '../components/ui/UiToast.vue';
 
+import UiDivider from '../components/ui/UiDivider.vue';
+import LoadingSpinner from '../components/LoadingSpinner.vue';
+import UiSpinner from '../components/ui/UiSpinner.vue';
+import UiLoader from '../components/ui/UiLoader.vue';
+import { onMounted } from 'vue';
+
 // Accedemos a los servicios a través de nuestros composables
 const $modal = useGlobalModal(); // ¡Usas tu composable aquí!
 const $toast = useGlobalToast(); // Si lo usas, también lo obtienes de tu composable
@@ -73,6 +79,8 @@ const showChainModal = () => {
       title: 'Modales encadenados',
     }
   );
+
+
 };
 
 // ... (El resto de tus funciones y comentarios permanecen igual) ...
@@ -116,10 +124,27 @@ const showChainModal = () => {
       Esta es una página de prueba para verificar el funcionamiento de los modales.
     </p>
 
-    
+    <UiDivider label="Seccion de Loaders" />
+    <div class="mt-6 space-y-4">
+
+
+      <UiSpinner
+        size="large"
+        color="blue"
+        class="mt-4"
+      />
+
+      <UiLoader
+        size="medium"
+        color="purple"
+        class="mt-4"
+      />
+    </div>
+    <UiDivider label="Sección de Toasts" />
     <div class="mt-6 space-y-2">
       <UiToast message="¡Bienvenido a la aplicación!" type="info" />
       <UiToast message="Este toast no tiene borde." :showLeftBorder="false" />
+      <!-- 
       <UiToast message="Mensaje sutil en modo Ghost." type="ghost" title="Información General" />
       <UiToast message="¡Has desbloqueado un nuevo nivel!" type="purple-power" title="¡Poder Púrpura!" />
       <UiToast message="Elemento destacado actualizado." type="highlight" title="Destacado" />
@@ -127,14 +152,14 @@ const showChainModal = () => {
       <UiToast message="¡Todo está funcionando correctamente!" type="success" title="Éxito" />
       <UiToast message="¡Algo salió mal!" type="error" title="Error Crítico" />
       <UiToast message="¡Atención! Algo necesita tu revisión." type="warning" title="Advertencia" />
-      <UiToast message="Información adicional para tu referencia." type="info" title="Información" />
-      <UiToast message="¡Genial! Tu conexión a internet ha vuelto y está lista." type="success" title="Conexión Restablecida" />
-      <UiToast message="¡Sigue explorando!" type="notify" title="Exploración" />
+      <UiToast message="Información adicional para tu referencia." type="info" title="Información" :position="'top-center'" />
+      <UiToast message="¡Genial! Tu conexión a internet ha vuelto y está lista." type="success" title="Conexión Restablecida" :position="'top-center'" />
+      <UiToast message="¡Sigue explorando!" type="notify" title="Exploración" :position="'top-center'" />
 
 
-      
-  <UiToast message="Elemento destacado actualizado." type="highlight" title="Destacado" :show-left-border="false" :dismissible="false"/>
-      <UiToast message="¡Esta es una nueva notificación importante!" type="notify" title="Notificación del Sistema" :show-left-border="false" :dismissible="false"/>
+
+  <UiToast message="Elemento destacado actualizado." type="highlight" title="Destacado" :show-left-border="false" :dismissible="false" :position="'bottom-right'"/>
+      <UiToast message="¡Esta es una nueva notificación importante!" type="notify" title="Notificación del Sistema" :show-left-border="false" :dismissible="false" :position="'bottom-left'"/>
       <UiToast message="¡Todo está funcionando correctamente!" type="success" title="Éxito" :show-left-border="false" :dismissible="false"/>
       <UiToast message="¡Algo salió mal!" type="error" title="Error Crítico" :show-left-border="false" :dismissible="false"/>
       <UiToast message="¡Atención! Algo necesita tu revisión." type="warning" title="Advertencia" :show-left-border="false" :dismissible="false"/>
@@ -148,7 +173,7 @@ const showChainModal = () => {
         title="Bienvenida"
         :show-left-border="true"
         :dismissible="false"
-        :position="'top-center'"
+        :position="'top-right'"
         show-left-border="false"
         :duration="15000"
       />
@@ -158,14 +183,19 @@ const showChainModal = () => {
         title="Conexión Restablecida"
         :show-left-border="true"
         :dismissible="false"
-        :position="'top-center'"
+        :position="'top-right'"
         :duration="16000"
         show-left-border="false"
       />
+    --->
+
+
 
     </div>
   </div>
 </template>
+
+
 
 <style scoped>
 /* Estilos específicos para esta página si los necesitas */

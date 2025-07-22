@@ -11,8 +11,7 @@
         Si sospechas que tu cuenta ha sido accedida desde otro lugar o simplemente quieres cerrar todas las sesiones excepto la actual, haz clic en el botón de abajo.
       </p>
       <UiButton
-        @click="confirmLogoutOtherDevices"
-        :disabled="isLoggingOut"
+        @click="showLogoutOtherDevicesConfirm" :disabled="isLoggingOut"
         variant="outline-error"
         class="w-full sm:w-auto"
       >
@@ -31,8 +30,7 @@
         Para cerrar tu sesión únicamente en este dispositivo.
       </p>
       <UiButton
-        @click="confirmLogout"
-        :disabled="isLoggingOutCurrent"
+        @click="showLogoutCurrentConfirm" :disabled="isLoggingOutCurrent"
         variant="secondary"
         class="w-full sm:w-auto"
       >
@@ -52,7 +50,9 @@ import UiSpinner from '@/components/ui/UiSpinner.vue';
 import { profileService } from '@/services/profileService';
 import { useGlobalToast } from '@/composables/useGlobalToast';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/authStore'; // Importar tu authStore
+import { useAuthStore } from '@/stores/authStore';
+import { useGlobalModal } from '@/composables/useGlobalModal'; // NUEVO: Importa el servicio de modal global
+import LogoutConfirmModal from '@/components/modals/LogoutConfirmModal.vue'; // NUEVO: Importa tu modal de confirmación
 
 // Font Awesome Icons
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -61,52 +61,99 @@ library.add(faMobileScreenButton, faRightFromBracket, faDoorOpen, faSignOutAlt);
 
 const $toast = useGlobalToast();
 const router = useRouter();
-const authStore = useAuthStore(); // Instanciar tu authStore
+const authStore = useAuthStore();
+const $modal = useGlobalModal(); // NUEVO: Instancia el servicio de modal
 
 const isLoggingOut = ref(false);
 const isLoggingOutCurrent = ref(false);
 
-const confirmLogoutOtherDevices = async () => {
-  if (!confirm('¿Estás seguro de que quieres cerrar la sesión en todos los demás dispositivos?')) {
-    return;
-  }
-
-  isLoggingOut.value = true;
+// NUEVA FUNCIÓN: Muestra el modal de confirmación para cerrar sesión en otros dispositivos
+const showLogoutOtherDevicesConfirm = async () => {
   try {
-    const response = await profileService.logoutOtherDevices();
-    $toast?.success(response.message || 'Sesiones cerradas en otros dispositivos exitosamente.');
+    const result = await $modal.showModal(
+      LogoutConfirmModal,
+      {
+        // Puedes pasarle props específicas al modal si es necesario,
+        // aunque para este modal genérico de confirmación no es estrictamente necesario.
+      },
+      {
+        // Opciones para el ModalContainer:
+        title: 'Cerrar Sesiones Activas', // Un título más específico para el encabezado del modal
+        closeOnClickOutside: false, // Fuerza al usuario a interactuar con los botones
+        width: 'max-w-md'
+      }
+    );
+
+    // Si el usuario confirmó el cierre de sesión
+    if (result && result.action === 'confirm' && result.payload.logout) {
+      isLoggingOut.value = true;
+      try {
+        const response = await profileService.logoutOtherDevices();
+        console.log('Sesiones cerradas en otros dispositivos:', response);
+        $toast?.success(response.message || 'Sesiones cerradas en otros dispositivos exitosamente.');
+      } catch (error) {
+        console.error("Error al cerrar sesión en otros dispositivos:", error);
+        $toast?.error(error.response?.data?.message || 'Error al cerrar sesión en otros dispositivos.');
+      } finally {
+        isLoggingOut.value = false;
+        $modal.hideModal(result.id); // Oculta el modal manualmente
+      }
+    } else {
+      // Si el usuario canceló
+      console.log('Cierre de sesión en otros dispositivos cancelado.');
+      $modal.hideModal(result.id); // Oculta el modal si fue cancelado
+    }
   } catch (error) {
-    console.error("Error al cerrar sesión en otros dispositivos:", error);
-    $toast?.error(error.response?.data?.message || 'Error al cerrar sesión en otros dispositivos.');
-  } finally {
-    isLoggingOut.value = false;
+    console.error('Error al mostrar o manejar el modal de cierre de sesión en otros dispositivos:', error);
+    // Asegúrate de ocultar el modal si algo salió mal antes de que se mostrara completamente
+    // Esto es un catch general, podrías necesitar manejo más específico.
   }
 };
 
-const confirmLogout = async () => {
-  if (!confirm('¿Estás seguro de que quieres cerrar tu sesión actual?')) {
-    return;
-  }
-
-  isLoggingOutCurrent.value = true;
+// NUEVA FUNCIÓN: Muestra el modal de confirmación para cerrar la sesión actual
+const showLogoutCurrentConfirm = async () => {
   try {
-    // Llama a la acción logout de tu authStore, que a su vez maneja:
-    // 1. La llamada al endpoint `/logout` del backend.
-    // 2. La limpieza del estado del Pinia store (user, token).
-    // 3. La eliminación del token de localStorage.
-    await authStore.logout(); 
-    
-    $toast?.success('Sesión cerrada exitosamente.');
-    router.push({ name: 'login' }); // Redirige a la página de login
+    const result = await $modal.showModal(
+      LogoutConfirmModal,
+      {},
+      {
+        title: 'Confirmar Cierre de Sesión', // Un título más específico para el encabezado del modal
+        closeOnClickOutside: true,
+        width: 'max-w-md'
+      }
+    );
+
+    // Si el usuario confirmó el cierre de sesión
+    if (result && result.action === 'confirm' && result.payload.logout) {
+      isLoggingOutCurrent.value = true;
+      try {
+        await authStore.logout();
+
+        $toast?.success('Sesión cerrada exitosamente.');
+        router.push({ name: 'login' }); // Redirige a la página de login
+      } catch (error) {
+        console.error("Error al cerrar sesión:", error);
+        $toast?.error(error.response?.data?.message || 'Error al cerrar sesión.');
+      } finally {
+        isLoggingOutCurrent.value = false;
+        $modal.hideModal(result.id); // Oculta el modal manualmente
+      }
+    } else {
+      // Si el usuario canceló
+      console.log('Cierre de sesión actual cancelado.');
+      $modal.hideModal(result.id); // Oculta el modal si fue cancelado
+    }
   } catch (error) {
-    console.error("Error al cerrar sesión:", error);
-    $toast?.error(error.response?.data?.message || 'Error al cerrar sesión.');
-  } finally {
-    isLoggingOutCurrent.value = false;
+    console.error('Error al mostrar o manejar el modal de cierre de sesión actual:', error);
   }
 };
+
+// Eliminamos las funciones confirmLogoutOtherDevices y confirmLogout originales
+// ya que ahora sus lógicas están dentro de las nuevas funciones show...Confirm
 </script>
 
 <style scoped>
 /* Estilos adicionales si fueran necesarios */
+
+
 </style>

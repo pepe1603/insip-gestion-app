@@ -4,99 +4,138 @@ import { ref, markRaw } from 'vue';
 const activeModals = ref({});
 let modalIdCounter = 0;
 
+const currentOfflineModalId = ref(null);
+const currentOnlineModalId = ref(null);
+
 export function useModalService() {
+    const showModal = (component, props = {}, options = {}) => {
+        return new Promise((resolve) => {
+            const componentName = component.name;
 
-  const showModal = (component, props = {}, options = {}) => {
-    // Retorna una Promesa que se resolverá cuando el modal se cierre (y su acción sea determinada)
-    return new Promise((resolve) => {
-      modalIdCounter++;
-      const id = modalIdCounter;
+            console.log('Attempting to show modal:', componentName, 'Current offline ID:', currentOfflineModalId.value, 'Current online ID:', currentOnlineModalId.value);
 
-      activeModals.value[id] = {
-        id,
-        component: markRaw(component),
-        props: {
-          ...props, // Mantenemos las props originales
-          // INYECTAMOS FUNCIONES QUE EL COMPONENTE INTERNO DEL MODAL PUEDE LLAMAR
-          // Estas funciones SETEAN LA ACCIÓN FINAL Y SOLICITAN EL CIERRE.
-          // La PROMESA se resolverá LUEGO, cuando el modal termine de ocultarse.
-          __onConfirm: (payload) => {
-            // Almacena la acción y el payload para resolver la promesa más tarde
-            activeModals.value[id]._actionResult = { action: 'confirm', payload };
-            hideModal(id); // Solicita que el modal se oculte
-          },
-          __onCancel: (payload) => {
-            activeModals.value[id]._actionResult = { action: 'cancel', payload };
-            hideModal(id);
-          },
-          __onClose: (payload) => { // Para cerrar sin acción específica (ej. InfoMessageModal)
-            activeModals.value[id]._actionResult = { action: 'close', payload };
-            hideModal(id);
-          }
-        },
-        options,
-        show: true, // El modal es visible inicialmente
-        _resolver: resolve, // Guardamos la función resolve de la promesa original aquí
-        _actionResult: null, // Para almacenar el resultado de la acción (confirm/cancel/close)
-      };
-    });
-  };
+            if (componentName === 'OfflineNotificationModal') {
+                if (currentOfflineModalId.value) {
+                    console.warn("Offline modal is already open. Preventing new instance.");
+                    resolve({ action: 'duplicate', id: currentOfflineModalId.value });
+                    return;
+                }
+                if (currentOnlineModalId.value) {
+                    forceHideModal(currentOnlineModalId.value, 'connection_lost_preempt');
+                }
+            } else if (componentName === 'OnlineReconnectedModal') {
+                if (currentOnlineModalId.value) {
+                    console.warn("Online modal is already open. Preventing new instance.");
+                    resolve({ action: 'duplicate', id: currentOnlineModalId.value });
+                    return;
+                }
+                if (currentOfflineModalId.value) {
+                    forceHideModal(currentOfflineModalId.value, 'connection_restored_preempt');
+                }
+            }
 
-  const hideModal = (id) => {
-    const modalToHide = activeModals.value[id];
+            modalIdCounter++;
+            const id = modalIdCounter;
 
-    if (modalToHide) {
-      // Si el modal no tiene un resultado de acción definido (ej. cerrado por ESC o clic fuera)
-      // establecemos un resultado por defecto de 'close'
-      if (!modalToHide._actionResult) {
-        modalToHide._actionResult = { action: 'close' };
-      }
+            if (componentName === 'OfflineNotificationModal') {
+                currentOfflineModalId.value = id;
+            } else if (componentName === 'OnlineReconnectedModal') {
+                currentOnlineModalId.value = id;
+            }
 
-      // Inicia la transición de salida visual del modal
-      modalToHide.show = false;
+            activeModals.value[id] = {
+                id,
+                component: markRaw(component),
+                props: {
+                    ...props,
+                    modalId: id, // <--- ¡Asegúrate de que esta línea esté aquí!
+                    __onConfirm: (resultFromModal) => { // Renombro 'payload' a 'resultFromModal' para mayor claridad
+                        activeModals.value[id]._actionResult = resultFromModal; // <--- ¡CAMBIO CLAVE! Asigna el objeto completo
+                        hideModal(id);
+                    },
+                    __onCancel: (resultFromModal) => {
+                        activeModals.value[id]._actionResult = resultFromModal; // <--- ¡CAMBIO CLAVE!
+                        hideModal(id);
+                    },
+                    __onClose: (resultFromModal) => {
+                        activeModals.value[id]._actionResult = resultFromModal; // <--- ¡CAMBIO CLAVE!
+                        hideModal(id);
+                    }
+                },
+                options,
+                show: true,
+                _resolver: resolve,
+                _actionResult: null,
+            };
+        });
+    };
 
-      // Esperamos a que la transición visual termine
-      setTimeout(() => {
-        // Resolvemos la promesa SOLO DESPUÉS de que el modal haya desaparecido visualmente
-        if (modalToHide._resolver) {
-          modalToHide._resolver({
-            id: modalToHide.id,
-            ...modalToHide._actionResult // Incluye action y payload
-          });
-          modalToHide._resolver = null; // Prevenir resolución múltiple
+    const hideModal = (id) => {
+        const modalToHide = activeModals.value[id];
+
+        if (modalToHide) {
+            if (!modalToHide._actionResult) {
+                modalToHide._actionResult = { id: modalToHide.id, action: 'close' }; // Asegura que 'id' esté aquí también
+            }
+
+            console.log('Hiding modal with ID:', id, 'Component name:', modalToHide.component.name);
+            modalToHide.show = false;
+
+            const componentName = modalToHide.component.name;
+            if (componentName === 'OfflineNotificationModal' && currentOfflineModalId.value === id) {
+                currentOfflineModalId.value = null;
+            } else if (componentName === 'OnlineReconnectedModal' && currentOnlineModalId.value === id) {
+                currentOnlineModalId.value = null;
+            }
+
+            setTimeout(() => {
+                if (modalToHide._resolver) {
+                    // El _resolver ya recibe el _actionResult completo, no es necesario desestructurar
+                    modalToHide._resolver(modalToHide._actionResult); // <--- ¡CAMBIO CLAVE! Pasa el objeto completo
+                    modalToHide._resolver = null;
+                }
+                delete activeModals.value[id];
+            }, 300);
         }
+    };
 
-        // Eliminamos el modal del estado `activeModals`
-        delete activeModals.value[id];
-      }, 300); // Este tiempo debe coincidir con la duración de la transición `leave` en UiModal.vue
-    }
-  };
+    const forceHideModal = (id, action = 'programmatic_close', payload = null) => {
+        const modalToHide = activeModals.value[id];
+        console.log('Force hiding modal with ID:', id, 'Action:', action);
+        if (modalToHide) {
+            // Asegura que el resultado forzado también tenga el ID
+            modalToHide._actionResult = { id: id, action, payload }; // <--- Asegura que 'id' esté aquí
+            hideModal(id);
+        }
+    };
 
-  const hideAllModals = () => {
-    Object.values(activeModals.value).forEach(modal => {
-      // Aseguramos un resultado de 'close' si no se definió una acción específica
-      if (!modal._actionResult) {
-        modal._actionResult = { action: 'close' };
-      }
-      modal.show = false; // Inicia la transición de salida
+    const hideAllModals = () => {
+        Object.values(activeModals.value).forEach(modal => {
+            if (!modal._actionResult) {
+                modal._actionResult = { id: modal.id, action: 'close' }; // Asegura que 'id' esté aquí
+            }
+            modal.show = false;
 
-      // No resolvemos aquí individualmente, ya que la lógica setTimeout manejará eso por cada modal
-      // Lo mejor es que la promesa de cada modal se resuelva cuando SU hideModal individual lo limpie.
-    });
+            const componentName = modal.component.name;
+            if (componentName === 'OfflineNotificationModal' && currentOfflineModalId.value === modal.id) {
+                currentOfflineModalId.value = null;
+            } else if (componentName === 'OnlineReconnectedModal' && currentOnlineModalId.value === modal.id) {
+                currentOnlineModalId.value = null;
+            }
+        });
 
-    // Limpiamos el objeto `activeModals` después de la transición de todos
-    // Esto es un poco delicado si los modales tienen diferentes tiempos de cierre.
-    // Una alternativa más segura es que cada `hideModal` individual se encargue de su limpieza.
-    // Para simplificar, si se asume que todos se cierran en 300ms:
-    setTimeout(() => {
-      activeModals.value = {};
-    }, 300);
-  };
+        setTimeout(() => {
+            activeModals.value = {};
+        }, 300);
+    };
 
-  return {
-    activeModals,
-    showModal,
-    hideModal,
-    hideAllModals,
-  };
+    return {
+        activeModals,
+        showModal,
+        hideModal,
+        hideAllModals,
+        forceHideModal,
+        currentOfflineModalId,
+        currentOnlineModalId
+    };
 }

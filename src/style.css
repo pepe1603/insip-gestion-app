@@ -22,8 +22,11 @@
   --color-empresarial-50: #F2F2F2;
 }
 
-/* Asegúrate de que Tailwind cargue sus utilidades */
-@import "tailwindcss";
+/* Carga de utilidades de  Tailwind */
+/* Directivas de capas de Tailwind CSS */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Usar estas variables en lugar de las clases predeterminadas de Tailwind */
 

@@ -1,17 +1,17 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import tailwindcss from '@tailwindcss/vite'
-import { resolve } from 'path' // Importa 'resolve' de 'path'
+// import tailwindcss from '@tailwindcss/vite' // <-- ELIMINA ESTA LÍNEA
+import { resolve } from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    tailwindcss(),
+    // tailwindcss(), // <-- ELIMINA ESTA LÍNEA si no se usa la verison 4 de Tailwind CSS
   ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'), // Define el alias '@' apuntando a tu carpeta 'src'
+      '@': resolve(__dirname, './src'), // Tu alias está perfecto aquí
     },
   },
 })

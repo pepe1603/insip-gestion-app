@@ -97,6 +97,7 @@ export function useInactivityDetector() {
             try {
                 await authStore.logout(); // Cierra sesión en el backend y limpia datos locales
                 console.log('Logout completo ejecutado.');
+
             } catch (error) {
                 console.warn('Fallo al cerrar sesión en el backend, limpiando localmente:', error);
                 authStore.clearAuthData(); // Asegurarse de limpiar incluso si el backend falla
@@ -105,7 +106,7 @@ export function useInactivityDetector() {
             console.log('Usuario ya no autenticado, solo limpiando datos locales.');
             authStore.clearAuthData(); // Solo limpia datos locales si no estaba autenticado
         }
-        router.push('/login'); // Redirige siempre al login después de la acción de cierre
+        router.push({ name: 'login' }); // Redirige siempre al login después de la acción de cierre
       }
     } catch (error) {
       console.error("Error al manejar el modal de inactividad o durante el proceso de logout:", error);
@@ -113,7 +114,7 @@ export function useInactivityDetector() {
       if (authStore.isAuthenticated) { // Solo si todavía tenemos un token que podría ser inválido
           authStore.clearAuthData();
       }
-      router.push('/login');
+      router.push({ name: 'login' });
     } finally {
       isModalOpen = false;
       inactivityModalId = null;

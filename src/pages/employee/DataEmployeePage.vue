@@ -72,7 +72,7 @@
           </div>
           <div class="py-2 border-b border-gray-200 dark:border-gray-600">
             <p class="font-semibold text-gray-800 dark:text-white">Departamento:</p>
-            <p>{{ employee.departamento?.nombre || 'N/A' }}</p>
+            <p>{{ departamento || 'N/A' }}</p>
           </div>
           <div class="py-2 border-b border-gray-200 dark:border-gray-600">
             <p class="font-semibold text-gray-800 dark:text-white">Fecha de Contratación:</p>
@@ -100,12 +100,12 @@
               type="text"
               class="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-700/50"
             />
-            <p v-else>{{ employee.direccion || 'N/A' }}</p>
+            <p v-else>{{ employee.direccion || 'No Disponible' }}</p>
           </div>
 
           <div class="py-2 border-b border-gray-200 dark:border-gray-600">
             <p class="font-semibold text-gray-800 dark:text-white">Salario:</p>
-            <p>{{ formatCurrency(employee.salario) || 'N/A' }}</p>
+            <p>{{ formatCurrency(employee.salario) || 'por motivos de privacidad no disponible' }}</p>
           </div>
         </div>
       </div>
@@ -162,6 +162,7 @@ const $toast = useGlobalToast();
 
 const employee = ref(null); // Datos originales del empleado
 const nombreFull = ref(null);
+const departamento = ref(null);
 const editableEmployee = ref({}); // Copia para la edición
 const isLoading = ref(true);
 const error = ref(null);
@@ -212,9 +213,9 @@ const loadEmployeeData = async () => {
     editableEmployee.value = { ...data }; 
     
     if (employee) {
-       // nombreFull.value= `${employee.nombre} ${employee.ape_parterno} ${employee.ape_materno}`;
-       nombreFull.value = employee.nombre;
-      $toast?.success(`Datos de ${ userName} cargados exitosamente.`, { duration: 3000 });
+       nombreFull.value= `${employee.value.nombre} ${employee.value.ape_paterno} ${employee.value.ape_materno}`;
+       //nombreFull.value = employee.value.nombre;
+      departamento.value = employee.value.departamento?.nombre || 'Desconocido';
     }
 
   } catch (err) {

@@ -4,6 +4,17 @@ import { createPinia } from 'pinia'
 import './style.css'
 import router from './router'
 import App from './App.vue'
+
+// Importa vue-i18n
+import { createI18n } from 'vue-i18n';
+
+// Importa tus archivos de traducción
+import es from './locales/es.json';
+import en from './locales/en.json';
+// Importa fr.json si lo tienes también
+// import fr from './locales/fr.json';
+
+//plugins
 import toastPlugin from './plugins/toastPlugin'
 import modalPlugin from './plugins/modalPlugin'
 import VueTippy from 'vue-tippy';
@@ -18,6 +29,7 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 /* Importa íconos Solid (fas) - ¡AGREGA LOS QUE NECESITES! */
 import {
   faHome,
+  faBan,
   faUsers,
   faUserGroup,
   faUser,
@@ -67,6 +79,7 @@ import { ClipboardDocumentListIcon, EnvelopeOpenIcon, ExclamationCircleIcon, Inf
 library.add(
 
   faHome,
+  faBan,
   faChartPie,
   faRightFromBracket,
   faUsers,
@@ -122,9 +135,24 @@ app.component('font-awesome-icon', FontAwesomeIcon) // ¡Ahora puedes usar <font
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate); // Usa el plugin de persistencia
 
+
+// Configuración de Vue I18n
+const i18n = createI18n({
+  legacy: false, // Usar la API de composición
+  locale: 'es', // Idioma predeterminado
+  fallbackLocale: 'en', // Idioma de respaldo si no se encuentra una traducción
+  messages: {
+    es, // tus traducciones en español
+    en  // tus traducciones en inglés
+    // fr, si lo tienes
+  }
+});
+
+
 app.use(pinia)
 app.use(router)
 app.use(toastPlugin)
 app.use(modalPlugin)
+app.use(i18n) // Añade i18n a la aplicación
 app.use(VueTippy)
 app.mount('#app')

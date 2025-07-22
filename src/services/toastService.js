@@ -21,7 +21,7 @@ const useToastServiceState = createGlobalState(() => {
     const id = nextId++;
     const defaultOptions = {
       type: 'info',
-      position: 'bottom-right',
+      position: 'top-right',
       duration: 12000, // Actualizado a 12 segundos por defecto
       title: '',
       dismissible: true, // Por defecto se puede cerrar

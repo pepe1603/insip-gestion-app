@@ -1,6 +1,6 @@
 <template>
 
-  <footer class="bg-white text-sm ">
+  <footer class="bg-white text-sm  dark:bg-gray-800 text-gray-600 dark:text-gray-300">
     <!-- Componente de LogosCloud -->
 
     <div class="mx-auto px-2 md:px-14">

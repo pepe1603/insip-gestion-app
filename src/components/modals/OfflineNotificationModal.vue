@@ -1,22 +1,34 @@
-<script setup>
-import { ref, computed } from 'vue';
+<script>
+import { defineComponent, ref } from 'vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
-const props = defineProps({
-  // Inyectado por el servicio de modales para resolver la promesa
-  __onConfirm: Function, 
-  __onClose: Function, // También para un cierre genérico
+export default defineComponent({
+  name: 'OfflineNotificationModal', // Aquí definimos el nombre del componente
+  components: {
+    FontAwesomeIcon,
+  },
+  props: {
+    // Inyectado por el servicio de modales para resolver la promesa
+    __onConfirm: Function,
+    __onClose: Function, // También para un cierre genérico
+  },
+  setup(props) {
+    const hasAgreedToOffline = ref(false); // Estado para la casilla de confirmación
+
+    // Se llamará cuando el usuario haga clic en "Continuar sin conexión"
+    const handleContinueOffline = () => {
+      if (props.__onConfirm) {
+        // Resolvemos la promesa en App.vue con una acción específica
+        props.__onConfirm({ action: 'continue_offline' });
+      }
+    };
+
+    return {
+      hasAgreedToOffline,
+      handleContinueOffline,
+    };
+  },
 });
-
-const hasAgreedToOffline = ref(false); // Nuevo estado para la casilla de confirmación
-
-// Se llamará cuando el usuario haga clic en "Continuar sin conexión"
-const handleContinueOffline = () => {
-  if (props.__onConfirm) {
-    // Resolvemos la promesa en App.vue con una acción específica
-    props.__onConfirm({ action: 'continue_offline' }); 
-  }
-};
 </script>
 
 <template>

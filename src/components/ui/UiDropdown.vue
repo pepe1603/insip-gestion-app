@@ -3,13 +3,13 @@
     <div>
       <MenuButton
         :class="[
-          'inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-gray-100 dark:ring-gray-700 dark:hover:bg-gray-700',
+          'inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:bg-gray-400 dark:text-white dark:ring-gray-700 dark:hover:bg-gray-200',
           buttonClass,
         ]"
       >
         <slot name="button">
           {{ label }}
-          <ChevronDownIcon class="-mr-1 size-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
+          <ChevronDownIcon class="-mr-1 size-5 text-gray-400 dark:text-white" aria-hidden="true" />
         </slot>
       </MenuButton>
     </div>

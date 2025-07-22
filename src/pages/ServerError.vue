@@ -1,5 +1,5 @@
 <template>
-    <div class="server-error">
+    <div class="server-error text-center bg-red-100 p-4 rounded dark:bg-red-900">
       <h2>500 - Error del servidor</h2>
       <p>Hubo un problema al procesar tu solicitud. Por favor, intenta más tarde.</p>
       <router-link to="/">Volver al inicio</router-link>

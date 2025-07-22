@@ -123,7 +123,7 @@
       <p class="text-gray-600 mt-2">Accede a la sección de administración de estados de solicitudes de vacaciones.</p>
     </div>
 
-    <div class="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col md:flex-row items-stretch p-6 gap-6 min-h-40 max-h-max mb-8">
+    <div class="rounded-xl border border-gray-200 bg-white shadow-sm flex flex-col md:flex-row items-stretch p-6 gap-6 min-h-40 max-h-max mb-8 dark:bg-gray-800 dark:border-gray-700">
       <div class="flex flex-col items-center self-start gap-3 w-full md:w-1/3">
         <h2 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
           <SparklesIcon class="w-6 h-6 text-blue-500" />

@@ -18,13 +18,13 @@
         Ir al Inicio
       </button>
 
-      <button
+      <UiButton
         v-if="!isAuthenticated"
         @click="handleGoToLogin"
         class="w-full px-4 py-2 rounded-md border border-indigo-600 text-indigo-600 font-medium hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition ease-in-out duration-150 dark:border-indigo-400 dark:text-indigo-400 dark:hover:bg-indigo-900"
       >
         Iniciar Sesión
-      </button>
+      </UiButton>
     </div>
   </div>
 </template>
@@ -32,6 +32,7 @@
 <script setup>
 import { useAuthStore } from '@/stores/authStore'; // Tu store de Pinia para auth
 import { useRouter } from 'vue-router'; // Para la navegación
+import UiButton from '../ui/UiButton.vue';
 
 // Props inyectadas por el modalService para gestionar el cierre y resultados
 const props = defineProps({

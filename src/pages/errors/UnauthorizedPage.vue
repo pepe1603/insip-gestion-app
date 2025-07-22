@@ -1,79 +1,129 @@
 <template>
-  <div class="min-h-screen w-full flex items-center justify-center bg-gray-100 dark:bg-gray-900 p-4 sm:p-6 lg:p-8">
-    <div class="bg-white dark:bg-gray-800 p-8 md:p-12 rounded-xl shadow-2xl  w-auto text-center transform hover:scale-105 transition-transform duration-300 ease-in-out">
-      <div class="mb-6">
-        <svg class="mx-auto h-24 w-24 text-red-500 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
+  <div class="min-h-screen w-full flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-100 dark:from-gray-900 dark:to-black p-4 sm:p-6 lg:p-8">
+    <div class=" p-8 md:p-12 rounded-2xl w-full text-center transform transition-all duration-500 ease-in-out scale-95 opacity-0 animate-fade-in-up">
+      <div class="mb-8">
+        <ExclamationTriangleIcon class="mx-auto h-28 w-28 text-red-500 dark:text-red-400 animate-bounce-subtle" />
       </div>
 
-      <h1 class="text-5xl md:text-6xl font-extrabold text-red-700 dark:text-red-500 mb-4">
+      <h1 class="text-6xl md:text-7xl font-extrabold text-red-700 dark:text-red-500 mb-4 tracking-tight">
         403
       </h1>
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-800 dark:text-white mb-6">
-        Acceso Denegado
+      <h2 class="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-6 leading-tight">
+        Acceso Denegado <font-awesome-icon :icon="['fas', 'ban']" class="h-6 w-6 text-red-400" />
       </h2>
 
-      <p class="text-gray-700 dark:text-gray-300 text-lg mb-4 leading-relaxed">
-        Parece que no tienes los permisos necesarios para acceder a esta sección. Tu cuenta actual no cuenta con los roles requeridos para visualizar este contenido.
+      <p class="text-gray-700 dark:text-gray-300 text-lg mb-4 leading-relaxed px-2">
+        Parece que **no tienes los permisos necesarios** para acceder a esta sección. Tu cuenta actual no cuenta con los roles requeridos para visualizar este contenido.
       </p>
-      <p class="text-gray-600 dark:text-gray-400 text-md mb-8">
-        Si crees que esto es un error o necesitas acceder, por favor, contacta a tu administrador.
+      <p class="text-gray-600 dark:text-gray-400 text-md mb-8 px-2">
+        Si crees que esto es un error o necesitas acceder, por favor, <span class="font-semibold text-indigo-600 dark:text-indigo-400">contacta a tu administrador</span>.
       </p>
 
-      <div class="flex flex-col sm:flex-row justify-center gap-4">
-        <router-link
-        v-if="authStore.isAuthenticated && authStore.user?.role !== 'employee'"
-          to="/admin"
-          class="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 ease-in-out transform hover:-translate-y-1"
+      <div class="flex flex-col sm:flex-row justify-center gap-4 mt-8">
+        <UiButton
+          v-if="authStore.isAuthenticated && authStore.user?.role !== 'employee'"
+          :to="determineDashboardRoute()"
+          variant="primary"
+          size="md"
+          :show-icon="true"
+          :icon="HomeModernIcon"
+          icon-position="left"
         >
-          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg>
           Ir al Panel de Control
-        </router-link>
-
-        <router-link
-          v-if="!isAuthenticated"
-          to="/auth/login"
-          class="inline-flex items-center justify-center px-6 py-3 border border-indigo-300 dark:border-indigo-600 text-base font-medium rounded-md text-indigo-700 dark:text-indigo-300 bg-indigo-100 dark:bg-indigo-700 hover:bg-indigo-200 dark:hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all duration-200 ease-in-out transform hover:-translate-y-1"
-        >
-          <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M3 3a1 1 0 011 1v12a1 1 0 11-2 0V4a1 1 0 011-1zm7.707 3.293a1 1 0 010 1.414L9.414 9H17a1 1 0 110 2H9.414l1.293 1.293a1 1 0 01-1.414 1.414l-3-3a1 1 0 010-1.414l3-3a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>
-          Iniciar Sesión
-        </router-link>
-
-        <router-link
-        to="/"
-        >
-        <UiButton size="md">
-          Regresar
         </UiButton>
 
-        </router-link>
+        <UiButton
+          v-if="!isAuthenticated"
+          to="/auth/login"
+          variant="outline-primary"
+          size="md"
+          :show-icon="true"
+          :icon="ArrowRightOnRectangleIcon"
+          icon-position="left"
+        >
+          Iniciar Sesión
+        </UiButton>
 
+        <UiButton
+          @click="goBack"
+          variant="secondary"
+          size="md"
+          :show-icon="true"
+          :icon="ArrowUturnLeftIcon"
+          icon-position="left"
+        >
+          Regresar
+        </UiButton>
       </div>
       
-      <div class="mt-8 text-sm text-gray-500 dark:text-gray-400">
-        <p>&copy; {{ currentYear }} {{ nameApp }} . Todos los derechos reservados.</p>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue';
-import { useAuthStore } from '@/stores/authStore'; // Asegúrate de que esta ruta sea correcta
-import UiButton from '../../components/ui/UiButton.vue';
+import { useRouter } from 'vue-router'; // Importar useRouter
+import { useAuthStore } from '@/stores/authStore';
+import UiButton from '@/components/ui/UiButton.vue'; // Asegúrate de que la ruta sea correcta
+import {
+  ExclamationTriangleIcon, // Icono principal de advertencia
+  HomeModernIcon,          // Icono para "Ir al Panel de Control"
+  ArrowRightOnRectangleIcon, // Icono para "Iniciar Sesión"
+  ArrowUturnLeftIcon         // Icono para "Regresar"
+} from '@heroicons/vue/24/solid';
 
-// Usa tu store de Pinia
 const authStore = useAuthStore();
+const router = useRouter(); // Instanciar el router
 
-// Usa la propiedad isAuthenticated del store como una propiedad computada
 const isAuthenticated = computed(() => authStore.isAuthenticated);
-
 const currentYear = computed(() => new Date().getFullYear());
+const appName = 'RH-Flow (Gestión de Asistencias y Vacaciones)'; // Nombre de la aplicación más descriptivo
 
-const nameApp = 'gestion-asistencias-vacaciones-insip-app/RH-Flow';
+// Función para determinar la ruta del dashboard basada en el rol
+const determineDashboardRoute = () => {
+  const userRole = authStore.user?.role;
+  if (userRole === 'admin' || userRole === 'supervisor') {
+    return { name: 'intro' }; // O la ruta de tu dashboard de admin/supervisor
+  } else if (userRole === 'employee') {
+    return { name: 'employee-dashboard' }; // O la ruta de tu dashboard de empleado
+  }
+  return '/'; // Ruta por defecto si no se reconoce el rol o no hay user
+};
+
+// Función para regresar a la página anterior o a la raíz
+const goBack = () => {
+  if (window.history.length > 1) {
+    router.go(-1); // Intenta ir a la página anterior
+  } else {
+    router.push('/'); // Si no hay historial, ve a la página de inicio
+  }
+};
 </script>
 
 <style scoped>
-/* No es necesario este bloque si solo usas Tailwind CSS */
+/* Animación de entrada para el contenedor principal */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInSlideUp 0.6s ease-out forwards;
+}
+
+/* Animación sutil de rebote para el icono de advertencia */
+@keyframes bounceSubtle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.animate-bounce-subtle {
+  animation: bounceSubtle 2s infinite ease-in-out;
+}
 </style>

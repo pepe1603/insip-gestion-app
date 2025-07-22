@@ -1,5 +1,6 @@
 <script setup>
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import UiButton from '../ui/UiButton.vue';
 
 const props = defineProps({
   title: {
@@ -38,18 +39,19 @@ const handleCancel = () => {
     <p class="text-gray-700 dark:text-gray-300 mb-6">{{ message }}</p>
 
     <div class="flex justify-center gap-4 mt-6">
-      <button
+      <UiButton
+        variant="secondary"
         @click="handleCancel"
-        class="px-6 py-2 rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
+        class="px-4 py-2 rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600"
       >
         Cerrar Sesión
-      </button>
-      <button
+      </UiButton>
+      <UiButton
         @click="handleConfirm"
-        class="px-6 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+        class="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
       >
         Continuar Sesión
-      </button>
+      </UiButton>
     </div>
   </div>
 </template>

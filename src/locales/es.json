@@ -1,0 +1,122 @@
+{
+  "general": {
+    "generalSettingsTitle": "Configuración General del Sistema",
+    "generalSettingsDescription": "Gestiona la información principal de la empresa y las preferencias de localización de la aplicación.",
+
+    "companyInfo": "Información de la Empresa",
+    "companyInfoDescription": "Detalles fundamentales de la organización que se utilizan en reportes y comunicaciones.",
+    "companyName": "Nombre de la Empresa",
+    "companyPhone": "Teléfono de Contacto",
+    "companyAddress": "Dirección",
+    "companyEmail": "Correo Electrónico",
+    "companyLogo": "Logo de la Empresa",
+    "companyLogoHelp": "Este logo se usará en reportes y cabeceras. (Funcionalidad de carga simulada)",
+    "noLogoLoaded": "No hay logo cargado",
+    "changeLogo": "Cambiar Logo",
+    "addressPlaceholder": "Calle, número, colonia, código postal, ciudad, país",
+    "emailPlaceholder": "contacto@empresa.com",
+    "phonePlaceholder": "+XX XXX XXX XXXX",
+    "namePlaceholder": "Nombre completo de la empresa",
+
+    "localePreferences": "Preferencias de Idioma y Región",
+    "localePreferencesDescription": "Ajusta los formatos de fecha, hora, moneda y el idioma predeterminado de la aplicación.",
+    "defaultLanguage": "Idioma Predeterminado",
+    "systemTimezone": "Zona Horaria del Sistema",
+    "dateFormat": "Formato de Fecha",
+    "currencyFormat": "Formato de Moneda",
+
+    "themePreferences": "Preferencias de Tema",         
+    "themePreferencesDescription": "Personaliza la apariencia visual de la aplicación.", 
+    "selectTheme": "Seleccionar Tema",                  
+    "themeLight": "Claro",                              
+    "themeDark": "Oscuro",                              
+    "themeChangedTo": "Tema cambiado a {theme}.",       
+
+    "soundAndNotifications": "Sonidos y Notificaciones",
+    "soundAndNotificationsDescription": "Controla la reproducción de sonidos para las alertas y notificaciones de la aplicación.",
+    "activateAlertSounds": "Activar Sonidos de Alerta",
+    "activateAlertSoundsHelp": "Reproducir un sonido cuando aparezca una notificación (ej. éxito, error).",
+    "browserAutoplayNote": "Nota: Los navegadores pueden requerir una primera interacción del usuario para permitir la reproducción de sonidos.",
+
+    "editSettings": "Editar Configuración",
+    "cancel": "Cancelar",
+    "saveChanges": "Guardar Cambios",
+    "saving": "Guardando...",
+
+    "settingsSavedSuccess": "Configuración guardada exitosamente.",
+    "editCanceled": "Edición cancelada. Los cambios no se guardaron.",
+    "logoUploadSimulated": "Funcionalidad de subir logo simulada. En una aplicación real, se abriría un selector de archivos.",
+    "alertSoundsMuted": "Sonidos de alerta silenciados.",
+    "alertSoundsActivated": "Sonidos de alerta activados.",
+    "languageChangedTo": "Idioma cambiado a {lang}.",
+    "languageOptions": {
+      "es": "Español (ES)",
+      "en": "Inglés (EN)",
+      "fr": "Francés (FR)"
+    },
+    "alertSoundsEnabled": "Sonidos de alerta activados.",
+    "alertSoundsDisabled": "Sonidos de alerta deshabilitados."
+  },
+  "validation": {
+    "requiredField": "Este campo es requerido."
+  },
+  "messages": {
+    "success": "Éxito",
+    "error": "Error",
+    "warning": "Advertencia",
+    "info": "Información"
+  },
+  "roles": {
+    "admin": "Administrador",
+    "supervisor": "Supervisor",
+    "employee": "Empleado",
+    "user": "Usuario"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "dashboard": "Dashboard",
+    "adminPanel": "Panel de Administración",
+    "employeePanel": "Panel de Empleado",
+    "profile": "Perfil",
+    "settings": "Configuración",
+    "generalSettings": "Configuración General",
+    "userManagement": "Gestión de Usuarios",
+    "attendanceTypes": "Tipos de Asistencia",
+    "departments": "Departamentos",
+    "requestStates": "Estados de Solicitud",
+    "officialHolidays": "Vacaciones Oficiales",
+    "employees": "Empleados",
+    "attendances": "Asistencias",
+    "vacations": "Vacaciones",
+    "myProfile": "Mi Perfil",
+    "editProfile": "Editar Perfil",
+    "changePassword": "Cambiar Contraseña",
+    "security": "Seguridad",
+    "myAttendance": "Mis Asistencias",
+    "myVacations": "Mis Vacaciones",
+    "requestVacation": "Solicitar Vacaciones",
+    "consultations": "Consultas",
+    "myData": "Mis Datos"
+  },
+  "auth": {
+    "passwordRequiredModalMessage": "Debe cambiar su contraseña para poder acceder a otras secciones.",
+    "passwordRequiredModalButton": "Ir a Cambiar Contraseña",
+    "passwordRequiredModalTitle": "Contraseña Requerida",
+    "loginRequiredModalMessage": "Necesitas iniciar sesión para acceder a esta sección.",
+    "loginRequiredModalButton": "Ir a Iniciar Sesión",
+    "loginRequiredModalTitle": "Acceso Restringido",
+    "alreadyLoggedInModalMessage": "Ya estás autenticado. Redirigiendo a tu dashboard.",
+    "alreadyLoggedInModalButton": "Aceptar",
+    "alreadyLoggedInModalTitle": "Ya Iniciaste Sesión"
+  },
+  "logoutModal": {
+    "title": "¿Cerrar Sesión?",
+    "description": "Estás a punto de cerrar tu sesión actual. Deberás volver a iniciar sesión para acceder a tu cuenta.",
+    "warning": "Asegúrate de haber guardado cualquier cambio importante.",
+    "confirmButton": "Cerrar Sesión",
+    "cancelButton": "Cancelar"
+  }
+}

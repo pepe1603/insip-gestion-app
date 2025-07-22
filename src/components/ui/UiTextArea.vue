@@ -12,6 +12,7 @@
         @input="$emit('update:modelValue', $event.target.value)"
         :required="required"
         class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-indigo-600 outline-indigo-700 focus:border-indigo-700 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-indigo-900 dark:focus:border-indigo-700"
+        :class="{ 'cursor-not-allowed opacity-75': disabled }"
       />
     </div>
   </template>
@@ -25,6 +26,10 @@
     rows: {
       type: Number,
       default: 5
+    },
+    disabled: { // Added new prop
+      type: Boolean,
+      default: false
     },
     modelValue: String,
     required: Boolean

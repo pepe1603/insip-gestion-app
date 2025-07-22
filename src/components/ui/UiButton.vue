@@ -36,7 +36,7 @@ const props = defineProps({
   variant: {
     type: String,
     default: 'primary',
-    validator: (value) => ['primary', 'notify', 'secondary', 'success', 'error', 'warning', 'info', 'neutral', 'loading', 'outline-primary', 'outline-secondary', 'outline-success', 'outline-error', 'outline-warning', 'outline-info'].includes(value),
+    validator: (value) => ['primary', 'notify', 'secondary', 'success', 'error', 'warning', 'info', 'neutral', 'loading', 'outline-primary', 'outline-secondary', 'outline-success', 'outline-error', 'outline-warning', 'outline-info', 'download'].includes(value), // Agregué 'download' aquí
   },
   size: {
     type: String,
@@ -55,6 +55,11 @@ const props = defineProps({
     type: String,
     default: 'right', // Por defecto, el ícono estará a la derecha del texto
     validator: (value) => ['left', 'right'].includes(value),
+  },
+  // 🚀 NUEVA PROP: Controla la visibilidad del icono 🚀
+  showIcon: {
+    type: Boolean,
+    default: false, // Por defecto, el icono no se mostrará a menos que se especifique true
   },
 });
 
@@ -82,11 +87,11 @@ const sizeClasses = computed(() => {
     case 'sm':
       return ['px-3', 'py-1.5', 'text-sm'];
     case 'lg':
-      return ['px-5', 'py-3', 'text-lg']; // Ajuste para 'lg' a text-lg
+      return ['px-5', 'py-3', 'text-lg'];
     case 'xl':
-      return ['px-6', 'py-3.5', 'text-xl']; // Ajuste para 'xl' a text-xl
+      return ['px-6', 'py-3.5', 'text-xl'];
     default: // md
-      return ['px-4', 'py-2', 'text-base']; // Ahora 'md' es 'text-base'
+      return ['px-4', 'py-2', 'text-base'];
   }
 });
 
@@ -95,19 +100,19 @@ const variantClasses = computed(() => {
     case 'primary':
       return ['bg-indigo-600', 'hover:bg-indigo-700', 'focus:ring-indigo-300', 'text-white', 'dark:bg-indigo-700', 'dark:hover:bg-indigo-800', 'dark:focus:ring-indigo-900'];
     case 'secondary':
-      return ['bg-gray-500', 'hover:bg-gray-600', 'focus:ring-gray-300', 'text-white', 'dark:bg-gray-600', 'dark:hover:bg-gray-700', 'dark:focus:ring-gray-800'];
+      return ['bg-gray-200', 'hover:bg-gray-400', 'focus:ring-gray-300', 'text-gray-700', 'dark:bg-gray-400', 'dark:hover:bg-gray-500', 'dark:text-gray-200', 'dark:focus:ring-gray-800'];
     case 'success':
       return ['bg-green-500', 'hover:bg-green-600', 'focus:ring-green-300', 'text-white', 'dark:bg-green-600', 'dark:hover:bg-green-700', 'dark:focus:ring-green-800'];
     case 'error':
       return ['bg-red-500', 'hover:bg-red-600', 'focus:ring-red-300', 'text-white', 'dark:bg-red-600', 'dark:hover:bg-red-700', 'dark:focus:ring-red-800'];
     case 'warning':
-      return ['bg-yellow-400', 'hover:bg-yellow-500', 'focus:ring-yellow-300', 'text-gray-900', 'dark:bg-yellow-500', 'dark:hover:bg-yellow-600', 'dark:focus:ring-yellow-400'];
+      return ['bg-yellow-600', 'hover:bg-yellow-700', 'focus:ring-yellow-500', 'text-white', 'dark:bg-yellow-500', 'dark:hover:bg-yellow-600', 'dark:focus:ring-yellow-400'];
     case 'info':
       return ['bg-blue-500', 'hover:bg-blue-600', 'focus:ring-blue-300', 'text-white', 'dark:bg-blue-600', 'dark:hover:bg-blue-700', 'dark:focus:ring-blue-800'];
     case 'neutral':
-      return ['bg-slate-100', 'border border-slate-200', 'hover:bg-slate-400', 'focus:ring-slate-300', 'text-slate-800', 'dark:bg-slate-600', 'dark:hover:bg-slate-700', 'dark:focus:ring-slate-800'];
-    case 'download':
-      return ['bg-slate-100', 'border border-slate-200', 'hover:bg-slate-400', 'focus:ring-slate-300', 'text-slate-800', 'dark:bg-slate-600', 'dark:hover:bg-slate-700', 'dark:focus:ring-slate-800'];
+      return ['bg-slate-100', 'border', 'border-slate-200', 'hover:bg-slate-400', 'focus:ring-slate-300', 'text-slate-800', 'dark:bg-slate-600', 'dark:hover:bg-slate-700', 'dark:focus:ring-slate-800'];
+    case 'download': // ¡Asegúrate de que este caso tenga estilos si es diferente a 'neutral'!
+      return ['bg-slate-100', 'border', 'border-slate-200', 'hover:bg-slate-400', 'focus:ring-slate-300', 'text-slate-800', 'dark:bg-slate-600', 'dark:hover:bg-slate-700', 'dark:focus:ring-slate-800'];
     case 'loading':
       return ['bg-indigo-600', 'text-white', 'cursor-wait', 'dark:bg-indigo-700'];
     case 'outline-primary':
@@ -146,8 +151,10 @@ const defaultIconComponent = computed(() => {
   }
 });
 
+// 🚀 Lógica de hasIcon ajustada para incluir showIcon 🚀
 const hasIcon = computed(() => {
-  return props.icon !== null || defaultIconComponent.value !== null;
+  // Solo muestra el icono si showIcon es true Y hay un icono (ya sea pasado por prop o por defecto de variante)
+  return props.showIcon && (props.icon !== null || defaultIconComponent.value !== null);
 });
 
 const resolvedIconComponent = computed(() => {
@@ -178,27 +185,19 @@ const iconSizeClass = computed(() => {
   }
 });
 
-// NUEVO: Clase para la dirección de flexbox del botón
 const buttonFlexDirectionClass = computed(() => {
-  // Solo aplicamos flex-row-reverse si el ícono está a la derecha
-  // y hay un ícono para mostrar.
+  // Aplicamos flex-row-reverse solo si el ícono está a la derecha Y hay un ícono para mostrar.
   return props.iconPosition === 'right' && hasIcon.value ? 'flex-row-reverse' : '';
 });
 
-// NUEVO: Clase para el margen del ícono basada en la posición
 const iconMarginClass = computed(() => {
-  if (!hasIcon.value) return ''; // No hay ícono, no hay margen
+  if (!hasIcon.value) return ''; // Si no hay ícono, no hay margen
 
-  // Si el ícono está a la izquierda (por defecto si no hay flex-row-reverse)
-  // necesita margen a la derecha (mr-2) para separarse del texto.
   if (props.iconPosition === 'left') {
     return 'mr-2';
-  }
-  // Si el ícono está a la derecha (con flex-row-reverse)
-  // necesita margen a la izquierda (ml-2) para separarse del texto.
-  else if (props.iconPosition === 'right') {
+  } else if (props.iconPosition === 'right') {
     return 'ml-2';
   }
-  return ''; // Por si acaso
+  return '';
 });
 </script>

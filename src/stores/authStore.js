@@ -60,9 +60,11 @@ export const useAuthStore = defineStore('auth', {
         this.user = data.data.user;
         // Si fetchUser se llama después de un cambio de contraseña,
         // nos aseguramos de que requiresPasswordChange se resetee.
-        if (this.user && this.user.must_change_password === false) {
-          this.requiresPasswordChange = false;
-        }
+        this.requiresPasswordChange = this.user?.must_change_password === true;
+
+      console.log('FetchUser: User object from backend:', this.user);
+      console.log('FetchUser: Updated requiresPasswordChange to:', this.requiresPasswordChange);
+
       } catch (error) {
         console.error('Error al obtener datos del usuario:', error);
         // Si hay un error al obtener el usuario (ej. token inválido), limpiamos la sesión

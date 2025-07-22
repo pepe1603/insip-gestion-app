@@ -1,5 +1,5 @@
 <template>
-  <header class="bg-white shadow-sm px-4 py-2 flex flex-col sm:flex-row justify-between items-center z-10 border-b border-gray-200">
+  <header class="bg-white shadow-sm px-4 py-2 flex flex-col sm:flex-row justify-between items-center z-10 rounded border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
     <div class="flex-shrink-0 flex items-center text-center gap-2">
       <router-link to="/" class="flex flex-col justify-center items-center text-xs sm:text-sm font-bold text-center text-green-500">
         <UiAvatar src="/public/nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
@@ -9,7 +9,6 @@
         {{ pageTitle }}
       </h1>
     </div>
-
 
     <div class="flex items-center space-x-4">
       <button class="text-gray-600 hover:text-gray-800 relative focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-1">
@@ -58,19 +57,22 @@
 import { computed, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
+import { useGlobalModal } from '@/composables/useGlobalModal'; // <-- Importa useGlobalModal
+import { useGlobalToast } from '@/composables/useGlobalToast'; // <-- También el toast para mensajes de éxito/error
 
 // Importa los componentes de UI reutilizables
 import UiAvatar from '@/components/ui/UiAvatar.vue';
 import UiDropdown from '@/components/ui/UiDropdown.vue';
+import LogoutConfirmModal from '@/components/modals/LogoutConfirmModal.vue'; // <-- Importa el modal de confirmación
 
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
+const $modal = useGlobalModal(); // <-- Instancia del modal
+const $toast = useGlobalToast(); // <-- Instancia del toast
 
-// Contador de notificaciones (puedes conectar esto a tu backend o un store)
 const notificationCount = ref(3);
 
-// Título dinámico de la página basado en la ruta actual
 const pageTitle = computed(() => {
   const name = route.name;
   switch (name) {
@@ -111,15 +113,14 @@ const pageTitle = computed(() => {
     case 'reporte-vacaciones-dias-tomados-semana': return 'Reporte Días Tomados por Semana';
     case 'reporte-vacaciones-top-empleados': return 'Top Empleados con Vacaciones';
     case 'reporte-vacaciones-resumen': return 'Resumen de Vacaciones';
-    case 'profile-overview': return 'Bienvenido a tu Perfil'; // Para /profile
-    case 'profile-details': return 'Mi Perfil'; // Para /profile/details
+    case 'profile-overview': return 'Bienvenido a tu Perfil';
+    case 'profile-details': return 'Mi Perfil';
     case 'edit-profile': return 'Editar Perfil';
     case 'change-password': return 'Cambiar Contraseña';
     case 'verify-email': return 'Verificar Email';
     case 'security': return 'Seguridad';
-
-    case 'employee-overview': return 'Panel de Empleado'; // Para /employee
-    case 'employee-dashboard': return 'Dashboard Empleado'; // Para /employee/dashboard
+    case 'employee-overview': return 'Panel de Empleado';
+    case 'employee-dashboard': return 'Dashboard Empleado';
     case 'employee-my-data': return 'Mis Datos de Empleado';
     case 'employee-attendance': return 'Mis Asistencias';
     case 'employee-vacations': return 'Mis Vacaciones';
@@ -127,7 +128,6 @@ const pageTitle = computed(() => {
     case 'employee-consultations': return 'Consultas';
     case 'released': return 'Información del Sistema';
     default:
-      // Intenta formatear el nombre de la ruta si no hay una coincidencia directa
       if (name) {
         return name.replace(/-/g, ' ').split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
       }
@@ -135,14 +135,11 @@ const pageTitle = computed(() => {
   }
 });
 
-// Definimos los ítems del menú de usuario de forma programática
 const userMenuItems = computed(() => {
   const items = [
     { label: 'Mi Perfil', to: { name: 'profile-overview' }, icon: ['fa', 'user'], class: 'text-gray-700 hover:bg-gray-100' },
   ];
 
-  // CAMBIO CLAVE: Añadir "Panel de Empleado" si el rol del usuario NO es 'user'.
-  // Esto incluye 'employee', 'supervisor', 'admin', y cualquier otro rol que no sea 'user'.
   if (authStore.user?.role && authStore.user.role !== 'user') {
     items.push({
       label: 'Panel de Empleado',
@@ -152,29 +149,62 @@ const userMenuItems = computed(() => {
     });
   }
 
-  // Último ítem: Cerrar Sesión
+  // Se asigna la función confirmLogout al onClick
   items.push({
     label: 'Cerrar Sesión',
-    type: 'button', // Indica que es un botón HTML
-    onClick: logout, // Asigna directamente la función logout
+    type: 'button',
+    onClick: confirmLogout, // <-- ¡CAMBIO AQUÍ! Ahora llama a confirmLogout
     icon: ['fas', 'right-from-bracket'],
-    class: 'text-red-600 hover:bg-red-50 hover:text-red-700', // Estilos específicos para logout
+    class: 'text-red-600 hover:bg-red-50 hover:text-red-700',
   });
 
   return items;
 });
 
-// Manejador para el evento 'item-selected' del UiDropdown
 const handleMenuItemSelected = (item) => {
-  console.log('Item seleccionado del menú de usuario:', item.label);
-  // Aquí puedes añadir lógica adicional si es necesario,
-  // pero las acciones principales (navegación, logout) ya están en los 'items'.
+  // Las acciones (navegación o confirmLogout) ya están asignadas directamente en los items.
+  // console.log('Item seleccionado del menú de usuario:', item.label); // Puedes descomentar para depuración
 };
 
-// Función para cerrar sesión
-const logout = async () => {
-  await authStore.logout();
-  router.push({ name: 'login' });
+// Función para CONFIRMAR el cierre de sesión mediante el modal
+const confirmLogout = async () => {
+  // Muestra el modal de confirmación de logout
+  const result = await $modal.showModal(
+    LogoutConfirmModal,
+    {}, // No necesitamos pasar props al modal de confirmación de logout
+    {
+      title: 'Confirmar Cierre de Sesión', // Título del modal
+      closeOnClickOutside: false, // Es mejor forzar al usuario a elegir una opción
+      // Puedes añadir más opciones de configuración del modal aquí si es necesario
+    }
+  );
+
+  // Verifica la respuesta del modal
+  if (result && result.action === 'confirm') {
+    try {
+      await authStore.logout();
+      router.push({ name: 'login' });
+      $toast.success('¡Sesión cerrada exitosamente!', {
+        position: 'top-center',
+        duration: 5000,
+        title: 'Adiós',
+      });
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+      $toast.error('Ocurrió un error al intentar cerrar sesión. Por favor, inténtalo de nuevo.', {
+        position: 'top-center',
+        duration: 7000,
+        title: 'Error al Cerrar Sesión',
+      });
+    }
+  } else {
+    console.log('Cierre de sesión cancelado por el usuario.');
+    $toast.info('Cierre de sesión cancelado.', {
+      position: 'top-right',
+      duration: 3000,
+      title: 'Acción Cancelada',
+    });
+  }
 };
 </script>
 
