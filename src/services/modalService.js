@@ -6,6 +6,9 @@ let modalIdCounter = 0;
 
 const currentOfflineModalId = ref(null);
 const currentOnlineModalId = ref(null);
+const currentBackendDownModalId = ref(null);
+const currentBackendUpModalId = ref(null);
+
 
 export function useModalService() {
     const showModal = (component, props = {}, options = {}) => {
@@ -32,7 +35,29 @@ export function useModalService() {
                 if (currentOfflineModalId.value) {
                     forceHideModal(currentOfflineModalId.value, 'connection_restored_preempt');
                 }
-            }
+            }//fin logica modals Offline/Online
+
+            if (componentName === 'BackendDownModal') {
+                if (currentBackendDownModalId.value) {
+                    console.warn("Backend modal is already open. Preventing new instance.");
+                    resolve({ action: 'duplicate', id: currentBackendDownModalId.value });
+                    return;
+                }
+                // Si hay un BackendUpModal abierto, ciérralo (aunque es raro)
+                if (currentBackendUpModalId.value) {
+                    forceHideModal(currentBackendUpModalId.value, 'backend_down_preempt');
+                }
+                } else if (componentName === 'BackendUpModal') {
+                if (currentBackendUpModalId.value) {
+                    console.warn("BackendUp modal is already open. Preventing new instance.");
+                    resolve({ action: 'duplicate', id: currentBackendUpModalId.value });
+                    return;
+                }
+                // Si hay un BackendDownModal abierto, ciérralo antes
+                if (currentBackendDownModalId.value) {
+                    forceHideModal(currentBackendDownModalId.value, 'backend_up_preempt');
+                }
+            }//fon logica modal BakcenddsDownmodal yBkanedUpN Mdoal
 
             modalIdCounter++;
             const id = modalIdCounter;
@@ -42,6 +67,14 @@ export function useModalService() {
             } else if (componentName === 'OnlineReconnectedModal') {
                 currentOnlineModalId.value = id;
             }
+
+            if (componentName === 'BackendDownModal') {
+                currentBackendDownModalId.value = id;
+            } else if (componentName === 'BackendUpModal') {
+                currentBackendUpModalId.value = id;
+            }
+
+
 
             activeModals.value[id] = {
                 id,
@@ -86,6 +119,12 @@ export function useModalService() {
                 currentOfflineModalId.value = null;
             } else if (componentName === 'OnlineReconnectedModal' && currentOnlineModalId.value === id) {
                 currentOnlineModalId.value = null;
+            }
+
+            if (componentName === 'BackendDownModal' && currentBackendDownModalId.value === id) {
+                currentBackendDownModalId.value = null;
+            } else if (componentName === 'BackendUpModal' && currentBackendUpModalId.value === id) {
+                currentBackendUpModalId.value = null;
             }
 
             setTimeout(() => {
@@ -136,6 +175,8 @@ export function useModalService() {
         hideAllModals,
         forceHideModal,
         currentOfflineModalId,
-        currentOnlineModalId
+        currentOnlineModalId,
+        currentBackendDownModalId,
+        currentBackendUpModalId,
     };
 }

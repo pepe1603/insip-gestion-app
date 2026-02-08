@@ -6,11 +6,24 @@ import { useGlobalModal } from '@/composables/useGlobalModal'; // Ajusta la ruta
 import UnauthorizedModal from '@/components/modals/UnauthorizedModal.vue'; // Ajusta la ruta si es necesario
 import { useAuthStore } from '@/stores/authStore';
 
+// Configura la URL base de la API desde las variables de entorno
+// Asegúrate de que VITE_API_BASE_URL esté definida en tu archivo .e
+//al importmeta del entorno de Vite debemos añadirle al final el prefijo /api
+// Por ejemplo, si tu API está en http://localhost:8000/api, deberías definir VITE_API_URL=http://localhost:80 y al final añadir /api 
+
+
+
+const baseURL = import.meta.env.VITE_API_URL ? `${import.meta.env.VITE_API_URL}/api` : 'http://localhost:80/api';
+
+//const baseURL = `${import.meta.env.VITE_API_URL}/api`;
+console.log('base Url api api.js : ', baseURL);
+
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: baseURL,
+  timeout: 10000, // Tiempo de espera de 10 segundos
   headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
+    'Content-Type' : 'application/json',
+    'Accept' : 'application/json',
   }
 });
 

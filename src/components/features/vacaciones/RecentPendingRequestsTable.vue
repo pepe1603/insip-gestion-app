@@ -63,10 +63,10 @@
 
 <script setup>
 import { computed } from 'vue';
-import UiTablestriped from '../../ui/tables/UiTablestriped.vue';
-import UiButton from '../../ui/UiButton.vue';
-import UiBadge from '../../ui/UiBadge.vue';
-import { formatDate } from '../../../utils/dateFormatter';
+import UiTablestriped from '@/components/ui/tables/UiTableStriped.vue';
+import UiButton from '@/components/ui/UiButton.vue';
+import UiBadge from '@/components/ui/UiBadge.vue';
+import { formatDate } from '@/utils/dateFormatter';
 
 const props = defineProps({
   pendingRequests: {

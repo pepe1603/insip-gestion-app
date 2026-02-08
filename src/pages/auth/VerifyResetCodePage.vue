@@ -1,10 +1,10 @@
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
-    <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
+  <div class="flex flex-col items-center justify-center min-h-screen p-4">
+    <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center dark:bg-slate-800">
       <h1 class="text-3xl font-bold text-gray-800 mb-4">Verifica tu código</h1>
       <p class="text-gray-600 mb-8">
         Ingresa el código de seguridad de 6 dígitos que enviamos a tu correo electrónico:
-        <span class="font-semibold text-gray-800">{{ currentEmailDisplay }}</span>
+        <span class="font-semibold text-gray-800 dark:text-white">{{ currentEmailDisplay }}</span>
       </p>
 
       <div class="flex justify-center gap-3 mb-8">
@@ -16,8 +16,9 @@
           @input="handleInput($event, index)"
           @keydown="handleKeyDown($event, index)"
           :ref="el => inputRefs[index] = el"
-          class="w-12 h-14 text-3xl text-center border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500 outline-none transition duration-200"
+          class="w-12 h-14 text-3xl text-black dark:text-white text-center bg-white dark:bg-gray-600 border-2 border-gray-300 rounded-lg focus:border-blue-500 focus:ring-blue-500 outline-none transition duration-200"
           :class="{'border-blue-500 ring-1 ring-blue-500': code[index] !== ''}"
+          
         />
       </div>
 
@@ -26,8 +27,8 @@
         variant="primary"
         @click="verifyCode"
         :disabled="!isCodeComplete || isLoading"
-        :is-loading="isLoading"
       >
+      <UiSpinner v-if="isLoading" class="size-5 text-current mr-1" />
         Verificar
       </UiButton>
 
@@ -53,6 +54,7 @@ import { authService } from '@/services/authService'; // Importamos tu servicio
 import { useGlobalModal } from '../../composables/useGlobalModal';
 import { useGlobalToast } from '../../composables/useGlobalToast';
 import InfoMessageModal from '../../components/modals/InfoMessageModal.vue';
+import UiSpinner from '@/components/ui/UiSpinner.vue';
 
 
 const router = useRouter();

@@ -1,0 +1,3 @@
+# frontend/.env.development
+VITE_API_URL=http://localhost:8000
+,VITE_LAST_DEPLOYMENT_DATE=2025-07-30T13:15:00Z

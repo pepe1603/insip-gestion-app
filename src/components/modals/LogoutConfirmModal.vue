@@ -4,14 +4,14 @@
       <ExclamationTriangleIcon class="h-8 w-8 text-red-600 dark:text-red-400" aria-hidden="true" />
     </div>
     <h3 class="mt-5 text-lg font-bold leading-6 text-gray-900 dark:text-white" id="modal-title">
-      {{ $t('logoutModal.title') }}
+      ¿Quieres cerrar sesión?
     </h3>
     <div class="mt-2">
       <p class="text-sm text-gray-500 dark:text-gray-300">
-        {{ $t('logoutModal.description') }}
+      Estás a punto de cerrar tu sesión actual. Deberás volver a iniciar sesión para acceder a tu cuenta.
       </p>
       <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
-        {{ $t('logoutModal.warning') }}
+        Asegúrate de haber guardado cualquier cambio importante.
       </p>
     </div>
 
@@ -21,14 +21,14 @@
         class="inline-flex w-full justify-center rounded-md bg-red-600 px-4 py-2 text-base font-semibold text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm transition-colors duration-200"
         @click="handleConfirm"
       >
-        {{ $t('logoutModal.confirmButton') }}
+        Cerrar sesión
       </button>
       <button
         type="button"
         class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-700 px-4 py-2 text-base font-semibold text-gray-900 dark:text-gray-200 shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-1 sm:mt-0 sm:text-sm transition-colors duration-200"
         @click="handleCancel"
       >
-        {{ $t('logoutModal.cancelButton') }}
+        Cancelar
       </button>
     </div>
   </div>

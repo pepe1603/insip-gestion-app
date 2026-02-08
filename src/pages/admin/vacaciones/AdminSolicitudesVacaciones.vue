@@ -321,27 +321,27 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 // Importamos los componentes UI
-import UiTablestriped from '../../../components/ui/tables/UiTablestriped.vue';
-import UiButton from '../../../components/ui/UiButton.vue';
-import UiBadge from '../../../components/ui/UiBadge.vue';
-import ModalDynamic from '../../../components/modals/ModalDynamic.vue';
-import DetalleVacacion from '../../../components/features/vacaciones/DetalleVacacion.vue';
-import UiInputSearchwithResult from '../../../components/ui/UiInputSearchWithResults.vue';
-import UiDescriptionList from '../../../components/ui/UiDescriptionList.vue';
-import UiAlert from '../../../components/ui/UiAlert.vue';
+import UiTablestriped from '@/components/ui/tables/UiTableStriped.vue';
+import UiButton from '@/components/ui/UiButton.vue';
+import UiBadge from '@/components/ui/UiBadge.vue';
+import ModalDynamic from '@/components/modals/ModalDynamic.vue';
+import DetalleVacacion from '@/components/features/vacaciones/DetalleVacacion.vue';
+import UiInputSearchwithResult from '@/components/ui/UiInputSearchWithResults.vue';
+import UiDescriptionList from '@/components/ui/UiDescriptionList.vue';
+import UiAlert from '@/components/ui/UiAlert.vue';
 
 // NUEVOS COMPONENTES FACTORIZADOS
-import EmployeeApprovedRequestsSearch from '../../../components/features/vacaciones/EmployeeApprovedRequestsSearch.vue';
-import RecentPendingRequestsTable from '../../../components/features/vacaciones/RecentPendingRequestsTable.vue';
+import EmployeeApprovedRequestsSearch from '@/components/features/vacaciones/EmployeeApprovedRequestsSearch.vue';
+import RecentPendingRequestsTable from '@/components/features/vacaciones/RecentPendingRequestsTable.vue';
 
 // Services and Utilities
-import VacacionesService from '../../../services/vacacionesService'; // Importamos el servicio
-import { formatDate } from '../../../utils/dateFormatter';
+import VacacionesService from '@/services/vacacionesService'; // Importamos el servicio
+import { formatDate } from '@/utils/dateFormatter';
 
 // Heroicons
 import { ArrowPathIcon, MagnifyingGlassIcon, DocumentArrowDownIcon, XCircleIcon, DocumentMagnifyingGlassIcon, ClipboardDocumentIcon } from '@heroicons/vue/24/outline';
 import { useRouter } from 'vue-router';
-import UiDivider from '../../../components/ui/UiDivider.vue';
+import UiDivider from '@/components/ui/UiDivider.vue';
 import { ClockIcon } from '@heroicons/vue/24/outline';
 
 //---- const para icons

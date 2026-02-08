@@ -52,7 +52,7 @@
     </div>
 
     <div class="flex justify-center mt-6">
-      <UiButton variant="primary" size="large" :disabled="!fechaInicio || !fechaFin" @click="generarReporte">
+      <UiButton variant="primary" size="md" :disabled="!fechaInicio || !fechaFin" @click="generarReporte">
         <DocumentArrowDownIcon class="w-6 h-6 mr-2" /> Generar Reporte
       </UiButton>
     </div>

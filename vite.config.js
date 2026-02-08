@@ -1,17 +1,19 @@
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-// import tailwindcss from '@tailwindcss/vite' // <-- ELIMINA ESTA LÍNEA
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+import { resolve } from 'path';
+import strip from '@rollup/plugin-strip';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
     vue(),
-    // tailwindcss(), // <-- ELIMINA ESTA LÍNEA si no se usa la verison 4 de Tailwind CSS
-  ],
+    process.env.NODE_ENV === 'production' && strip({
+      debugger: true,
+      functions: ['console.warn', 'console.error'],
+    })
+  ].filter(Boolean),
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'), // Tu alias está perfecto aquí
+      '@': resolve(__dirname, './src'),
     },
   },
-})
+});

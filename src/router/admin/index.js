@@ -2,7 +2,7 @@
 
 import AdminLayout from "@/layouts/AdminLayout.vue";
 import AdminDashboardPage from "@/pages/admin/AdminDashboardPage.vue";
-import IntroPage from "@/pages/admin/introPage.vue"; // Asegúrate de que este archivo exista
+import IntroPage from "@/pages/admin/IntroPage.vue"; // Asegúrate de que este archivo exista
 
 // Importaciones para Tipos de Asistencia
 import TipoAsistenciaPage from "@/pages/admin/tiposAsistencias/TipoAsistenciaPage.vue";
@@ -51,6 +51,8 @@ import UserListPage from '@/pages/admin/users/UserListPage.vue';
 import UserDetailPage from "@/pages/admin/users/UserDetailPage.vue";
 import UserCreatePage from "@/pages/admin/users/UserCreatePage.vue";
 import UserEditPage from "@/pages/admin/users/UserEditPage.vue";
+import CrearAsistenciaView from "@/views/admin/asistencias/CrearAsistenciaView.vue";
+import EditarAsistenciaView from "@/views/admin/asistencias/EditarAsistenciaView.vue";
 
 // Importaciones de los componentes de reportes de vacaciones (lazy loaded)
 const CrearEditarVacacion = () => import('@/pages/admin/vacaciones/CrearEditarVacacion.vue');
@@ -178,8 +180,8 @@ const adminRoutes = {
       meta: { roles: ['admin', 'supervisor'] },
       children: [
         { path: "lista", name: "lista-asistencias", component: ListaAsistencias },
-        { path: "crear", name: "crear-asistencia", component: CrearEditarAsistencia, meta: { roles: ['admin'] } },
-        { path: "editar/:id", name: "editar-asistencia", component: CrearEditarAsistencia, props: true, meta: { roles: ['admin'] } },
+        { path: "crear", name: "crear-asistencia", component: CrearAsistenciaView, meta: { roles: ['admin'] } },
+        { path: "editar/:id", name: "editar-asistencia", component: EditarAsistenciaView, props: true, meta: { roles: ['admin'] } },
         {
           path: "reportes",
           component: ReportesAsistenciasView,

@@ -68,6 +68,8 @@ const routes = [
     children: [
       { path: "500", name: "ServerError", component: ServerError },
       { path: "403", name: "Unauthorized", component: UnauthorizedPage },
+      //podirmaos añadir la pagina de mantenimiento aquí
+      { path: "maintenance", name: "Maintenance", component: () => import('@/pages/Maintenance.vue') },
     ],
   },
   // --- Catch-all para 404 (siempre al final) ---

@@ -5,7 +5,9 @@ export default {
   async getAll() {
     try {
       const response = await api.get('/departamentos');
+      console.log('Data getAll Deparrtamentos: ',  response.data?.data);
       return response.data.data;
+      
     } catch (error) {
       console.error('Error al obtener los departamentos:', error);
       const errorMessage = error.response?.data?.data?.error || 'Error desconocido al obtener los departamentos.';

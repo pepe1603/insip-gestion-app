@@ -1,35 +1,3 @@
-<script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import UiButton from '../ui/UiButton.vue';
-
-const props = defineProps({
-  title: {
-    type: String,
-    default: 'Actividad Detectada',
-  },
-  message: {
-    type: String,
-    default: 'Parece que no has estado activo por un tiempo. ¿Deseas continuar tu sesión?',
-  },
-  // Funciones inyectadas por el servicio de modales
-  __onConfirm: Function, // Para 'Continuar Sesión'
-  __onCancel: Function,  // Para 'Cerrar Sesión'
-  __onClose: Function,   // Para cierre genérico (ej. por escape, aunque lo bloquearemos si queremos)
-});
-
-const handleConfirm = () => {
-  if (props.__onConfirm) {
-    props.__onConfirm({ action: 'continue_session' });
-  }
-};
-
-const handleCancel = () => {
-  if (props.__onCancel) {
-    props.__onCancel({ action: 'logout' });
-  }
-};
-</script>
-
 <template>
   <div class="p-6 text-center">
     <div class="text-orange-500 mb-4">
@@ -55,3 +23,41 @@ const handleCancel = () => {
     </div>
   </div>
 </template>
+
+<script>
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import UiButton from '../ui/UiButton.vue';
+
+export default {
+  name: 'InactivityWarningModal',
+  props: {
+    title: { type: String, default: 'Actividad Detectada' },
+    message: { type: String, default: 'Parece que no has estado activo por un tiempo. ¿Deseas continuar tu sesión?' },
+    __onConfirm: Function,
+    __onCancel: Function,
+    __onClose: Function,
+  },
+  components: {
+    FontAwesomeIcon,
+    UiButton,
+  },
+  methods: {
+    handleConfirm() {
+      if (this.__onConfirm) {
+        // Envía el objeto con la propiedad 'payload'
+        this.__onConfirm({ action: 'confirm', payload: { action: 'continue_session' } });
+      }
+    },
+    handleCancel() {
+      if (this.__onCancel) {
+        // Envía el objeto con la propiedad 'payload'
+        this.__onCancel({ action: 'cancel', payload: { action: 'logout' } });
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+/* No se necesitan estilos específicos de componente aquí si usas Tailwind */
+</style>

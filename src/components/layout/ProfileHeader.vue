@@ -2,7 +2,7 @@
   <header class="bg-white shadow-sm px-4 py-2 flex flex-col sm:flex-row justify-between items-center z-10 rounded border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
     <div class="flex-shrink-0 flex items-center text-center gap-2">
       <router-link to="/" class="flex flex-col justify-center items-center text-xs sm:text-sm font-bold text-center text-green-500">
-        <UiAvatar src="/public/nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
+        <UiAvatar src="/nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
         <span class="text-center">RH-flow</span>
       </router-link>
       <h1 class="text-center text-indigo-600 break-keep text-wrap">
@@ -11,7 +11,7 @@
     </div>
 
     <div class="flex items-center space-x-4">
-      <button class="text-gray-600 hover:text-gray-800 relative focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-1">
+      <button class="text-gray-600 hover:text-gray-800 relative focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded-full p-1 dark:text-gray-300 dark:hover:text-white">
         <font-awesome-icon :icon="['fas', 'bell']" class="h-6 w-6" />
         <span
           v-if="notificationCount > 0"
@@ -19,6 +19,17 @@
         >
           {{ notificationCount }}
         </span>
+      </button>
+
+      <button
+        @click="toggleTheme"
+        class="p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200"
+        :class="uiStore.currentTheme === 'dark'
+          ? 'bg-gray-700 text-yellow-300 hover:bg-gray-600 focus:ring-yellow-500'
+          : 'bg-gray-200 text-indigo-600 hover:bg-gray-300 focus:ring-indigo-500'"
+        aria-label="Alternar modo oscuro"
+      >
+        <component :is="themeIcon" class="h-5 w-5" />
       </button>
 
       <UiDropdown
@@ -35,8 +46,8 @@
             size="small"
             alt="Foto de perfil de usuario"
           />
-          <span class="text-gray-700 font-medium hidden md:inline">{{ authStore.user?.name || 'Usuario' }}</span>
-          </template>
+          <span class="text-gray-700 font-medium hidden md:inline dark:text-gray-200">{{ authStore.user?.name || 'Usuario' }}</span>
+        </template>
 
         <template #header>
           <div class="px-4 py-2 border-b border-gray-100 dark:border-gray-700 text-center">
@@ -57,22 +68,38 @@
 import { computed, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/authStore';
-import { useGlobalModal } from '@/composables/useGlobalModal'; // <-- Importa useGlobalModal
-import { useGlobalToast } from '@/composables/useGlobalToast'; // <-- También el toast para mensajes de éxito/error
+import { useGlobalModal } from '@/composables/useGlobalModal';
+import { useGlobalToast } from '@/composables/useGlobalToast';
+import { useUiStore } from '@/stores/uiStore'; // Importa el uiStore
 
 // Importa los componentes de UI reutilizables
 import UiAvatar from '@/components/ui/UiAvatar.vue';
 import UiDropdown from '@/components/ui/UiDropdown.vue';
-import LogoutConfirmModal from '@/components/modals/LogoutConfirmModal.vue'; // <-- Importa el modal de confirmación
+import LogoutConfirmModal from '@/components/modals/LogoutConfirmModal.vue';
+
+// Importa los íconos de Heroicons
+import { SunIcon, MoonIcon } from '@heroicons/vue/24/outline'; // Asegúrate de tenerlos instalados
 
 const router = useRouter();
 const route = useRoute();
 const authStore = useAuthStore();
-const $modal = useGlobalModal(); // <-- Instancia del modal
-const $toast = useGlobalToast(); // <-- Instancia del toast
+const $modal = useGlobalModal();
+const $toast = useGlobalToast();
+const uiStore = useUiStore(); // Inicializa el uiStore
 
 const notificationCount = ref(3);
 
+// --- Lógica para el botón de cambio de tema ---
+const themeIcon = computed(() => {
+  return uiStore.currentTheme === 'dark' ? SunIcon : MoonIcon;
+});
+
+const toggleTheme = () => {
+  const newTheme = uiStore.currentTheme === 'dark' ? 'light' : 'dark';
+  uiStore.setTheme(newTheme);
+};
+
+// --- Resto de la lógica del componente ---
 const pageTitle = computed(() => {
   const name = route.name;
   switch (name) {
@@ -137,7 +164,7 @@ const pageTitle = computed(() => {
 
 const userMenuItems = computed(() => {
   const items = [
-    { label: 'Mi Perfil', to: { name: 'profile-overview' }, icon: ['fa', 'user'], class: 'text-gray-700 hover:bg-gray-100' },
+    { label: 'Mi Perfil', to: { name: 'profile-overview' }, icon: ['fa', 'user'], class: 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700' },
   ];
 
   if (authStore.user?.role && authStore.user.role !== 'user') {
@@ -145,17 +172,16 @@ const userMenuItems = computed(() => {
       label: 'Panel de Empleado',
       to: { name: 'employee-overview' },
       icon: ['fas', 'chart-pie'],
-      class: 'text-gray-700 hover:bg-gray-100'
+      class: 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700'
     });
   }
 
-  // Se asigna la función confirmLogout al onClick
   items.push({
     label: 'Cerrar Sesión',
     type: 'button',
-    onClick: confirmLogout, // <-- ¡CAMBIO AQUÍ! Ahora llama a confirmLogout
+    onClick: confirmLogout,
     icon: ['fas', 'right-from-bracket'],
-    class: 'text-red-600 hover:bg-red-50 hover:text-red-700',
+    class: 'text-red-600 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-900',
   });
 
   return items;
@@ -166,20 +192,16 @@ const handleMenuItemSelected = (item) => {
   // console.log('Item seleccionado del menú de usuario:', item.label); // Puedes descomentar para depuración
 };
 
-// Función para CONFIRMAR el cierre de sesión mediante el modal
 const confirmLogout = async () => {
-  // Muestra el modal de confirmación de logout
   const result = await $modal.showModal(
     LogoutConfirmModal,
-    {}, // No necesitamos pasar props al modal de confirmación de logout
+    {},
     {
-      title: 'Confirmar Cierre de Sesión', // Título del modal
-      closeOnClickOutside: false, // Es mejor forzar al usuario a elegir una opción
-      // Puedes añadir más opciones de configuración del modal aquí si es necesario
+      title: 'Confirmar Cierre de Sesión',
+      closeOnClickOutside: false,
     }
   );
 
-  // Verifica la respuesta del modal
   if (result && result.action === 'confirm') {
     try {
       await authStore.logout();

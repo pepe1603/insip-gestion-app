@@ -27,7 +27,7 @@
 
       <nav>
         <ul class="space-y-2">
-          <li>
+            <li v-if="authStore.user && authStore.user.role !== 'employee'">
             <router-link
               :to="{ name: 'dashboard' }"
               class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-indigo-100 dark:hover:bg-gray-700 transition-colors duration-200"
@@ -36,7 +36,17 @@
               <font-awesome-icon :icon="['fas', 'arrow-left']" class="h-5 w-5 mr-3" />
               <span>Volver al Panel</span>
             </router-link>
-          </li>
+            </li>
+            <li v-else-if="authStore.user && authStore.user.role == 'employee'">
+            <router-link
+              :to="{ name: 'employee-my-data' }"
+              class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-indigo-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              active-class="bg-indigo-500 text-white dark:bg-indigo-700"
+            >
+              <font-awesome-icon :icon="['fas', 'arrow-left']" class="h-5 w-5 mr-3" />
+              <span>Ir al Panel Empleado</span>
+            </router-link>
+            </li>
           <li class="border-t border-gray-200 dark:border-gray-700 my-2 pt-2"></li>
           <li>
             <router-link

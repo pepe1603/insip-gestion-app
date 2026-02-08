@@ -1,10 +1,10 @@
 {
   "general": {
-    "generalSettingsTitle": "Configuración General del Sistema",
-    "generalSettingsDescription": "Gestiona la información principal de la empresa y las preferencias de localización de la aplicación.",
+    "generalSettingsTitle": "",
+    "generalSettingsDescription": "",
 
     "companyInfo": "Información de la Empresa",
-    "companyInfoDescription": "Detalles fundamentales de la organización que se utilizan en reportes y comunicaciones.",
+    "companyInfoDescription": "",
     "companyName": "Nombre de la Empresa",
     "companyPhone": "Teléfono de Contacto",
     "companyAddress": "Dirección",

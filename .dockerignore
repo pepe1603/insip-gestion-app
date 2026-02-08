@@ -1,0 +1,21 @@
+# frontend/.dockerignore
+node_modules
+package-lock.json
+# yarn.lock # Descomenta esta línea si usas Yarn en lugar de npm
+
+# Carpetas de salida de compilación
+dist
+build
+
+# Archivos de variables de entorno
+# COMENTAR O ELIMINAR ESTA LÍNEA PARA QUE EL .env SEA INCLUIDO EN EL CONTEXTO DE CONSTRUCCIÓN
+# .env
+.env.local
+.env.*.local
+
+# Otras carpetas o archivos que no quieres que estén en la imagen final
+.git
+.gitignore
+README.md
+Dockerfile
+.dockerignore

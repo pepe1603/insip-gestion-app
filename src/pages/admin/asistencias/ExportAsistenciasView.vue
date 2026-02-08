@@ -104,7 +104,7 @@
       </div>
   
       <div class="flex justify-center mt-6">
-        <UiButton variant="primary" size="large" @click="exportarAsistencias">
+        <UiButton variant="primary" size="md" @click="exportarAsistencias">
           <DocumentArrowDownIcon class="w-6 h-6 mr-2" /> Exportar Asistencias
         </UiButton>
       </div>

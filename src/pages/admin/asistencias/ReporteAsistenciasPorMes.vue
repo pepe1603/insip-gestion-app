@@ -57,7 +57,7 @@
     </div>
 
     <div class="flex justify-center mt-6">
-      <UiButton variant="primary" size="large" :disabled="!anio || !mes" @click="generarReporte">
+      <UiButton variant="primary" size="md" :disabled="!anio || !mes" @click="generarReporte">
         <DocumentArrowDownIcon class="w-6 h-6 mr-2" /> Generar Reporte
       </UiButton>
     </div>

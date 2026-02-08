@@ -7,24 +7,27 @@
         <router-link class="hover:text-blue-600 underline" to="/auth/login">Regresar</router-link>
       </p>
       <UiInputEmail class="mb-6 max-w-md " v-model="email" placeholder="empleado@example.com" />
-      <UiButton :icon="paperAirplaneIcon" variant="primary" class="my-4" @click="sendRecoveryRequest" :is-loading="isLoading">
+      <UiButton :icon="paperAirplaneIcon" variant="primary" size="md" class="my-6" @click="sendRecoveryRequest">
+        <UiSpinner v-if="isLoading" class="text-current size-5 mr-1" />
         Enviar
       </UiButton>
     </div>
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { ref, onMounted } from 'vue'; // Importamos onMounted
 import { PaperAirplaneIcon } from '@heroicons/vue/24/solid';
-import UiButton from '../../components/ui/UiButton.vue';
-import UiInputEmail from '../../components/ui/UiInputEmail.vue';
+import UiButton from '@/components/ui/UiButton.vue';
+import UiInputEmail from '@/components/ui/UiInputEmail.vue';
+import UiSpinner from '@/components/ui/UiSpinner.vue'
 import { useRouter } from 'vue-router';
 import { usePasswordResetStore } from '@/stores/passwordResetStore'; // Importamos el store de Pinia
 import { authService } from '@/services/authService'; // Importamos tu servicio
-import { useGlobalModal } from '../../composables/useGlobalModal';
-import InfoMessageModal from '../../components/modals/InfoMessageModal.vue';
-import { useGlobalToast } from '../../composables/useGlobalToast';
+import { useGlobalModal } from '@/composables/useGlobalModal';
+import InfoMessageModal from '@/components/modals/InfoMessageModal.vue';
+import { useGlobalToast } from '@/composables/useGlobalToast';
+
 const router = useRouter();
 const email = ref('');
 const paperAirplaneIcon = PaperAirplaneIcon;

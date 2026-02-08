@@ -33,6 +33,13 @@
       </div>
     </div>
 
+    <UiAlert type="danger" v-if="errorRequestVacation">
+      <h1>Error al Solicitrar tus vacaciones</h1>
+      <p>
+        {{ errorRequestVacation }}
+      </p>
+
+    </UiAlert>
 
 
     <form @submit.prevent="submitVacationRequest">
@@ -101,6 +108,7 @@ import vacacionesService from '@/services/vacacionesService';
 // Componentes UI
 import UiButton from '@/components/ui/UiButton.vue';
 import UiSpinner from '@/components/ui/UiSpinner.vue';
+import UiAlert from '@/components/ui/UiAlert.vue';
 
 // Heroicons
 import { InformationCircleIcon, ExclamationTriangleIcon } from '@heroicons/vue/24/outline'; // Importar ExclamationTriangleIcon
@@ -114,6 +122,7 @@ const endDate = ref('');
 const reason = ref('');
 const isSubmitting = ref(false);
 const dateError = ref(null);
+const errorRequestVacation = ref(null);
 const employeeIdError = ref(null); // Nuevo ref para el error de empleado_id
 const loading = ref(null);
 
@@ -177,6 +186,7 @@ const submitVacationRequest = async () => {
 
   isSubmitting.value = true;
   dateError.value = null;
+  errorRequestVacation.value = null;
 
   const empleadoId = authStore.user?.empleado_id;
   if (!empleadoId) { // Esta comprobación debería haber sido cubierta por checkEmployeeIdAvailability
@@ -209,6 +219,7 @@ const submitVacationRequest = async () => {
     console.error('Error al enviar solicitud de vacaciones:', error);
     const errorMessage = error.response?.data?.message || 'Error desconocido al enviar la solicitud de vacaciones.';
     $toast?.error(errorMessage, { title: 'Error al Enviar Solicitud' });
+    errorRequestVacation.value = error;
   } finally {
     isSubmitting.value = false;
   }

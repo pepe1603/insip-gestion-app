@@ -7,15 +7,15 @@
 
     <form @submit.prevent="handleLogin" class="mt-4 flex flex-col items-center text-sm sm:text-base">
 
-      <UiInputEmail label="Email Address" class="mb-4 " v-model="email" placeholder="example@example.com"/>
-      <UiInputPassword label="Password" class="mb-2" v-model="password" placelholder="password-example" />
+      <UiInputEmail label="Email Address" class="mb-4 " v-model="email" placeholder="example@example.com" :required="true" />
+      <UiInputPassword label="Password" class="mb-2" v-model="password" placelholder="password-example" :required="true"/>
 
       <div class="w-full flex justify-between text-xs sm:text-sm mb-6 sm:mb-12">
-        <router-link class="text-indigo-500 hover:underline hover:text-indigo-700" to="/auth/forgot-password">Forgot Password?</router-link>
+        <span class="text-indigo-500 hover:underline hover:text-indigo-700" @click="handleForgotMyPass" >Forgot Password?</span>
         <p class="flex text-gray-600 gap-2">You haven't Account?,<router-link class="text-indigo-500 hover:text-indigo-700 hover:underline" to="/auth/register">create one now</router-link></p>
       </div>
 
-      <UiButton type="submit" variant="primary" >Iniciar Sesión</UiButton>
+      <UiButton type="submit" size="md" variant="primary" :disabled=isLoading > <UiSpinner v-if="isLoading" class="text-current size-4 mr-1" /> Iniciar Sesión</UiButton>
 
     </form>
 
@@ -41,19 +41,43 @@ import UiInputPassword from '../../components/ui/UiInputPassword.vue';
 import UiDivider from "@/components/ui/UiDivider.vue";
 import UiButton from "@/components/ui/UiButton.vue";
 import { useGlobalToast } from '../../composables/useGlobalToast';
+import UiSpinner from '@/components/ui/UiSpinner.vue';
+import { useGlobalModal } from '../../composables/useGlobalModal';
+import WarningMessageModal from '../../components/modals/WarningMessageModal.vue';
 
 const email = ref('');
 const password = ref('');
 const router = useRouter();
 const auth = useAuthStore();
-
+const isLoading=ref(false);
 const $toast = useGlobalToast();
+const $modal = useGlobalModal();
 
 const showToast = () => {
   $toast?.success('¡Bienvenido al sistema!, Es un gusto tenerte de vuelta.');
 };
 
+
+const handleForgotMyPass = () => {
+
+  $modal?.showModal(
+    WarningMessageModal,
+      {
+        message: 'Si recargas o cierras la página una vez que hayas inciado el proceso de recuperacion de tu cuenta, se reiniciara el proceso de recuperación desde el principio.',
+        buttonText: 'Entendido'
+      },
+      {
+        title: 'Aviso de Recuperacion de Cuenta',
+        closeOnClickOutside: false,
+      }
+    ).then(() => {
+      router.push('/auth/forgot-password');
+    });
+  
+};
+
 const handleLogin = async () => {
+  isLoading.value=true;
   try {
     const loginResult = await auth.login({ email: email.value, password: password.value });
     
@@ -70,7 +94,11 @@ const handleLogin = async () => {
   } catch (error) {
     console.error('Error al iniciar sesión:', error);
     // Aquí podrías usar un toast o modal para mostrar un error de login
+    $toast.error('Error desconocido al iniciar sesión.');
     $toast.error(error.response.data?.message || 'Error desconocido al iniciar sesión.');
+  }
+  finally {
+    isLoading.value=false;
   }
 };
 </script>

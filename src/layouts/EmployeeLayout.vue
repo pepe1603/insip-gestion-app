@@ -24,13 +24,24 @@
 
       <nav>
         <ul class="space-y-2">
+          <li v-if="authStore.user.role !== 'empleado'" >
+            <router-link
+              :to="{ name: 'dashboard' }"
+              class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-indigo-100 dark:hover:bg-gray-700 transition-colors duration-200"
+              active-class="bg-indigo-500 text-white dark:bg-indigo-700"
+            >
+              <font-awesome-icon :icon="['fas', 'arrow-left']" class="h-5 w-5 mr-3" />
+              <span>Volver al Panel</span>
+            </router-link>
+          </li>
+          <li class="border-t border-gray-200 dark:border-gray-700 my-2 pt-2"></li>
           <li>
             <router-link
               :to="{ name: 'employee-overview' }"
-              class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-teal-100 dark:hover:bg-gray-700 transition-colors duration-200 transform hover:scale-105"
-              active-class="bg-teal-500 text-white dark:bg-teal-700 shadow-md"
+              class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300  hover:bg-teal-100 dark:hover:bg-gray-700 transition-colors duration-200 transform hover:scale-105"
+              active-class="bg-teal-500 text-white dark:bg-teal-700 hover:text-gray-400 shadow-md"
             >
-              <font-awesome-icon :icon="['fas', 'home']" class="w-6 h-6 mr-3" />
+              <font-awesome-icon :icon="['fas', 'home']" class="w-5 h-5 mr-3" />
               <span>Inicio del Panel</span>
             </router-link>
           </li>
@@ -38,9 +49,9 @@
             <router-link
               :to="{ name: 'employee-dashboard' }"
               class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-teal-100 dark:hover:bg-gray-700 transition-colors duration-200 transform hover:scale-105"
-              active-class="bg-teal-500 text-white dark:bg-teal-700 shadow-md"
+              active-class="bg-teal-500 text-white dark:bg-teal-700 hover:text-gray-400 shadow-md"
             >
-              <font-awesome-icon :icon="['fas', 'chart-pie']" class="w-6 h-6 mr-3" />
+              <font-awesome-icon :icon="['fas', 'chart-pie']" class="w-5 h-5 mr-3" />
               <span>Dashboard</span>
             </router-link>
           </li>
@@ -48,9 +59,9 @@
             <router-link
               :to="{ name: 'employee-attendance' }"
               class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-teal-100 dark:hover:bg-gray-700 transition-colors duration-200 transform hover:scale-105"
-              active-class="bg-teal-500 text-white dark:bg-teal-700 shadow-md"
+              active-class="bg-teal-500 text-white dark:bg-teal-700 hover:text-gray-400 shadow-md"
             >
-              <font-awesome-icon :icon="['fas', 'clock']" class="w-6 h-6 mr-3" />
+              <font-awesome-icon :icon="['fas', 'clock']" class="w-5 h-5 mr-3" />
               <span>Mis Asistencias</span>
             </router-link>
           </li>
@@ -58,9 +69,9 @@
             <router-link
               :to="{ name: 'employee-vacations' }"
               class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-teal-100 dark:hover:bg-gray-700 transition-colors duration-200 transform hover:scale-105"
-              active-class="bg-teal-500 text-white dark:bg-teal-700 shadow-md"
+              active-class="bg-teal-500 text-white dark:bg-teal-700 hover:text-gray-400 shadow-md"
             >
-              <font-awesome-icon :icon="['fas', 'earth-americas']" class="w-6 h-6 mr-3" />
+              <font-awesome-icon :icon="['fas', 'earth-americas']" class="w-5 h-5 mr-3" />
               <span>Mis Vacaciones</span>
             </router-link>
           </li>
@@ -68,9 +79,9 @@
             <router-link
               :to="{ name: 'employee-request-vacation' }"
               class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-teal-100 dark:hover:bg-gray-700 transition-colors duration-200 transform hover:scale-105"
-              active-class="bg-teal-500 text-white dark:bg-teal-700 shadow-md"
+              active-class="bg-teal-500 text-white dark:bg-teal-700 hover:text-gray-400 shadow-md"
             >
-              <font-awesome-icon :icon="['fas', 'calendar-plus']" class="w-6 h-6 mr-3" />
+              <font-awesome-icon :icon="['fas', 'calendar-plus']" class="w-5 h-5 mr-3" />
               <span>Solicitar Vacaciones</span>
             </router-link>
           </li>
@@ -78,9 +89,9 @@
             <router-link
               :to="{ name: 'employee-consultations' }"
               class="flex items-center p-3 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-teal-100 dark:hover:bg-gray-700 transition-colors duration-200 transform hover:scale-105"
-              active-class="bg-teal-500 text-white dark:bg-teal-700 shadow-md"
+              active-class="bg-teal-500 text-white dark:bg-teal-700 hover:text-gray-400 shadow-md"
             >
-              <font-awesome-icon :icon="['fas', 'circle-question']" class="w-6 h-6 mr-3" />
+              <font-awesome-icon :icon="['fas', 'circle-question']" class="w-5 h-5 mr-3" />
               <span>Consultas</span>
             </router-link>
           </li>
@@ -94,7 +105,7 @@
               :to="{ name: 'profile-overview' }"
               class="flex items-center p-3 rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors duration-200 transform hover:scale-105"
             >
-              <font-awesome-icon :icon="['fas', 'user']" class="w-6 h-6 mr-3" />
+              <font-awesome-icon :icon="['fas', 'user']" class="w5 h-5 mr-3" />
               <span>Mi Perfil de Usuario</span>
             </router-link>
           </li>
@@ -103,7 +114,7 @@
               :to="{ name: 'employee-my-data' }"
               class="flex items-center p-3 rounded-lg bg-indigo-100 text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-800 transition-colors duration-200 transform hover:scale-105"
             >
-              <font-awesome-icon :icon="['fas', 'id-card']" class="w-6 h-6 mr-3" />
+              <font-awesome-icon :icon="['fas', 'id-card']" class="w-5 h-5 mr-3" />
               <span>Mis Datos</span>
             </router-link>
           </li>
@@ -133,11 +144,12 @@ import {
   faCalendarPlus,
   faCircleQuestion, 
   faUser,
-  faIdCard, // ¡Añadido el ícono para "Mis Datos"!
+  faIdCard,
+  faArrowLeft, // ¡Añadido el ícono para "Mis Datos"!
 } from '@fortawesome/free-solid-svg-icons';
 
 // Añadir solo los iconos que se usan en este layout
-library.add(faChartPie, faClock, faEarthAmericas, faCalendarPlus, faCircleQuestion, faUser, faIdCard); // Asegúrate de agregarlo aquí
+library.add(faArrowLeft, faChartPie, faClock, faEarthAmericas, faCalendarPlus, faCircleQuestion, faUser, faIdCard); // Asegúrate de agregarlo aquí
 
 const authStore = useAuthStore();
 

@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useGlobalModal } from '@/composables/useGlobalModal';
 import { useGlobalToast } from '@/composables/useGlobalToast';
-import { authService } from '@/services/AuthService'; // Auth Store
+import { authService } from '@/services/authService'; // Auth Store
 
 import ConfirmActionModal from '@/components/modals/ConfirmActionModal.vue';
 
@@ -13,6 +13,7 @@ import UiInputPassword from '@/components/ui/UiInputPassword.vue';
 import UiDivider from '@/components/ui/UiDivider.vue';
 import UiButton from '@/components/ui/UiButton.vue';
 import UiInputText from '@/components/ui/UiInputText.vue';
+import UiSpinner from '@/components/ui/UiSpinner.vue';
 
 const router = useRouter();
 const $modal = useGlobalModal();
@@ -22,6 +23,7 @@ const username = ref('');
 const email = ref('');
 const password = ref('');
 const passwordConfirmation = ref('');
+const isLoading = ref(false);
 
 const validatePassword = (pwd) => {
   const minLength = pwd.length >= 8;
@@ -48,6 +50,7 @@ const handleRegister = async (confirmed = false) => { // <-- CAMBIO CLAVE AQUÍ:
   console.log('parametro (confirmed) en el método handleRegister:', confirmed); // <-- Ahora verás 'false' o 'true'
 
   try {
+    isLoading.value=true;
     const payload = {
       name: username.value,
       email: email.value,
@@ -99,6 +102,8 @@ const handleRegister = async (confirmed = false) => { // <-- CAMBIO CLAVE AQUÍ:
       console.error('Ocurrió un error inesperado al registrar:', error);
       $toast?.error('Ocurrió un error inesperado al registrar.');
     }
+  } finally {
+    isLoading.value = false;
   }
 };
 // **FIN DEL CÓDIGO CORREGIDO PARA handleRegister**
@@ -125,7 +130,7 @@ const handleRegister = async (confirmed = false) => { // <-- CAMBIO CLAVE AQUÍ:
           <p class="font-semibold">Ya tengo una cuenta, <router-link to="/auth/login" class="text-indigo-600 font-normal hover:text-indigo-700 hover:underline">Login</router-link></p>
         </div>
 
-        <UiButton type="submit" class="mt-4" variant="primary">Registrar</UiButton>
+        <UiButton type="submit" class="mt-4" variant="primary"> <UiSpinner v-if="isLoading" class="text-current size-5 mr-1" /> Registrar</UiButton>
       </form>
 
       <div class="bg-blue-50 dark:bg-blue-700 rounded-lg shadow-xs p-2.5 container">

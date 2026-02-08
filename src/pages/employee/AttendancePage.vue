@@ -180,7 +180,7 @@ import UiKbd from '@/components/ui/UiKbd.vue';
 import UiSpinner from '@/components/ui/UiSpinner.vue'; // Asegúrate de que este componente exista
 
 // Heroicons
-import { ClockIcon, CalendarDaysIcon, ExclamationTriangleIcon, ArrowPathIcon } from '@heroicons/vue/24/outline'; // Añadimos CalendarDaysIcon
+import { ClockIcon, CalendarDaysIcon, ExclamationTriangleIcon, ArrowPathIcon, PuzzlePieceIcon } from '@heroicons/vue/24/outline'; // Añadimos CalendarDaysIcon
 
 const authStore = useAuthStore();
 const $toast = useGlobalToast();

@@ -1,9 +1,8 @@
 <template>
   <nav class="bg-white shadow-md h-14 fixed top-0 left-0 right-0 z-20 dark:bg-gray-800 dark:text-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center h-16">
-        <div class="flex-shrink-0 flex items-center gap-2">
-          <UiAvatar src="/public/nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
+      <div class="h-full min-w-full flex justify-between items-center px-4 sm:px-6 lg:px-8">
+        <div class="flex-shrink-0 flex items-center gap-2  ">
+          <UiAvatar src="/nsip-logo_opt_original_mini.png" alt="Nature Intitute Source improved Plants" size="small" />
           <router-link to="/" class="text-xl font-bold text-green-500">RH-flow</router-link>
         </div>
 
@@ -21,6 +20,19 @@
           </li>
 
           <li>
+            <button
+              @click="toggleTheme"
+              class="p-2 rounded-full border-none focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors duration-200"
+              :class="uiStore.currentTheme === 'dark'
+                ? 'bg-gray-700 text-yellow-300 hover:bg-gray-600 focus:ring-yellow-500'
+                : 'bg-gray-200 text-indigo-600 hover:bg-gray-300 focus:ring-indigo-500'"
+              aria-label="Alternar modo oscuro"
+            >
+              <component :is="themeIcon" class="h-5 w-5" />
+            </button>
+          </li>
+
+          <li>
             <template v-if="authStore.isAuthenticated">
               <button
                 @click="goToCPanel"
@@ -29,7 +41,8 @@
                 {{ cPanelButtonText }}
               </button>
             </template>
-            <!--
+
+                        
             <template v-else>
               <router-link
                 :to="{ name: 'login' }"
@@ -39,23 +52,31 @@
               </router-link>
             </template>
 
-          -->
-          </li>
+          
+
+            </li>
+
+
+            
         </ul>
       </div>
-    </div>
   </nav>
 </template>
 
 <script setup>
 import { computed, watch, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import UiAvatar from '@/components/ui/UiAvatar.vue'; // Correct path assumed
+import UiAvatar from '@/components/ui/UiAvatar.vue';
 import { useAuthStore } from '@/stores/authStore';
+import { useUiStore } from '@/stores/uiStore'; // Importa el uiStore
+
+// Importa los íconos de Heroicons
+import { SunIcon, MoonIcon } from '@heroicons/vue/24/outline';
 
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
+const uiStore = useUiStore(); // Inicializa el uiStore
 
 // --- Public Navigation Links ---
 const links = [
@@ -67,12 +88,22 @@ const isActiveRoute = (to) => {
   return route.path === to;
 };
 
+// --- Lógica para el botón de cambio de tema ---
+const themeIcon = computed(() => {
+  return uiStore.currentTheme === 'dark' ? SunIcon : MoonIcon;
+});
+
+const toggleTheme = () => {
+  const newTheme = uiStore.currentTheme === 'dark' ? 'light' : 'dark';
+  uiStore.setTheme(newTheme);
+};
+
 // --- CPanel/Profile Access Logic ---
 
 // Computed property for the CPanel/Profile button text
 const cPanelButtonText = computed(() => {
   if (!authStore.isAuthenticated) return 'Iniciar Sesión'; // Should not be seen if isAuthenticated is false
-  
+
   switch (authStore.user?.role) {
     case 'admin':
       return 'Panel de Admin';
